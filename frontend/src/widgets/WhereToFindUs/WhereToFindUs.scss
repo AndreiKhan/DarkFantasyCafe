@@ -1,0 +1,149 @@
+.where-to-find-us {
+  padding: 20px;
+  &__title {
+    margin-bottom: 20px;
+  }
+  &__content {
+    display: flex;
+    gap: 25px;
+  }
+  &__map {
+    width: 100%;
+    background-color: purple;
+  }
+  &__info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    filter: blur();
+    padding: 40px;
+    max-width: 300px;
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-image: url('../../assets/BWE6_0004_big-opened-pergament.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-color: green;
+      mix-blend-mode: multiply;
+
+      -webkit-mask-box-image: url('../../assets/BWE6_0004_big-opened-pergament.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
+      mask-border: url('../../assets/BWE6_0004_big-opened-pergament.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
+    }
+  }
+  &__header {
+    
+  }
+  &__info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  &__description {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  &__name {
+
+  }
+  &__text {
+
+  }
+  &__divider {
+    height: 10px;
+    width: 100%;
+    background-color: red;
+  }
+  &__subtitle {
+
+  }
+  &__contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  &__input {
+    position: relative;
+    filter: blur();
+    padding: 5px;
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-image: url('../../assets/BWE6_0003_input-background.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-color: blue;
+      mix-blend-mode: multiply;
+
+      -webkit-mask-box-image: url('../../assets/BWE6_0003_input-background.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
+      mask-border: url('../../assets/BWE6_0003_input-background.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
+    }
+  }
+  &__textarea {
+    position: relative;
+    filter: blur();
+    padding: 5px;
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-image: url('../../assets/BWE6_0003_input-background.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-color: blue;
+      mix-blend-mode: multiply;
+
+      -webkit-mask-box-image: url('../../assets/BWE6_0003_input-background.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
+      mask-border: url('../../assets/BWE6_0003_input-background.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
+    }
+  }
+  &__button {
+    position: relative;
+    padding: 10px;
+    color: red;
+        filter: blur();
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-image: url('../../assets/BWE5_0000_wood-button.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-color: blue;
+      mix-blend-mode: multiply;
+
+      -webkit-mask-box-image: url('../../assets/BWE5_0000_wood-button.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
+      mask-border: url('../../assets/BWE5_0000_wood-button.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
+    }
+  }
+}

@@ -1,0 +1,72 @@
+.footer {
+  &__separator {
+    position: relative;
+    height: 30px;
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-image: url('../../assets/BWE7_0004_runes-line.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 repeat;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-color: green;
+      mix-blend-mode: multiply;
+
+      -webkit-mask-box-image: url('../../assets/BWE7_0004_runes-line.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 repeat;
+      mask-border: url('../../assets/BWE7_0004_runes-line.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 repeat;
+    }
+  }
+  &__content {
+    position: relative;
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-image: url('../../assets/BWE7_0005_wood-background.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-color: green;
+      mix-blend-mode: multiply;
+
+      -webkit-mask-box-image: url('../../assets/BWE7_0005_wood-background.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
+      mask-border: url('../../assets/BWE7_0005_wood-background.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
+    }
+  }
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 30px 0 !important;
+    gap: 50px;
+  }
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: min-content;
+  }
+  &__title {
+    text-wrap: nowrap;
+  }
+  &__socials {
+    display: flex;
+    gap: 12px;
+  }
+  &__copyright {
+    background-color: #000000;
+    &-text {
+      padding: 20px 0;
+      text-align: center;
+    }
+  }
+}

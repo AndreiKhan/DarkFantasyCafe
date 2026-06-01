@@ -1,0 +1,192 @@
+.menu {
+  &__header {
+
+  }
+  &__title {
+
+  }
+  &__filter {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    gap: 25px;
+    padding: 40px 80px;
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-image: url('../../assets/BWE2_0005_pergament-half-rolled.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-color: green;
+      mix-blend-mode: multiply;
+
+      -webkit-mask-box-image: url('../../assets/BWE2_0005_pergament-half-rolled.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
+      mask-border: url('../../assets/BWE2_0005_pergament-half-rolled.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
+    }
+    &-type {
+
+    }
+    &-title {
+
+    }
+    &-categories {
+
+    }
+    &-tags {
+      .menu__billet {
+        position: relative;
+        padding: 10px;
+        filter: blur();
+        &::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          z-index: -1;
+          border-image: url('../../assets/BWE1_0013_pergament-damaged.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
+        }
+        &::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          z-index: -1;
+          background-color: blue;
+          mix-blend-mode: multiply;
+
+          -webkit-mask-box-image: url('../../assets/BWE1_0013_pergament-damaged.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
+          mask-border: url('../../assets/BWE1_0013_pergament-damaged.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
+        }
+      }
+    }
+    &-sort {
+
+    }
+  }
+  &__billets {
+    display: flex;
+    gap: 12px;
+  }
+  &__billet {
+    position: relative;
+    padding: 10px;
+        filter: blur();
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-image: url('../../assets/BWE1_0017_plywood.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-color: blue;
+      mix-blend-mode: multiply;
+
+      -webkit-mask-box-image: url('../../assets/BWE1_0017_plywood.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
+      mask-border: url('../../assets/BWE1_0017_plywood.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
+    }
+  }
+  &__billet--active {
+    &::after {
+      background-color: darkcyan;
+    }
+  }
+  &__sort-type {
+    position: relative;
+    padding: 10px;
+    color: red;
+        filter: blur();
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-image: url('../../assets/BWE5_0000_wood-button.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-color: blue;
+      mix-blend-mode: multiply;
+
+      -webkit-mask-box-image: url('../../assets/BWE5_0000_wood-button.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
+      mask-border: url('../../assets/BWE5_0000_wood-button.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
+    }
+  }
+  &__cards {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 30px;
+    padding: 20px;
+  }
+  &__card {
+    position: relative;
+    padding: 10px;
+        filter: blur();
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      border-image: url('../../assets/product-border-small.png') 20 20 20 20 fill / 20px 20px 20px 20px / 0 stretch;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background-color: green;
+      mix-blend-mode: multiply;
+
+      -webkit-mask-box-image: url('../../assets/product-border-small.png') 20 20 20 20 fill / 20px 20px 20px 20px / 0 stretch;
+      mask-border: url('../../assets/product-border-small.png') 20 20 20 20 fill / 20px 20px 20px 20px / 0 stretch;
+    }
+    &-present-block {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      padding: 10px;
+          filter: blur();
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-image: url('../../assets/BWE2_0004_background-wood.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
+      }
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background-color: green;
+        mix-blend-mode: multiply;
+
+        -webkit-mask-box-image: url('../../assets/BWE2_0004_background-wood.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
+        mask-border: url('../../assets/BWE2_0004_background-wood.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
+      }
+    }
+    &-image {
+      padding: 50px;
+    }
+    &-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: maroon;
+      gap: 10px;
+      padding: 10px 12px 15px;
+    }
+  }
+}
