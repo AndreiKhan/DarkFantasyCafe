@@ -1,23 +1,6 @@
-.header {
-  position: relative;
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-image: url('../../assets/BWE7_0005_wood-background.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-  }
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background-color: green;
-    mix-blend-mode: multiply;
+@use '../../app/styles/mixins' as m;
 
-    -webkit-mask-box-image: url('../../assets/BWE7_0005_wood-background.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-    mask-border: url('../../assets/BWE7_0005_wood-background.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-  }
+.header {
   &__content {
     display: flex;
     align-items: center;
@@ -41,31 +24,14 @@
       justify-content: space-between;
     }
     &-item {
-      position: relative;
       width: min-content;
       padding: 20px 40px;
-      &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        border-image: url('../../assets/BWE1_0000_pergament-half-rolled.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-      }
-      &::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        background-color: green;
-        mix-blend-mode: multiply;
-        -webkit-mask-box-image: url('../../assets/BWE1_0000_pergament-half-rolled.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-        mask-border: url('../../assets/BWE1_0000_pergament-half-rolled.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-      }
+
+      @include m.half-rolled-parchment-button-bg-variant-1;
     }
     &-item--active {
       filter: drop-shadow(0 0 5px gold)
       drop-shadow(0 0 10px orange);
-      
     }
   }
   &__menu {

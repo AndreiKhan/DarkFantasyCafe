@@ -1,3 +1,6 @@
+@import './themes'; 
+@import './mixins';
+
 * {
   margin: 0;
   padding: 0;
@@ -10,8 +13,8 @@ html, body, #root {
 
 body {
   font-family: sans-serif;
-  color: #c99253;
-  background: #180f06;
+  color: var(--color-text);
+  background: var(--color-bg);
 }
 
 #root {

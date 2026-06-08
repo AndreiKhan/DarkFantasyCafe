@@ -1,0 +1,92 @@
+@import './themes';
+
+@mixin bw-coloring-image ($img, $color, $slice, $width, $index: -1, $repeat: stretch) {
+  position: relative;
+  filter: blur();
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: $index;
+    border-image: url($img) $slice fill / $width / 0 $repeat;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: $index;
+    background-color: $color;
+    mix-blend-mode: multiply;
+
+    -webkit-mask-box-image: url($img) $slice fill / $width / 0 $repeat;
+    mask-border: url($img) $slice fill / $width / 0 $repeat;
+  }
+}
+
+@mixin faq-opened-bg {
+  @include bw-coloring-image('../../assets/BWE7_0003_faq-opened.png', var(--frame-tint), 10 10 10 10, 10px 10px 10px 10px)
+}
+
+@mixin faq-closed-bg {
+  @include bw-coloring-image('../../assets/BWE7_0002_faq-closed.png', var(--frame-tint), 10 10 10 10, 10px 10px 10px 10px)
+}
+
+@mixin runes-line-bg {
+  @include bw-coloring-image('../../assets/BWE7_0004_runes-line.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px, repeat)
+}
+
+@mixin wood-background-bg {
+  @include bw-coloring-image('../../assets/BWE7_0005_wood-background.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
+}
+
+@mixin wood-background-small-bg {
+  @include bw-coloring-image('../../assets/BWE2_0004_background-wood.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
+}
+
+@mixin half-rolled-parchment-button-bg-variant-1 {
+  @include bw-coloring-image('../../assets/BWE1_0000_parchment-half-rolled.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
+}
+
+@mixin half-rolled-parchment-button-bg-variant-2 {
+  @include bw-coloring-image('../../assets/BWE2_0005_parchment-half-rolled.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
+}
+
+@mixin big-opened-parchment-bg {
+  @include bw-coloring-image('../../assets/BWE6_0004_big-opened-parchment.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
+}
+
+@mixin plate-with-frame-button-bg {
+  @include bw-coloring-image('../../assets/BWE1_0005_plate-with-frame.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
+}
+
+@mixin input-bg {
+  @include bw-coloring-image('../../assets/BWE6_0003_input-background.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
+}
+
+@mixin wood-button-bg {
+  @include bw-coloring-image('../../assets/BWE5_0000_wood-button.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
+}
+
+@mixin parchment-damaged-bg {
+  @include bw-coloring-image('../../assets/BWE1_0013_parchment-damaged.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
+}
+
+@mixin plywood-bg {
+  @include bw-coloring-image('../../assets/BWE1_0017_plywood.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
+}
+
+@mixin product-border-bg {
+  @include bw-coloring-image('../../assets/product-border-small.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px, 1)
+}
+
+@mixin tablet ($width: 1024px) {
+  @media (max-width: $width) {
+    @content;
+  }
+}
+
+@mixin mobile ($width: 640px) {
+  @media (max-width: $width) {
+    @content;
+  }
+}

@@ -1,6 +1,9 @@
+import { useTranslation } from 'react-i18next'
 import './Footer.scss'
 
 function Footer() {
+  const { t } = useTranslation()
+  
   return (
     <footer className='footer'>
       <div className='footer__separator' />
@@ -13,36 +16,33 @@ function Footer() {
           </section>
           <section className='footer__item'>
             <h5 className='footer__title'>
-              Quick links
+              {t('footer.links.title')}
             </h5>
             <a href="#" className='footer__link'>
-              Menu
+              {t('footer.links.menu')}
             </a>
             <a href="#" className='footer__link'>
-              Reserve
+              {t('footer.links.booking')}
             </a>
             <a href="#" className='footer__link'>
-              Heroes
+              {t('footer.links.arena')}
             </a>
             <a href="#" className='footer__link'>
-              Arena
+              {t('footer.links.gallery')}
             </a>
             <a href="#" className='footer__link'>
-              Gallery
-            </a>
-            <a href="#" className='footer__link'>
-              FAQ
+              {t('footer.links.faq')}
             </a>
           </section>
           <section className='footer__item'>
             <h5 className='footer__title'>
-              Contacts
+              {t('footer.contacts.title')}
             </h5>
             <a href="#" className='footer__text'>
-              phone
+              {t('footer.contacts.phone')}
             </a>
             <a href="#" className='footer__text'>
-              email
+              {t('footer.contacts.email')}
             </a>
             <div className='footer__socials'>
               <div className='footer__social'>

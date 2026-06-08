@@ -1,47 +1,13 @@
+@use '../../app/styles/mixins' as m;
+
 .footer {
   &__separator {
-    position: relative;
     height: 30px;
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      border-image: url('../../assets/BWE7_0004_runes-line.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 repeat;
-    }
 
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      background-color: green;
-      mix-blend-mode: multiply;
-
-      -webkit-mask-box-image: url('../../assets/BWE7_0004_runes-line.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 repeat;
-      mask-border: url('../../assets/BWE7_0004_runes-line.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 repeat;
-    }
+    @include m.runes-line-bg;
   }
   &__content {
-    position: relative;
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      border-image: url('../../assets/BWE7_0005_wood-background.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-    }
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      background-color: green;
-      mix-blend-mode: multiply;
-
-      -webkit-mask-box-image: url('../../assets/BWE7_0005_wood-background.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-      mask-border: url('../../assets/BWE7_0005_wood-background.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-    }
+    @include m.wood-background-bg;
   }
   &__grid {
     display: grid;

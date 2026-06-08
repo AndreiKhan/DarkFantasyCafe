@@ -1,3 +1,5 @@
+@use '../../app/styles/mixins' as m;
+
 .hero {
   padding: 200px 0;
   &__description {
@@ -10,26 +12,9 @@
 
   }
   &__main-button {
-    position: relative;
     padding: 40px 60px;
     color: red;
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      border-image: url('../../assets/BWE1_0005_plate-with-frame.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-    }
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      background-color: green;
-      mix-blend-mode: multiply;
 
-      -webkit-mask-box-image: url('../../assets/BWE1_0005_plate-with-frame.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-      mask-border: url('../../assets/BWE1_0005_plate-with-frame.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-    }
+    @include m.plate-with-frame-button-bg;
   }
 }

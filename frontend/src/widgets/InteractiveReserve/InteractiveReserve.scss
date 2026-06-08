@@ -1,28 +1,13 @@
+@use '../../app/styles/mixins' as m;
+
 .interactive-reserve {
   &__filters {
-    position: relative;
     display: flex;
     justify-content: space-between;
     gap: 25px;
     padding: 40px 80px;
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      border-image: url('../../assets/BWE2_0005_pergament-half-rolled.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-    }
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      background-color: green;
-      mix-blend-mode: multiply;
 
-      -webkit-mask-box-image: url('../../assets/BWE2_0005_pergament-half-rolled.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-      mask-border: url('../../assets/BWE2_0005_pergament-half-rolled.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-    }
+    @include m.half-rolled-parchment-button-bg-variant-2;
   }
   &__filter {
     display: flex;
@@ -34,51 +19,15 @@
 
   }
   &__input {
-    position: relative;
-    filter: blur();
     padding: 5px;
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      border-image: url('../../assets/BWE6_0003_input-background.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-    }
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      background-color: blue;
-      mix-blend-mode: multiply;
 
-      -webkit-mask-box-image: url('../../assets/BWE6_0003_input-background.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-      mask-border: url('../../assets/BWE6_0003_input-background.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-    }
+    @include m.input-bg;
   }
   &__reserve {
-    position: relative;
-    filter: blur();
     padding: 5px;
     color: red;
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      border-image: url('../../assets/BWE5_0000_wood-button.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-    }
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      background-color: blue;
-      mix-blend-mode: multiply;
 
-      -webkit-mask-box-image: url('../../assets/BWE5_0000_wood-button.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-      mask-border: url('../../assets/BWE5_0000_wood-button.png') 30 45 28 44 fill / 30px 45px 28px 44px / 0 stretch;
-    }
+    @include m.wood-button-bg;
   }
   &__statuses {
     display: flex;

@@ -1,3 +1,5 @@
+@use '../../app/styles/mixins' as m;
+
 .faq {
   padding: 0 0 50px 0;
   &__title {
@@ -14,27 +16,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: relative;
       padding: 20px 80px;
-          filter: blur();
-      &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        border-image: url('../../assets/BWE7_0002_faq-closed.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
-      }
-      &::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        background-color: green;
-        mix-blend-mode: multiply;
-
-        -webkit-mask-box-image: url('../../assets/BWE7_0002_faq-closed.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
-        mask-border: url('../../assets/BWE7_0002_faq-closed.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
-      }
+      @include m.faq-closed-bg;
     }
     &-name {
       
@@ -44,29 +27,10 @@
     }
     &-answer {
       height: 180px;
-      position: relative;
-      filter: blur();
       margin: -21px 58px;
       padding: 40px 20px;
       z-index: -1;
-      &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        border-image: url('../../assets/BWE7_0003_faq-opened.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
-      }
-      &::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        background-color: green;
-        mix-blend-mode: multiply;
-
-        -webkit-mask-box-image: url('../../assets/BWE7_0003_faq-opened.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
-        mask-border: url('../../assets/BWE7_0003_faq-opened.png') 10 10 10 10 fill / 10px 10px 10px 10px / 0 stretch;
-      }
+      @include m.faq-opened-bg;
     }
   }
 }

@@ -1,0 +1,19 @@
+:root {
+  // неизменяемые цвета
+}
+
+:root[data-theme='dark'] {
+  --color-bg: #180f06;
+  --color-text: #c99253;
+  --color-accent: #c4a35a;
+  --color-border: #3a2a18;
+  --frame-tint: #6b3f1d;
+}
+
+:root[data-theme='light'] {
+  --color-bg: #f5ecd9;
+  --color-text: #2a1f15;
+  --color-accent: #8a5a2b;
+  --color-border: #d8c4a0;
+  --frame-tint: #c8965a;
+}
