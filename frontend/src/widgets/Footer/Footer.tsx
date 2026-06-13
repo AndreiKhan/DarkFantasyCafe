@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import './Footer.scss'
 
 function Footer() {
-  const { t } = useTranslation()
+  const { t } = useTranslation('footer')
   
   return (
     <footer className='footer'>
@@ -16,33 +16,33 @@ function Footer() {
           </section>
           <section className='footer__item'>
             <h5 className='footer__title'>
-              {t('footer.links.title')}
+              {t('links.title')}
             </h5>
             <a href="#" className='footer__link'>
-              {t('footer.links.menu')}
+              {t('links.menu')}
             </a>
             <a href="#" className='footer__link'>
-              {t('footer.links.booking')}
+              {t('links.booking')}
             </a>
             <a href="#" className='footer__link'>
-              {t('footer.links.arena')}
+              {t('links.arena')}
             </a>
             <a href="#" className='footer__link'>
-              {t('footer.links.gallery')}
+              {t('links.gallery')}
             </a>
             <a href="#" className='footer__link'>
-              {t('footer.links.faq')}
+              {t('links.faq')}
             </a>
           </section>
           <section className='footer__item'>
             <h5 className='footer__title'>
-              {t('footer.contacts.title')}
+              {t('contacts.title')}
             </h5>
             <a href="#" className='footer__text'>
-              {t('footer.contacts.phone')}
+              {t('contacts.phone')}
             </a>
             <a href="#" className='footer__text'>
-              {t('footer.contacts.email')}
+              {t('contacts.email')}
             </a>
             <div className='footer__socials'>
               <div className='footer__social'>

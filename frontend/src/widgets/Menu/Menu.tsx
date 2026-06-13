@@ -1,4 +1,4 @@
-import pres from "../../assets/BWE1_0015_rune-stone-button-circle.png"
+import pres from "@/assets/images/BWE1_0015_rune-stone-button-circle.png"
 import './Menu.scss'
 
 function Menu() {

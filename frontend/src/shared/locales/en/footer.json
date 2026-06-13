@@ -1,0 +1,16 @@
+{
+  "links": {
+    "title": "Quick links",
+    "menu": "Menu",
+    "booking": "Booking",
+    "arena": "Arena",
+    "gallery": "Gallery",
+    "news": "News",
+    "faq": "FAQ"
+  },
+  "contacts": {
+    "title": "Contacts",
+    "phone": "Phone",
+    "email": "Email"
+  }
+}

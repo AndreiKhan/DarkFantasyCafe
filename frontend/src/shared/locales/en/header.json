@@ -1,0 +1,10 @@
+{
+  "nav": {
+    "menu": "Menu",
+    "booking": "Booking",
+    "arena": "Arena",
+    "gallery": "Gallery",
+    "news": "News"
+  },
+  "profile": "Profile"
+}

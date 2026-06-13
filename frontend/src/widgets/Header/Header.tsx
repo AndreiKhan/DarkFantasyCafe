@@ -1,20 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import './Header.scss'
+import { ThemeSwitcher } from '@/features/ThemeSwitcher'
+import { LanguageSwitcher } from '@/features/LanguageSwitcher'
 
 function Header() {
-  const { t, i18n } = useTranslation()
-  const toggleLanguage = () => {
-    const next = i18n.language === 'ru' ? 'ru' : 'en'
-    i18n.changeLanguage(next)
-    localStorage.setItem('lang', next)
-  }
-
-  const toggleTheme = () => {
-    const current = document.documentElement.getAttribute('data-theme')
-    const next = current === 'dark' ? 'light' : 'dark'
-    document.documentElement.setAttribute('data-theme', next)
-    localStorage.setItem('theme', next)
-  }
+  const { t } = useTranslation('header')
   return (
     <header className='header'>
       <div className='center header__content'>
@@ -26,41 +16,37 @@ function Header() {
             <ul className='header__nav-list'>
               <li className='header__nav-item header__nav-item--active'>
                 <a href="#">
-                  {t('header.nav.menu')}
+                  {t('nav.menu')}
                 </a>
               </li>
               <li className='header__nav-item'>
                 <a href="#">
-                  {t('header.nav.booking')}
+                  {t('nav.booking')}
                 </a>
               </li>
               <li className='header__nav-item'>
                 <a href="#">
-                  {t('header.nav.arena')}
+                  {t('nav.arena')}
                 </a>
               </li>
               <li className='header__nav-item'>
                 <a href="#">
-                  {t('header.nav.gallery')}
+                  {t('nav.gallery')}
                 </a>
               </li>
               <li className='header__nav-item'>
                 <a href="#">
-                  {t('header.nav.news')}
+                  {t('nav.news')}
                 </a>
               </li>
             </ul>
           </nav>
           <div className='header__menu'>
             <button type='button' className='header__profile'>
-              {t('header.profile')}
+              {t('profile')}
             </button>
-            <button type='button' onClick={toggleLanguage}>
-              {i18n.language === 'ru' ? 'RU' : 'EN'}
-            </button>
-            <button type='button' onClick={toggleTheme}>
-              {i18n.language === 'dark' ? 'dark' : 'light'}
-            </button>
+            <ThemeSwitcher />
+            <LanguageSwitcher />
           </div>
         </div>
       </div>

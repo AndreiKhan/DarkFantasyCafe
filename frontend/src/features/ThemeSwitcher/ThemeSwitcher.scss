@@ -1,0 +1,5 @@
+@use 'app/styles/mixins' as m;
+
+.theme-switcher {
+  @include m.half-rolled-parchment-button-bg-variant-1
+}
