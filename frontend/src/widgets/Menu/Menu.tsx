@@ -1,7 +1,32 @@
-import pres from "@/assets/images/BWE1_0015_rune-stone-button-circle.png"
 import './Menu.scss'
+import { useDishes } from '@/entities/Dish'
+
+function DishCard({dish}) {
+  return (
+    <>
+      <div key={dish.id} className='menu__card'>
+        <div className='menu__card-present-block'>
+          <img className='menu__card-image' src={dish.image} />
+        </div>
+        <div className='menu__card-info'>
+          <h5 className='menu__card-title'>
+            {dish.name}
+          </h5>
+          <p className='menu__card-description'>
+            {dish.description}
+          </p>
+          <p className='menu__card-price'>
+            {dish.price} ₽
+          </p>
+        </div>
+      </div>
+    </>
+  )
+}
 
 function Menu() {
+  const { data: dishes, isLoading, isError } = useDishes()
+
   return (
     <section className='menu'>
       <div className='center'>
@@ -47,23 +72,14 @@ function Menu() {
           </div>
         </form>
         <div className='menu__cards'>
-          {Array.from({ length: 20 }).map((_, index) => (
-            <div key={index} className='menu__card'>
-              <div className='menu__card-present-block'>
-                <img className='menu__card-image' src={pres} alt="asd" />
-              </div>
-              <div className='menu__card-info'>
-                <h5 className='menu__card-title'>
-                  title
-                </h5>
-                <p className='menu__card-description'>
-                  short description
-                </p>
-                <p className='menu__card-price'>
-                  price
-                </p>
-              </div>
-            </div>
+          {isLoading &&
+            <p>isLoading</p>
+          }
+          {isError &&
+            <p>isError</p>
+          }
+          {dishes?.map((dish) => (
+            <DishCard dish={dish} />
           ))}
         </div>
       </div>
