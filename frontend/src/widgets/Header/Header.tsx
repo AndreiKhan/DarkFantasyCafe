@@ -2,9 +2,15 @@ import { useTranslation } from 'react-i18next'
 import './Header.scss'
 import { ThemeSwitcher } from '@/features/ThemeSwitcher'
 import { LanguageSwitcher } from '@/features/LanguageSwitcher'
+import { Link } from 'react-router-dom'
+import { useMe, useLogout } from '@/features/auth'
+
 
 function Header() {
   const { t } = useTranslation('header')
+  const logout = useLogout()
+  const { data } = useMe()
+  const isAuth = Boolean(data?.user)
   return (
     <header className='header'>
       <div className='center header__content'>
@@ -42,9 +48,15 @@ function Header() {
             </ul>
           </nav>
           <div className='header__menu'>
-            <button type='button' className='header__profile'>
-              {t('profile')}
-            </button>
+            {isAuth ? (
+              <button type='button' className='header__profile' onClick={() => logout.mutate()}>
+                Выйти
+              </button>
+            ) : (
+              <Link to='/login' className='header__profile'>
+                Войти
+              </Link>
+            )}
             <ThemeSwitcher />
             <LanguageSwitcher />
           </div>

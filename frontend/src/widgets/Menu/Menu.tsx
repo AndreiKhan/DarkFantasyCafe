@@ -4,7 +4,7 @@ import { useDishes } from '@/entities/Dish'
 function DishCard({dish}) {
   return (
     <>
-      <div key={dish.id} className='menu__card'>
+      <div className='menu__card'>
         <div className='menu__card-present-block'>
           <img className='menu__card-image' src={dish.image} />
         </div>
@@ -79,7 +79,7 @@ function Menu() {
             <p>isError</p>
           }
           {dishes?.map((dish) => (
-            <DishCard dish={dish} />
+            <DishCard key={dish.id} dish={dish} />
           ))}
         </div>
       </div>
