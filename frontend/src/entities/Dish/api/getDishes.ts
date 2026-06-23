@@ -1,8 +1,23 @@
-import type { Dish } from '../model/types'
+import type { Dish, DishFilters } from '../model/types'
 // import { mockDishes } from '../mocks/dishes'
 import { apiClient } from '@/shared/api'
 
-export async function getDishes(): Promise<Dish[]> {
+export function getDishes(params: { lang: string } & DishFilters): Promise<Dish[]> {
   // return Promise.resolve(mockDishes)
-  return apiClient<Dish[]>('/dish')
+  const search = new URLSearchParams()
+  search.set('lang', params.lang)
+  if (params.category) {
+    search.set('category', params.category)
+  }
+  if (params.tags.length) {
+    search.set('tags', params.tags.join(','))
+  }
+  if (params.allergens.length) {
+    search.set('allergens', params.allergens.join(','))
+  }
+  if (params.sort) {
+    search.set('sort', params.sort)
+  }
+
+  return apiClient<Dish[]>(`/dish?${search.toString()}`)
 }
