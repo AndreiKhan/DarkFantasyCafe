@@ -492,6 +492,35 @@ async function main() {
   }
 }
 
+const zones = [
+  { slug: 'tavern', nameRu: 'Таверна', nameEn: 'Tavern', pricePerHour: 300 },
+  { slug: 'vip', nameRu: 'Чертог', nameEn: 'Great Hall', pricePerHour: 800 },
+  { slug: 'terrace', nameRu: 'Двор', nameEn: 'Courtyard', pricePerHour: 500 },
+]
+
+for (const z of zones) {
+  await prisma.zone.create({ data: z })
+}
+
+const tavern = await prisma.zone.findUniqueOrThrow({ where: { slug: 'tavern' } })
+const vip = await prisma.zone.findUniqueOrThrow({ where: { slug: 'vip' } })
+const terrace = await prisma.zone.findUniqueOrThrow({ where: { slug: 'terrace' } })
+
+const tables = [
+  { number: 1, zoneId: tavern.id, capacity: 2, x: 15, y: 20 },
+  { number: 2, zoneId: tavern.id, capacity: 4, x: 35, y: 20 },
+  { number: 3, zoneId: tavern.id, capacity: 4, x: 55, y: 25 },
+  { number: 4, zoneId: tavern.id, capacity: 6, x: 25, y: 50 },
+  { number: 5, zoneId: vip.id, capacity: 4, x: 75, y: 25 },
+  { number: 6, zoneId: vip.id, capacity: 8, x: 80, y: 55 },
+  { number: 7, zoneId: terrace.id, capacity: 2, x: 20, y: 80 },
+  { number: 8, zoneId: terrace.id, capacity: 4, x: 45, y: 82 },
+]
+
+for (const t of tables) {
+  await prisma.table.create({ data: t })
+}
+
 main()
   .then(() => console.log('Seed completed'))
   .catch((e) => {

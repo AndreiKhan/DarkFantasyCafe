@@ -1,0 +1,131 @@
+.reserve {
+  padding: 40px 0;
+
+  &__title {
+    margin-bottom: 24px;
+  }
+
+  &__filters {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  &-input {
+    border: 1px solid red;
+  }
+
+  &__legend {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+
+    &-item{
+      width: 12px;
+      height: 12px;
+      margin-right: 6px;
+      border-radius: 100px;
+    }
+    &-item--free {
+      background-color: green;
+    }
+    &-item--busy  {
+      background-color: yellow;
+    }
+    &-item--small {
+      background-color: gray;
+    }
+  }
+
+  &__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  &__next {
+    color: black;
+    cursor: pointer;
+    &:disabled {
+      opacity: .4;
+    }
+  }
+}
+
+.hall-map {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  aspect-ratio: 1 / 1;
+  background: black;
+  border: 1px solid white;
+
+  &__table {
+    position: absolute;
+    cursor: pointer;
+
+    color: white;
+    background-color: green;
+    width: 30px;
+    height: 30px;
+    border-radius: 100px;
+
+    &:hover {
+      background-color: green;
+    }
+    &--selected {
+      background-color: yellow;
+    }
+    &--busy {
+      cursor: not-allowed;
+      background-color: gray;
+    }
+    &--small {
+      cursor: not-allowed;
+      background-color: gray;
+    }
+  }
+}
+
+.hall-list {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .hall-map  {
+    display: none;
+  }
+  .hall-list {
+    display: block;
+  }
+}
+
+
+.reserve-confirm,
+.reserve-payment {
+  &__list {
+    list-style: none;
+    margin: 12px 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  &__total {
+    font-size: 18px;
+    margin: 12px 0;
+  }
+  &__error {
+    color: red;
+  }
+  &__nav {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  &__login {
+    color: yellow;
+  }
+}

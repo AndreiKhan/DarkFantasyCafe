@@ -9,9 +9,3 @@ export const dishQuerySchema = z.object({
 })
 
 export type DishQuery = z.infer<typeof dishQuerySchema>
-
-export const langSchema = z.object({
-  lang: z.enum(['ru', 'en']).default('ru'),
-})
-
-export type LangQuery = z.infer<typeof langSchema>

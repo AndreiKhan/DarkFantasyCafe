@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { dishService } from './dish.service.js'
-import { dishQuerySchema, langSchema } from './dish.schema.js'
+import { dishQuerySchema } from './dish.schema.js'
+import { langSchema } from '../../shared/schemas.js'
 
 export async function dishRoutes(app: FastifyInstance) {
   app.get('/', async (request) => {

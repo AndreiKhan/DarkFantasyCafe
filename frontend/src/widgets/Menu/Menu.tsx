@@ -1,27 +1,6 @@
 import { useState } from 'react'
 import './Menu.scss'
-import { useDishes, useDishFilters, type Dish, type DishFilters, type DishRef } from '@/entities/Dish'
-
-function DishCard({ dish }: { dish: Dish }) {
-  return (
-    <div className='menu__card'>
-      <div className='menu__card-present-block'>
-        <img className='menu__card-image' src={dish.images[0]} alt={dish.name} />
-      </div>
-      <div className='menu__card-info'>
-        <h5 className='menu__card-title'>
-          {dish.name}
-        </h5>
-        <p className='menu__card-description'>
-          {dish.description}
-        </p>
-        <p className='menu__card-price'>
-          {dish.price} ₽
-        </p>
-      </div>
-    </div>
-  )
-}
+import { useDishes, useDishFilters, type DishFilters, type DishRef, DishCard } from '@/entities/Dish'
 
 function FilterGroup({ title, options, isActive, onSelect, className }: {
   title: string
@@ -54,7 +33,10 @@ function toggleInArray(arr: string[], slug: string): string[] {
   return arr.includes(slug) ? arr.filter((s) => s !== slug) : [...arr, slug]
 }
 
-function Menu() {
+function Menu({ dishQuantity, onQuantityChange }: {
+  dishQuantity?: Record<string, number>
+  onQuantityChange?: (dishId: string, quantity: number) => void
+}) {
   const [filters, setFilters] = useState<DishFilters>({ tags: [], allergens: [] })
   const { data: dishes, isLoading, isError } = useDishes(filters)
   const { data: options } = useDishFilters()
@@ -147,7 +129,12 @@ function Menu() {
             <p>isError</p>
           }
           {dishes?.map((dish) => (
-            <DishCard key={dish.id} dish={dish} />
+            <DishCard
+              key={dish.id}
+              dish={dish}
+              quantity={dishQuantity?.[dish.id] ?? 0}
+              onQuantityChange={onQuantityChange}
+            />
           ))}
         </div>
       </div>

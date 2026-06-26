@@ -1,0 +1,27 @@
+@use 'app/styles/mixins' as m;
+
+.dish-card {
+  &__content {
+    padding: 10px;
+    @include m.product-border-bg;
+  }
+  &__present-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+
+    @include m.wood-background-small-bg;
+  }
+  &__image {
+    padding: 50px;
+  }
+  &__info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: maroon;
+    gap: 10px;
+    padding: 10px 12px 15px;
+  }
+}

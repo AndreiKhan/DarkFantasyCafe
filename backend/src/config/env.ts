@@ -9,6 +9,9 @@ const schema = z.object({
   ACCESS_TOKEN_TTL: z.string().default('15m'),
   REFRESH_TOKEN_TTL: z.string().default('7d'),
   NODE_ENV: z.enum(['development', 'production']).default('development'),
+  YOOKASSA_SHOP_ID: z.string(),
+  YOOKASSA_SECRET_KEY: z.string(),
+  FRONTEND_URL: z.string().default('http://localhost:5173'),
 })
 
 export const env = schema.parse(process.env)
