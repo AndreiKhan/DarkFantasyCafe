@@ -9,14 +9,14 @@ const loginSchema = z.object({
 
 const registerSchema = loginSchema.extend({
   firstName: z.string().min(1, 'имя'),
-  secondName: z.string().min(1, 'фамилию'),
+  secondName: z.string().min(1, 'фамилия'),
   phone: z.string().min(5, 'телефон'),
 })
 
 export type LoginValues = z.infer<typeof loginSchema>
 export type RegisterValues = z.infer<typeof registerSchema>
 
-export function AuthForm({ mode, submitLabel, onSubmit, error }: { 
+function AuthForm({ mode, submitLabel, onSubmit, error }: { 
   mode: 'login' | 'registration'
   submitLabel: string
   onSubmit: (values: LoginValues | RegisterValues) => Promise<void>
@@ -97,3 +97,5 @@ export function AuthForm({ mode, submitLabel, onSubmit, error }: {
     </form>
   )
 }
+
+export default AuthForm

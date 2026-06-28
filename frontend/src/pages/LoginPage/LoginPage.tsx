@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { AuthForm, type LoginValues } from '@/shared/ui/AuthForm'
+import { AuthForm } from '@/shared/ui'
 import { useLogin } from '@/entities/Auth'
 
 function LoginPage() {
@@ -14,7 +14,7 @@ function LoginPage() {
         submitLabel="Войти"
         error={login.isError ? 'Неверный email или пароль' : undefined}
         onSubmit={async (values) => {
-          await login.mutateAsync(values as LoginValues)
+          await login.mutateAsync(values)
           navigate('/')
         }}
       />

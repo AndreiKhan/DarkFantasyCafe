@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './Menu.scss'
 import { useDishes, useDishFilters, type DishFilters, type DishRef, DishCard } from '@/entities/Dish'
-import { default as Pagination } from '@/shared/ui/Pagination'
+import { Pagination } from '@/shared/ui'
 
 function FilterGroup({ title, options, isActive, onSelect, className }: {
   title: string

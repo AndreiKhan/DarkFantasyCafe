@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { useNews } from '@/entities/News'
-import { default as HtmlContent } from '@/shared/ui/HtmlContent'
+import { HtmlContent } from '@/shared/ui'
 
 function NewsSlugPage() {
   const { slug = '' } = useParams()

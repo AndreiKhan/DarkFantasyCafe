@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useNewsList } from '@/entities/News'
-import { default as Pagination } from '@/shared/ui/Pagination'
+import { Pagination } from '@/shared/ui'
 
 function NewsPage() {
   const { data, isLoading, isError } = useNewsList()
