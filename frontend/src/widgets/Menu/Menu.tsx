@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './Menu.scss'
 import { useDishes, useDishFilters, type DishFilters, type DishRef, DishCard } from '@/entities/Dish'
+import { default as Pagination } from '@/shared/ui/Pagination'
 
 function FilterGroup({ title, options, isActive, onSelect, className }: {
   title: string
@@ -121,22 +122,27 @@ function Menu({ dishQuantity, onQuantityChange }: {
           </div>
         </form>
 
-        <div className='menu__cards'>
-          {isLoading &&
-            <p>isLoading</p>
-          }
-          {isError &&
-            <p>isError</p>
-          }
-          {dishes?.map((dish) => (
-            <DishCard
-              key={dish.id}
-              dish={dish}
-              quantity={dishQuantity?.[dish.id] ?? 0}
-              onQuantityChange={onQuantityChange}
-            />
-          ))}
-        </div>
+        {isLoading &&
+          <p>isLoading</p>
+        }
+        {isError &&
+          <p>isError</p>
+        }
+
+        <Pagination items={dishes ?? []} pageSize={10} resetPage={filters}>
+          {(pageDishes) => (
+            <div className='menu__cards'>
+              {pageDishes.map((dish) => (
+                <DishCard
+                  key={dish.id}
+                  dish={dish}
+                  quantity={dishQuantity?.[dish.id] ?? 0}
+                  onQuantityChange={onQuantityChange}
+                />
+              ))}
+            </div>
+          )}
+        </Pagination>
       </div>
     </section>
   )

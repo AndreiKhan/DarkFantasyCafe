@@ -5,4 +5,6 @@ export const langSchema = z.object({
 })
 export type LangQuery = z.infer<typeof langSchema>
 
-export const idParamSchema = z.object({ id: z.string().uuid() })
+export const idParamSchema = z.object({
+  id: z.string().uuid()
+})

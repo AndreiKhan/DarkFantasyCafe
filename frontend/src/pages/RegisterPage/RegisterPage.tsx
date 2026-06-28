@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { AuthForm } from '@/features/auth/ui/AuthForm'
-import { useRegister } from '@/features/auth'
+import { AuthForm, type RegisterValues } from '@/shared/ui/AuthForm'
+import { useRegister } from '@/entities/Auth'
 
 function RegisterPage() {
   const navigate = useNavigate()
@@ -10,10 +10,11 @@ function RegisterPage() {
     <section className="center">
       <h1>Регистрация</h1>
       <AuthForm
-        submitLabel="Создать аккаунт"
+        mode="registration"
+        submitLabel="создать"
         error={registerMutation.isError ? 'Email занят' : undefined}
         onSubmit={async (values) => {
-          await registerMutation.mutateAsync(values)
+          await registerMutation.mutateAsync(values as RegisterValues)
           navigate('/')
         }}
       />

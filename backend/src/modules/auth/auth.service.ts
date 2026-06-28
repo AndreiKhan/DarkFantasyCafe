@@ -34,8 +34,13 @@ export const authService = {
     }
 
     const passwordHash = await argon2.hash(input.password)
-    const user = await authRepository.create(input.email, passwordHash)
-
+    const user = await authRepository.create({
+      email: input.email,
+      passwordHash,
+      firstName: input.firstName,
+      secondName: input.secondName,
+      phone: input.phone,
+    })
     return issueTokens(user.id, user.role)
   },
 

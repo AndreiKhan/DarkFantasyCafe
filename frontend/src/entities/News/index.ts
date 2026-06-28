@@ -1,0 +1,5 @@
+export type { NewsType, NewsCard, NewsDetail } from './model/types'
+export { getNewsList } from './api/getNewsList'
+export { getNews } from './api/getNews'
+export { useNewsList } from './api/useNewsList'
+export { useNews } from './api/useNews'

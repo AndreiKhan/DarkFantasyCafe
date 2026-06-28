@@ -4,6 +4,8 @@ import cookie from '@fastify/cookie'
 import { ZodError } from 'zod'
 import { dishRoutes } from './modules/dish/dish.route.js'
 import { authRoutes } from './modules/auth/auth.route.js'
+import { newsRoutes } from './modules/news/news.route.js'
+import { userRoutes } from './modules/user/user.route.js'
 import { registerAuthGuard } from './plugins/auth.js'
 import { reservationRoutes } from './modules/reservation/reservation.route.js'
 import { reservationService } from './modules/reservation/reservation.service.js'
@@ -64,6 +66,12 @@ export function buildApp() {
       if (error.message === 'RESERVATION_CANCELLED') {
         return reply.code(409).send({ message: 'Reservation is cancelled' })
       }
+      if (error.message === 'NEWS_NOT_FOUND') {
+        return reply.code(404).send({ message: 'News not found' })
+      }
+      if (error.message === 'USER_NOT_FOUND') {
+        return reply.code(404).send({ message: 'User not found' })
+      }
     }
     app.log.error(error)
     return reply.code(500).send({ message: 'Internal server error' })
@@ -72,6 +80,8 @@ export function buildApp() {
   app.register(dishRoutes, { prefix: '/dish' })
   app.register(authRoutes, { prefix: '/auth' })
   app.register(reservationRoutes, { prefix: '/reservation' })
+  app.register(newsRoutes, { prefix: '/news' })
+  app.register(userRoutes, { prefix: '/user' })
 
   app.post('/payments/yookassa/webhook', async (request, reply) => {
     const body = request.body as { object?: { metadata?: { reservationId?: string } } }

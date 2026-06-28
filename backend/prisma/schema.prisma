@@ -33,6 +33,10 @@ model User {
   id            String         @id @default(uuid())
   email         String         @unique
   passwordHash  String
+  firstName     String
+  secondName    String
+  phone         String
+  image         String?
   role          Role           @default(USER)
   refreshTokens RefreshToken[]
   reservations  Reservation[]
@@ -159,4 +163,35 @@ enum PaymentStatus {
   PENDING
   SUCCEEDED
   CANCELED
+}
+
+model News {
+  id                 String     @id @default(uuid())
+  slug               String     @unique
+  type               NewsType   @default(NEWS)
+  status             NewsStatus @default(DRAFT)
+  titleRu            String
+  titleEn            String
+  shortDescriptionRu String
+  shortDescriptionEn String
+  bodyRu             String
+  bodyEn             String
+  images             String[]
+  startsAt           DateTime?
+  endsAt             DateTime?
+  publishedAt        DateTime?
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+}
+
+enum NewsType {
+  NEWS
+  PERFORMANCE
+  MONSTER
+}
+
+enum NewsStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
 }

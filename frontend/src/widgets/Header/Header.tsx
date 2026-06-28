@@ -3,7 +3,7 @@ import './Header.scss'
 import { ThemeSwitcher } from '@/features/ThemeSwitcher'
 import { LanguageSwitcher } from '@/features/LanguageSwitcher'
 import { Link } from 'react-router-dom'
-import { useMe, useLogout } from '@/features/auth'
+import { useMe, useLogout } from '@/entities/Auth'
 
 
 function Header() {

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import type { AvailabilityParams, AvailabilityTable, AvailabilityZone, ReservationSummary } from '@/entities/Reservation'
 import { useCreateReservation } from '@/entities/Reservation'
 import { useDishes } from '@/entities/Dish'
-import { useMe } from '@/features/auth'
+import { useMe } from '@/entities/Auth'
 
 export function StepConfirm({ params, table, zone, dishQuantity, onBack, onCreated }: {
   params: AvailabilityParams
