@@ -5,6 +5,7 @@ import { authRepository } from './auth.repository.js'
 import type { RegisterInput, LoginInput } from './auth.schema.js'
 import { createHash } from 'node:crypto'
 import { refreshTokenRepository } from './refreshToken.repository.js'
+import { AppError } from '../../shared/AppError.js'
 
 const REFRESH_TTL_MS = 7 * 24 * 60 * 60 * 1000
 
@@ -30,7 +31,7 @@ export const authService = {
   async register(input: RegisterInput) {
     const existing = await authRepository.findByEmail(input.email)
     if (existing) {
-      throw new Error('EMAIL_TAKEN')
+      throw AppError.conflict('Email already registered', 'EMAIL_TAKEN')
     }
 
     const passwordHash = await argon2.hash(input.password)
@@ -47,12 +48,12 @@ export const authService = {
   async login(input: LoginInput) {
     const user = await authRepository.findByEmail(input.email)
     if (!user) {
-      throw new Error('INVALID_CREDENTIALS')
+      throw AppError.unauthorized('Invalid email or password', 'INVALID_CREDENTIALS')
     }
 
     const ok = await argon2.verify(user.passwordHash, input.password)
     if (!ok) {
-      throw new Error('INVALID_CREDENTIALS')
+      throw AppError.unauthorized('Invalid email or password', 'INVALID_CREDENTIALS')
     }
 
     return issueTokens(user.id, user.role)
@@ -63,7 +64,7 @@ export const authService = {
     const tokenHash = hashToken(refreshToken)
     const stored = await refreshTokenRepository.findByHash(tokenHash)
     if (!stored) {
-      throw new Error('INVALID_REFRESH')
+      throw AppError.unauthorized('Refresh token revoked', 'INVALID_REFRESH')
     }
     await refreshTokenRepository.deleteByHash(tokenHash)
     return issueTokens(payload.sub, payload.role)

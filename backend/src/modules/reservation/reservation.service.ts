@@ -2,6 +2,7 @@ import { reservationRepository, type ReservationItemInput } from './reservation.
 import type { CreateReservationInput, TablesQuery } from './reservation.schema.js'
 import { createYooKassaPayment, getYooKassaPayment } from '../../lib/yookassa.js'
 import { env } from '../../config/env.js'
+import { AppError } from '../../shared/AppError.js'
 
 const BUFFER_MS = 30 * 60 * 1000
 
@@ -67,17 +68,17 @@ export const reservationService = {
     const { startsAt, endsAt } = buildWindow(input.date, input.start, input.duration)
 
     if (startsAt.getTime() <= Date.now()) {
-      throw new Error('RESERVATION_IN_PAST')
+      throw AppError.badRequest('Reservation time is in the past', 'RESERVATION_IN_PAST')
     }
 
     const table = await reservationRepository.findTableById(input.tableId)
 
     if (!table || !table.isActive) {
-      throw new Error('TABLE_NOT_FOUND')
+      throw AppError.notFound('Table not found', 'TABLE_NOT_FOUND')
     }
 
     if (input.guests > table.capacity) {
-      throw new Error('TABLE_TOO_SMALL')
+      throw AppError.badRequest('Table capacity is too small for the party', 'TABLE_TOO_SMALL')
     }
 
     const conflicts = await reservationRepository.findConfirmedForTable(
@@ -87,7 +88,7 @@ export const reservationService = {
     )
 
     if (conflicts.length > 0) {
-      throw new Error('TABLE_UNAVAILABLE')
+      throw AppError.conflict('Table is already booked for this time', 'TABLE_UNAVAILABLE')
     }
     const hours = input.duration / 60
 
@@ -108,7 +109,7 @@ export const reservationService = {
       const dishes = await reservationRepository.findDishesByIds(ids)
 
       if (dishes.length !== new Set(ids).size) {
-        throw new Error('DISH_NOT_FOUND')
+        throw AppError.badRequest('One or more dishes not found', 'DISH_NOT_FOUND')
       }
       const byId = new Map(dishes.map((dish) => [dish.id, dish]))
 
@@ -144,11 +145,11 @@ export const reservationService = {
     const reservation = await reservationRepository.findReservationById(id)
 
     if (!reservation) {
-      throw new Error('RESERVATION_NOT_FOUND')
+      throw AppError.notFound('Reservation not found', 'RESERVATION_NOT_FOUND')
     }
 
     if (reservation.userId !== userId) {
-      throw new Error('FORBIDDEN')
+      throw AppError.forbidden('Forbidden', 'FORBIDDEN')
     }
 
     return toSummary(reservation, lang)
@@ -158,16 +159,16 @@ export const reservationService = {
     const reserve = await reservationRepository.findReservationById(id)
 
     if (!reserve) {
-      throw new Error('RESERVATION_NOT_FOUND')
+      throw AppError.notFound('Reservation not found', 'RESERVATION_NOT_FOUND')
     }
     if (reserve.userId !== userId) {
-      throw new Error('FORBIDDEN')
+      throw AppError.forbidden('Forbidden', 'FORBIDDEN')
     }
     if (reserve.status === 'CONFIRMED') {
-      throw new Error('ALREADY_PAID')
+      throw AppError.conflict('Reservation already paid', 'ALREADY_PAID')
     }
     if (reserve.status === 'CANCELLED') {
-      throw new Error('RESERVATION_CANCELLED')
+      throw AppError.conflict('Reservation is cancelled', 'RESERVATION_CANCELLED')
     }
 
     const conflicts = await reservationRepository.findConfirmedForTable(
@@ -176,7 +177,7 @@ export const reservationService = {
       new Date(reserve.endsAt.getTime() + BUFFER_MS),
     )
     if (conflicts.length > 0) {
-      throw new Error('TABLE_UNAVAILABLE')
+      throw AppError.conflict('Table is already booked for this time', 'TABLE_UNAVAILABLE')
     }
 
     const payment = await createYooKassaPayment({
@@ -198,10 +199,10 @@ export const reservationService = {
     const reserve = await reservationRepository.findReservationById(id)
 
     if (!reserve) {
-      throw new Error('RESERVATION_NOT_FOUND')
+      throw AppError.notFound('Reservation not found', 'RESERVATION_NOT_FOUND')
     }
     if (reserve.userId !== userId) {
-      throw new Error('FORBIDDEN')
+      throw AppError.forbidden('Forbidden', 'FORBIDDEN')
     }
 
     return syncPayment(id, lang)
@@ -248,7 +249,7 @@ async function syncPayment(id: string, lang: 'ru' | 'en') {
   const reserve = await reservationRepository.findReservationById(id)
 
   if (!reserve) {
-    throw new Error('RESERVATION_NOT_FOUND')
+    throw AppError.notFound('Reservation not found', 'RESERVATION_NOT_FOUND')
   }
   if (!reserve.payment?.providerPaymentId) {
     return toSummary(reserve, lang)

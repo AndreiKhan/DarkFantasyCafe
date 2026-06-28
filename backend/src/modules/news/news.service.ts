@@ -1,6 +1,7 @@
 import { newsRepository } from './news.repository.js'
 import type { NewsListQuery } from './news.schema.js'
 import type { News } from '../../../generated/prisma/index.js'
+import { AppError } from '../../shared/AppError.js'
 
 function toCard(n: News, lang: 'ru' | 'en') {
   return {
@@ -37,7 +38,7 @@ export const newsService = {
   async getBySlug(slug: string, lang: 'ru' | 'en') {
     const news = await newsRepository.findPublishedBySlug(slug)
     if (!news) {
-      throw new Error('NEWS_NOT_FOUND')
+      throw AppError.notFound('News not found', 'NEWS_NOT_FOUND')
     }
     return toDetail(news, lang)
   },

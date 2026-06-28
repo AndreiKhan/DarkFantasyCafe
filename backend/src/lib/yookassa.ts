@@ -1,11 +1,12 @@
 import { randomUUID } from 'node:crypto'
 import { env } from '../config/env.js'
+import { AppError } from '../shared/AppError.js'
 
 const API = 'https://api.yookassa.ru/v3'
 
 function authHeader() {
   if (!env.YOOKASSA_SHOP_ID || !env.YOOKASSA_SECRET_KEY) {
-    throw new Error('PAYMENTS_NOT_CONFIGURED')
+    throw new AppError(503, 'Payments are not configured', 'PAYMENTS_NOT_CONFIGURED')
   }
 
   const creds = Buffer.from(`${env.YOOKASSA_SHOP_ID}:${env.YOOKASSA_SECRET_KEY}`).toString('base64')
@@ -43,7 +44,7 @@ export async function createYooKassaPayment(input: {
     }),
   })
   if (!response.ok) {
-    throw new Error('YOOKASSA_ERROR')
+    throw new AppError(502, 'Payment provider error', 'YOOKASSA_ERROR')
   }
   return response.json() as Promise<YooKassaPayment>
 }
@@ -53,7 +54,7 @@ export async function getYooKassaPayment(id: string): Promise<YooKassaPayment> {
     headers: { Authorization: authHeader() },
   })
   if (!response.ok) {
-    throw new Error('YOOKASSA_ERROR')
+    throw new AppError(502, 'Payment provider error', 'YOOKASSA_ERROR')
   }
   return response.json() as Promise<YooKassaPayment>
 }
