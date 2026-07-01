@@ -83,6 +83,8 @@ async function issueTokens(userId: string, role: string) {
   const accessToken = signAccess(payload)
   const refreshToken = signRefresh(payload)
 
+  await refreshTokenRepository.deleteExpiredForUser(userId)
+
   await refreshTokenRepository.create(
     userId,
     hashToken(refreshToken),

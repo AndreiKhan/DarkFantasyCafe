@@ -1,5 +1,16 @@
-export type { NewsType, NewsCard, NewsDetail } from './model/types'
+export type { NewsType, NewsStatus, NewsCard, NewsDetail, NewsFull, CreateNews, UpdateNews } from './model/types'
+export { newsFormSchema } from './model/schema'
+
 export { getNewsList } from './api/getNewsList'
 export { getNews } from './api/getNews'
+export { getAdminNews } from './api/getAdminNews'
+export { createNews } from './api/createNews'
+export { updateNews } from './api/updateNews'
+export { deleteNews } from './api/deleteNews'
+
 export { useNewsList } from './api/useNewsList'
 export { useNews } from './api/useNews'
+export { useAdminNews } from './api/useAdminNews'
+export { useCreateNews } from './api/useCreateNews'
+export { useUpdateNews } from './api/useUpdateNews'
+export { useDeleteNews } from './api/useDeleteNews'

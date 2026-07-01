@@ -26,3 +26,47 @@ export interface DishFilterOptions {
   tags: DishRef[]
   allergens: DishRef[]
 }
+
+export interface DishOptionRef {
+  id: string
+  slug: string
+  nameRu: string
+  nameEn: string
+}
+
+export interface DishFull {
+  id: string
+  nameRu: string
+  nameEn: string
+  descriptionRu: string
+  descriptionEn: string
+  price: number
+  images: string[]
+  categoryId: string
+  category: DishOptionRef
+  tags: DishOptionRef[]
+  allergens: DishOptionRef[]
+  createdAt: string
+  updatedAt: string
+  deletedAt: string | null
+}
+
+export interface CreateDish {
+  nameRu: string
+  nameEn: string
+  descriptionRu: string
+  descriptionEn: string
+  price: number
+  images: string[]
+  categoryId: string
+  tagIds: string[]
+  allergenIds: string[]
+}
+
+export type UpdateDish = Partial<CreateDish> & { id: string }
+
+export interface DishAdminOptions {
+  categories: DishOptionRef[]
+  tags: DishOptionRef[]
+  allergens: DishOptionRef[]
+}

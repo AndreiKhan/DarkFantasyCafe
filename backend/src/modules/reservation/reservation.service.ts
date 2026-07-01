@@ -1,5 +1,5 @@
-import { reservationRepository, type ReservationItemInput } from './reservation.repository.js'
-import type { CreateReservationInput, TablesQuery } from './reservation.schema.js'
+import { reservationRepository, reservationRepositoryAdmin, type ReservationItem } from './reservation.repository.js'
+import type { CreateReservation, TablesQuery, ReservationCreate, ReservationUpdate } from './reservation.schema.js'
 import { createYooKassaPayment, getYooKassaPayment } from '../../lib/yookassa.js'
 import { env } from '../../config/env.js'
 import { AppError } from '../../shared/AppError.js'
@@ -64,7 +64,7 @@ export const reservationService = {
     }
   },
 
-  async createDraft(userId: string, input: CreateReservationInput) {
+  async createDraft(userId: string, input: CreateReservation) {
     const { startsAt, endsAt } = buildWindow(input.date, input.start, input.duration)
 
     if (startsAt.getTime() <= Date.now()) {
@@ -92,7 +92,7 @@ export const reservationService = {
     }
     const hours = input.duration / 60
 
-    const items: ReservationItemInput[] = [
+    const items: ReservationItem[] = [
       {
         type: 'TIME',
         dishId: null,
@@ -211,6 +211,131 @@ export const reservationService = {
   async handleWebhook(reservationId: string) {
     await syncPayment(reservationId, 'ru')
   },
+}
+
+export const reservationAdmin = {
+  async getAll() {
+    return reservationRepositoryAdmin.findAll()
+  },
+
+  async getOptions() {
+    const [users, tables, dishes] = await Promise.all([
+      reservationRepositoryAdmin.findUserOptions(),
+      reservationRepositoryAdmin.findTableOptions(),
+      reservationRepositoryAdmin.findDishOptions(),
+    ])
+
+    return {
+      users,
+      tables: tables.map((table) => ({
+        id: table.id,
+        number: table.number,
+        zoneNameRu: table.zone.nameRu,
+      })),
+      dishes,
+    }
+  },
+
+  async create(input: ReservationCreate) {
+    await assertAdminReservationValid(input)
+
+    const items = await buildDishItems(input.dishes)
+
+    return reservationRepositoryAdmin.create(input, items)
+  },
+
+  async update(id: string, input: ReservationUpdate) {
+    const existing = await reservationRepositoryAdmin.findById(id)
+
+    if (!existing) {
+      throw AppError.notFound('Reservation not found', 'RESERVATION_NOT_FOUND')
+    }
+
+    await assertAdminReservationValid({
+      tableId: input.tableId ?? existing.tableId,
+      startsAt: input.startsAt ?? existing.startsAt,
+      endsAt: input.endsAt ?? existing.endsAt,
+      guests: input.guests ?? existing.guests,
+    }, id)
+
+    const items = input.dishes !== undefined ? await buildDishItems(input.dishes) : undefined
+
+    return reservationRepositoryAdmin.update(id, input, items)
+  },
+
+  async remove(id: string) {
+    const existing = await reservationRepositoryAdmin.findById(id)
+
+    if (!existing) {
+      throw AppError.notFound('Reservation not found', 'RESERVATION_NOT_FOUND')
+    }
+
+    return reservationRepositoryAdmin.remove(id)
+  },
+}
+
+async function buildDishItems(lines: { dishId: string; quantity: number }[]): Promise<ReservationItem[]> {
+  if (lines.length === 0) {
+    return []
+  }
+
+  const ids = lines.map((line) => line.dishId)
+  const dishes = await reservationRepository.findDishesByIds(ids)
+
+  if (dishes.length !== new Set(ids).size) {
+    throw AppError.badRequest('One or more dishes not found', 'DISH_NOT_FOUND')
+  }
+
+  const byId = new Map(dishes.map((dish) => [dish.id, dish]))
+
+  return lines.map((line) => {
+    const dish = byId.get(line.dishId)!
+    return {
+      type: 'DISH',
+      dishId: dish.id,
+      titleRu: dish.nameRu,
+      titleEn: dish.nameEn,
+      unitPrice: dish.price,
+      quantity: line.quantity,
+    }
+  })
+}
+
+function assertHalfHourAligned(date: Date) {
+  if (date.getUTCMinutes() % 30 !== 0 || date.getUTCSeconds() !== 0 || date.getUTCMilliseconds() !== 0) {
+    throw AppError.badRequest('Time must be aligned to 00 or 30 minutes', 'TIME_NOT_ALIGNED')
+  }
+}
+
+async function assertAdminReservationValid(
+  input: { tableId: string; startsAt: Date; endsAt: Date; guests: number },
+  excludeId?: string,
+) {
+  assertHalfHourAligned(input.startsAt)
+  assertHalfHourAligned(input.endsAt)
+
+  if (input.endsAt <= input.startsAt) {
+    throw AppError.badRequest('End time must be after start time', 'INVALID_TIME_RANGE')
+  }
+
+  const table = await reservationRepository.findTableById(input.tableId)
+
+  if (!table || !table.isActive) {
+    throw AppError.notFound('Table not found', 'TABLE_NOT_FOUND')
+  }
+  if (input.guests > table.capacity) {
+    throw AppError.badRequest('Table capacity is too small for the party', 'TABLE_TOO_SMALL')
+  }
+
+  const conflicts = await reservationRepository.findConfirmedForTable(
+    table.id,
+    new Date(input.startsAt.getTime() - BUFFER_MS),
+    new Date(input.endsAt.getTime() + BUFFER_MS),
+  )
+  
+  if (conflicts.some((reserved) => reserved.id !== excludeId)) {
+    throw AppError.conflict('Table is already booked for this time', 'TABLE_UNAVAILABLE')
+  }
 }
 
 function buildWindow(date: string, start: string, duration: number) {

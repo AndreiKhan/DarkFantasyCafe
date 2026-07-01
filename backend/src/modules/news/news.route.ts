@@ -1,7 +1,8 @@
 import type { FastifyInstance } from 'fastify'
-import { newsService } from './news.service.js'
-import { newsListQuerySchema, newsSlugParamSchema } from './news.schema.js'
-import { langSchema } from '../../shared/schemas.js'
+import { newsService, newsAdmin } from './news.service.js'
+import { newsListQuerySchema, newsSlugParamSchema, newsCreateSchema, newsUpdateSchema } from './news.schema.js'
+import { langSchema, idParamSchema } from '../../shared/schemas.js'
+import { requireRole } from '../../plugins/auth.js'
 
 export async function newsRoutes(app: FastifyInstance) {
   app.get('/', async (request) => {
@@ -13,5 +14,30 @@ export async function newsRoutes(app: FastifyInstance) {
     const { slug } = newsSlugParamSchema.parse(request.params)
     const { lang } = langSchema.parse(request.query)
     return newsService.getBySlug(slug, lang)
+  })
+}
+
+export async function newsAdminRoutes(app: FastifyInstance) {
+  const admin = { preHandler: [app.authenticate, requireRole('ADMIN')] }
+
+  app.get('/all', admin, async () => {
+    return newsAdmin.getAll()
+  })
+
+  app.post('/', admin, async (request) => {
+    const data = newsCreateSchema.parse(request.body)
+    return newsAdmin.create(data)
+  })
+
+  app.patch('/:id', admin, async (request) => {
+    const { id } = idParamSchema.parse(request.params)
+    const data = newsUpdateSchema.parse(request.body)
+    return newsAdmin.update(id, data)
+  })
+
+  app.delete('/:id', admin, async (request, reply) => {
+    const { id } = idParamSchema.parse(request.params)
+    await newsAdmin.remove(id)
+    return reply.code(204).send()
   })
 }

@@ -1,5 +1,6 @@
-import { dishRepository } from './dish.repository.js'
-import type { DishQuery } from './dish.schema.js'
+import { dishRepository, dishRepositoryAdmin } from './dish.repository.js'
+import type { DishQuery, DishCreate, DishUpdate } from './dish.schema.js'
+import { AppError } from '../../shared/AppError.js'
 
 export const dishService = {
   async getMenu(query: DishQuery) {
@@ -42,5 +43,36 @@ export const dishService = {
       tags: filterOptions(tags),
       allergens: filterOptions(allergens),
     }
+  },
+}
+
+export const dishAdmin = {
+  async getAll() {
+    return dishRepositoryAdmin.findAll()
+  },
+
+  async getOptions() {
+    const [categories, tags, allergens] = await dishRepositoryAdmin.findOptions()
+    return { categories, tags, allergens }
+  },
+
+  async create(input: DishCreate) {
+    return dishRepositoryAdmin.create(input)
+  },
+
+  async update(id: string, input: DishUpdate) {
+    const existing = await dishRepositoryAdmin.findById(id)
+    if (!existing) {
+      throw AppError.notFound('Dish not found', 'DISH_NOT_FOUND')
+    }
+    return dishRepositoryAdmin.update(id, input)
+  },
+
+  async remove(id: string) {
+    const existing = await dishRepositoryAdmin.findById(id)
+    if (!existing) {
+      throw AppError.notFound('Dish not found', 'DISH_NOT_FOUND')
+    }
+    return dishRepositoryAdmin.remove(id)
   },
 }

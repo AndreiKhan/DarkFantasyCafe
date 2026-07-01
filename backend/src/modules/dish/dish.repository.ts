@@ -1,5 +1,5 @@
 import { prisma } from '../../db/prisma.js'
-import type { DishQuery } from './dish.schema.js'
+import type { DishQuery, DishCreate, DishUpdate } from './dish.schema.js'
 
 export const dishRepository = {
   findAll(filter: DishQuery) {
@@ -33,4 +33,79 @@ export const dishRepository = {
       prisma.allergen.findMany(),
     ])
   }
+}
+
+export const dishRepositoryAdmin = {
+  findAll() {
+    return prisma.dish.findMany({
+      orderBy: { createdAt: 'desc' },
+      include: {
+        category: true,
+        tags: true,
+        allergens: true
+      }
+    })
+  },
+
+  findById(id: string) {
+    return prisma.dish.findFirst({
+      where: { id },
+      include: {
+        category: true,
+        tags: true,
+        allergens: true
+      }
+    })
+  },
+
+  findOptions() {
+    return Promise.all([
+      prisma.category.findMany(),
+      prisma.tag.findMany(),
+      prisma.allergen.findMany(),
+    ])
+  },
+
+  create(input: DishCreate) {
+    return prisma.dish.create({
+      data: {
+        nameRu: input.nameRu,
+        nameEn: input.nameEn,
+        descriptionRu: input.descriptionRu,
+        descriptionEn: input.descriptionEn,
+        price: input.price,
+        images: input.images,
+        category: { connect: { id: input.categoryId } },
+        tags: { connect: input.tagIds.map((id) => ({ id })) },
+        allergens: { connect: input.allergenIds.map((id) => ({ id })) },
+      },
+      include: { category: true, tags: true, allergens: true },
+    })
+  },
+
+  update(id: string, input: DishUpdate) {
+    return prisma.dish.update({
+      where: { id },
+      data: {
+        deletedAt: null,
+        nameRu: input.nameRu,
+        nameEn: input.nameEn,
+        descriptionRu: input.descriptionRu,
+        descriptionEn: input.descriptionEn,
+        price: input.price,
+        images: input.images,
+        ...(input.categoryId !== undefined ? { category: { connect: { id: input.categoryId } } } : {}),
+        ...(input.tagIds !== undefined ? { tags: { set: input.tagIds.map((id) => ({ id })) } } : {}),
+        ...(input.allergenIds !== undefined ? { allergens: { set: input.allergenIds.map((id) => ({ id })) } } : {}),
+      },
+      include: { category: true, tags: true, allergens: true },
+    })
+  },
+
+  remove(id: string) {
+    return prisma.dish.update({
+      where: { id },
+      data: { deletedAt: new Date() }
+    })
+  },
 }

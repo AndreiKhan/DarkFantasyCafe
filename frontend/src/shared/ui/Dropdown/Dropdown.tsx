@@ -35,7 +35,7 @@ function Dropdown({ options, value, onChange, placeholder, label, error, disable
       }
 
       <button type="button" className="dropdown__head" disabled={disabled} onClick={() => setOpen((value) => !value)}>
-        {selected?.label ?? placeholder ?? ''}
+        {selected?.label ?? placeholder ?? 'выбрать'}
       </button>
 
       {open && 

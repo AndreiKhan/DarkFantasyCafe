@@ -55,7 +55,26 @@ export async function apiClient<T>(
   }
 
   if (!response.ok) {
-    throw new Error(`API error ${response.status}`)
+    // throw new Error(`API error ${response.status}`)
+    let message = `API error ${response.status}`
+    let code: string | undefined
+    try {
+      const body = (await response.json()) as { message?: string; code?: string }
+      if (body?.message) {
+        message = body.message
+      }
+      code = body?.code
+    } catch {
+      //
+    }
+    const error = new Error(message) as Error & { status?: number; code?: string }
+    error.status = response.status
+    error.code = code
+    throw error
+  }
+
+  if (response.status === 204) {
+    return undefined as T
   }
 
   return response.json() as Promise<T>

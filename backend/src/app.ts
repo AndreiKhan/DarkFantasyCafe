@@ -3,19 +3,25 @@ import cors from '@fastify/cors'
 import cookie from '@fastify/cookie'
 import { ZodError } from 'zod'
 import { AppError } from './shared/AppError.js'
-import { dishRoutes } from './modules/dish/dish.route.js'
+import { dishRoutes, dishAdminRoutes } from './modules/dish/dish.route.js'
 import { authRoutes } from './modules/auth/auth.route.js'
-import { newsRoutes } from './modules/news/news.route.js'
-import { userRoutes } from './modules/user/user.route.js'
+import { newsRoutes, newsAdminRoutes } from './modules/news/news.route.js'
+import { userRoutes, userAdminRoutes } from './modules/user/user.route.js'
 import { registerAuthGuard } from './plugins/auth.js'
-import { reservationRoutes } from './modules/reservation/reservation.route.js'
+import { reservationRoutes, reservationAdminRoutes } from './modules/reservation/reservation.route.js'
 import { reservationService } from './modules/reservation/reservation.service.js'
+import { tableAdminRoutes } from './modules/table/table.route.js'
 
 
 export function buildApp() {
   const app = Fastify({ logger: true })
 
-  app.register(cors, { origin: 'http://localhost:5173', credentials: true })
+  app.register(cors, {
+    origin: 'http://localhost:5173',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
   app.register(cookie)
 
   registerAuthGuard(app)
@@ -27,6 +33,18 @@ export function buildApp() {
     if (error instanceof AppError) {
       return reply.code(error.statusCode).send({ message: error.message, code: error.code })
     }
+
+    const prismaCode = (error as { code?: string }).code
+    if (prismaCode === 'P2002') {
+      return reply.code(409).send({ message: 'Resource already exists', code: 'ALREADY_EXISTS' })
+    }
+    if (prismaCode === 'P2025') {
+      return reply.code(404).send({ message: 'Resource not found', code: 'NOT_FOUND' })
+    }
+    if (prismaCode === 'P2003') {
+      return reply.code(409).send({ message: 'Resource is referenced by other records', code: 'REFERENCED' })
+    }
+
     app.log.error(error)
     return reply.code(500).send({ message: 'Internal server error' })
   })
@@ -36,6 +54,12 @@ export function buildApp() {
   app.register(reservationRoutes, { prefix: '/reservation' })
   app.register(newsRoutes, { prefix: '/news' })
   app.register(userRoutes, { prefix: '/user' })
+
+  app.register(newsAdminRoutes, { prefix: '/admin/news' })
+  app.register(dishAdminRoutes, { prefix: '/admin/dish' })
+  app.register(reservationAdminRoutes, { prefix: '/admin/reservation' })
+  app.register(userAdminRoutes, { prefix: '/admin/user' })
+  app.register(tableAdminRoutes, { prefix: '/admin/table' })
 
   app.post('/payments/yookassa/webhook', async (request, reply) => {
     const body = request.body as { object?: { metadata?: { reservationId?: string } } }

@@ -54,11 +54,79 @@ export interface ReservationSummary {
   items: ReservationItem[]
 }
 
-export interface CreateReservationInput {
+export interface CreateReservation {
   tableId: string
   date: string
   start: string
   duration: number
   guests: number
   dishes: { dishId: string; quantity: number }[]
+}
+
+export interface ReservationUserRef {
+  id: string
+  email: string
+  firstName: string
+  secondName: string
+}
+
+export interface ReservationTableRef {
+  id: string
+  number: number
+}
+
+export interface ReservationItemFull {
+  type: 'TIME' | 'DISH' | 'EXTRA'
+  dishId: string | null
+  titleRu: string
+  titleEn: string
+  unitPrice: number
+  quantity: number
+}
+
+export interface ReservationFull {
+  id: string
+  userId: string
+  tableId: string
+  startsAt: string
+  endsAt: string
+  guests: number
+  status: ReservationStatus
+  totalAmount: number
+  user: ReservationUserRef
+  table: ReservationTableRef
+  items: ReservationItemFull[]
+  createdAt: string
+  updatedAt: string
+}
+
+export interface ReservationDishLine {
+  dishId: string
+  quantity: number
+}
+
+export interface CreateReservationAdmin {
+  userId: string
+  tableId: string
+  startsAt: string
+  endsAt: string
+  guests: number
+  status: ReservationStatus
+  totalAmount: number
+  dishes: ReservationDishLine[]
+}
+
+export type UpdateReservationAdmin = Partial<CreateReservationAdmin> & { id: string }
+
+export interface ReservationDishOption {
+  id: string
+  nameRu: string
+  nameEn: string
+  price: number
+}
+
+export interface ReservationAdminOptions {
+  users: ReservationUserRef[]
+  tables: { id: string; number: number; zoneNameRu: string }[]
+  dishes: ReservationDishOption[]
 }

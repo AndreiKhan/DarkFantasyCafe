@@ -1,5 +1,5 @@
-import { newsRepository } from './news.repository.js'
-import type { NewsListQuery } from './news.schema.js'
+import { newsRepository, newsRepositoryAdmin } from './news.repository.js'
+import type { NewsListQuery, NewsCreate, NewsUpdate } from './news.schema.js'
 import type { News } from '../../../generated/prisma/index.js'
 import { AppError } from '../../shared/AppError.js'
 
@@ -41,5 +41,45 @@ export const newsService = {
       throw AppError.notFound('News not found', 'NEWS_NOT_FOUND')
     }
     return toDetail(news, lang)
+  },
+}
+
+async function assertSlugAvailable(slug: string, excludeId?: string) {
+  const existing = await newsRepositoryAdmin.findBySlug(slug)
+
+  if (existing && existing.id !== excludeId) {
+    throw AppError.conflict('Slug already in use', 'SLUG_TAKEN')
+  }
+}
+
+export const newsAdmin = {
+  async getAll() {
+    return await newsRepositoryAdmin.findAll()
+  },
+
+  async create(input: NewsCreate) {
+    await assertSlugAvailable(input.slug)
+    const publishedAt = input.status === 'PUBLISHED' ? new Date() : null
+    return newsRepositoryAdmin.create({ ...input, publishedAt })
+  },
+
+  async update(id: string, input: NewsUpdate) {
+    const existing = await newsRepositoryAdmin.findById(id)
+    if (!existing) {
+      throw AppError.notFound('News not found', 'NEWS_NOT_FOUND')
+    }
+    if (input.slug) {
+      await assertSlugAvailable(input.slug, id)
+    }
+    const publishedAt = input.status === 'PUBLISHED' && !existing.publishedAt ? new Date() : undefined
+    return newsRepositoryAdmin.update(id, { ...input, publishedAt })
+  },
+
+  async remove(id: string) {
+    const existing = await newsRepositoryAdmin.findById(id)
+    if (!existing) {
+      throw AppError.notFound('News not found', 'NEWS_NOT_FOUND')
+    }
+    return newsRepositoryAdmin.remove(id)
   },
 }

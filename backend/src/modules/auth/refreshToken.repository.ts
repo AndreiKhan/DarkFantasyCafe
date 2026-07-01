@@ -16,4 +16,17 @@ export const refreshTokenRepository = {
   deleteByUser(userId: string) {
     return prisma.refreshToken.deleteMany({ where: { userId } })
   },
+
+  deleteByIds(userId: string, ids: string[]) {
+    return prisma.refreshToken.deleteMany({ where: { userId, id: { in: ids } } })
+  },
+
+  deleteExpiredForUser(userId: string) {
+    return prisma.refreshToken.deleteMany({
+      where: {
+        userId,
+        expiresAt: { lt: new Date() },
+      },
+    })
+  },
 }

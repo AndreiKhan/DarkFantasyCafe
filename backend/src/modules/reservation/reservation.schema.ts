@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { workingDateTime } from '../../shared/schemas.js'
 
 export const tablesQuerySchema = z.object({
   lang: z.enum(['ru', 'en']).default('ru'),
@@ -24,4 +25,26 @@ export const createReservationSchema = z.object({
   .default([]),
 })
 
-export type CreateReservationInput = z.infer<typeof createReservationSchema>
+export type CreateReservation = z.infer<typeof createReservationSchema>
+
+export const reservationCreateSchema = z.object({
+  userId: z.string().uuid(),
+  tableId: z.string().uuid(),
+  startsAt: workingDateTime,
+  endsAt: workingDateTime,
+  guests: z.coerce.number().int().min(1),
+  status: z.enum(['DRAFT', 'PENDING_PAYMENT', 'CONFIRMED', 'CANCELLED']),
+  totalAmount: z.coerce.number().int().min(0),
+  dishes: z
+    .array(z.object({
+      dishId: z.string().uuid(),
+      quantity: z.coerce.number().int().min(1).max(10),
+    }))
+    .default([]),
+})
+
+export type ReservationCreate = z.infer<typeof reservationCreateSchema>
+
+export const reservationUpdateSchema = reservationCreateSchema.partial()
+
+export type ReservationUpdate = z.infer<typeof reservationUpdateSchema>

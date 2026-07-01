@@ -1,9 +1,7 @@
 import type { Dish, DishFilters } from '../model/types'
-// import { mockDishes } from '../mocks/dishes'
 import { apiClient } from '@/shared/api'
 
 export function getDishes(params: { lang: string } & DishFilters): Promise<Dish[]> {
-  // return Promise.resolve(mockDishes)
   const search = new URLSearchParams()
   search.set('lang', params.lang)
   if (params.category) {

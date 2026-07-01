@@ -7,4 +7,5 @@ export const ROUTES = {
   reserveSuccess: '/reserve/success',
   news: '/news',
   profile: '/profile',
+  admin: '/admin',
 } as const
