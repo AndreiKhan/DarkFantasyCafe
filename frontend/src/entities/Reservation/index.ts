@@ -5,6 +5,11 @@ export type { ReservationStatus,
   AvailabilityParams,
   AvailabilityTable,
   AvailabilityZone,
+  MastersParams,
+  MasterOption,
+  MastersResponse,
+  AdminMastersParams,
+  MasterSessionType,
   ReservationFull,
   ReservationItemFull,
   ReservationUserRef,
@@ -20,6 +25,8 @@ export { createReservation } from './api/createReservation'
 export { useCreateReservation } from './api/useCreateReservation'
 export { getAvailability } from './api/getAvailability'
 export { useAvailability } from './api/useAvailability'
+export { getMasters } from './api/getMasters'
+export { useMasters } from './api/useMasters'
 export { payReservation } from './api/payReservation'
 export { usePayReservation } from './api/usePayReservation'
 export { useReservationStatus } from './api/useReservationStatus'

@@ -1,7 +1,7 @@
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-
+import { PhoneInput } from '@/shared/ui'
 const loginSchema = z.object({
   email: z.string().email('Некорректный email'),
   password: z.string().min(8, 'Минимум 8 символов'),
@@ -10,7 +10,10 @@ const loginSchema = z.object({
 const registerSchema = loginSchema.extend({
   firstName: z.string().min(1, 'имя'),
   secondName: z.string().min(1, 'фамилия'),
-  phone: z.string().min(5, 'телефон'),
+  phone: z.union([
+    z.string().regex(/^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/, 'Формат: +7 (999) 123-45-67'),
+    z.literal(''),
+  ]).optional(),
 })
 
 export type LoginValues = z.infer<typeof loginSchema>
@@ -24,7 +27,7 @@ function AuthForm({ mode, submitLabel, onSubmit, error }: {
  }) {
   const isRegister = mode === 'registration'
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterValues>({
+  const { register, handleSubmit, control, formState: { errors, isSubmitting } } = useForm<RegisterValues>({
     resolver: zodResolver(isRegister ? registerSchema : loginSchema),
   })
 
@@ -52,9 +55,19 @@ function AuthForm({ mode, submitLabel, onSubmit, error }: {
           </label>
           <label>
             Телефон
-            <input type="tel" {...register('phone')} />
-            {errors.phone &&
-              <span>
+            <Controller
+              name="phone"
+              control={control}
+              render={({ field }) => (
+                <PhoneInput
+                  name={field.name}
+                  value={field.value ?? ''}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                />
+              )}
+            />
+            {errors.phone &&              <span>
                 {errors.phone.message}
               </span>
             }

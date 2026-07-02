@@ -6,6 +6,14 @@ export const dishRepository = {
     return prisma.dish.findMany({
       where: {
         deletedAt: null,
+        ...(filter.keywordSearch
+          ? {
+              OR: [
+                { nameRu: { contains: filter.keywordSearch, mode: 'insensitive' } },
+                { nameEn: { contains: filter.keywordSearch, mode: 'insensitive' } },
+              ],
+            }
+          : {}),
         ...(filter.category
           ? { category: { slug: filter.category } }
           : {}),
@@ -36,8 +44,18 @@ export const dishRepository = {
 }
 
 export const dishRepositoryAdmin = {
-  findAll() {
+  findAll(keywordSearch?: string) {
     return prisma.dish.findMany({
+      where: keywordSearch
+        ? {
+            OR: [
+              { nameRu: { contains: keywordSearch, mode: 'insensitive' } },
+              { nameEn: { contains: keywordSearch, mode: 'insensitive' } },
+              { descriptionRu: { contains: keywordSearch, mode: 'insensitive' } },
+              { descriptionEn: { contains: keywordSearch, mode: 'insensitive' } },
+            ],
+          }
+        : {},
       orderBy: { createdAt: 'desc' },
       include: {
         category: true,

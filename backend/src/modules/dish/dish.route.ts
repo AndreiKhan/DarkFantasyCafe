@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { dishService, dishAdmin } from './dish.service.js'
 import { dishQuerySchema, dishCreateSchema, dishUpdateSchema } from './dish.schema.js'
-import { langSchema, idParamSchema } from '../../shared/schemas.js'
+import { langSchema, idParamSchema, searchQuerySchema } from '../../shared/schemas.js'
 import { requireRole } from '../../plugins/auth.js'
 
 export async function dishRoutes(app: FastifyInstance) {
@@ -18,8 +18,9 @@ export async function dishRoutes(app: FastifyInstance) {
 export async function dishAdminRoutes(app: FastifyInstance) {
   const admin = { preHandler: [app.authenticate, requireRole('ADMIN')] }
 
-  app.get('/all', admin, async () => {
-    return dishAdmin.getAll()
+  app.get('/all', admin, async (request) => {
+    const { keywordSearch } = searchQuerySchema.parse(request.query)
+    return dishAdmin.getAll(keywordSearch)
   })
 
   app.get('/options', admin, async () => {

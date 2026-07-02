@@ -2,7 +2,7 @@ import {
   useAdminNews, useCreateNews, useUpdateNews, useDeleteNews,
   newsFormSchema, type CreateNews, type NewsFull,
 } from '@/entities/News'
-import { AdminModal, Dropdown, ArrayField, DateTimeField } from '@/shared/ui'
+import { AdminModal, Dropdown, ArrayField, DateTimeField, KeywordSearchField } from '@/shared/ui'
 import { slugify } from '@/shared/lib/slugify'
 import { formatReadOnlyValue } from '@/shared/lib/datetime'
 import { useEffect, useRef, useState } from 'react'
@@ -42,7 +42,8 @@ const toForm = (item: NewsFull): CreateNews =>
   ) as CreateNews
 
 function NewsAdminList() {
-  const { data, isLoading, isError } = useAdminNews()
+  const [query, setQuery] = useState('')
+  const { data, isLoading, isError } = useAdminNews(query)
   const create = useCreateNews()
   const update = useUpdateNews()
   const del = useDeleteNews()
@@ -101,6 +102,8 @@ function NewsAdminList() {
       <button type="button" onClick={openCreate}>
         Создать новость
       </button>
+
+      <KeywordSearchField onSearch={setQuery} placeholder="Slug, заголовок, текст..." />
 
       {data.map((item) => (
         <div key={item.id} onClick={() => openEdit(item)}>

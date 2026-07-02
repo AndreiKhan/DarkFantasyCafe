@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { getAdminUsers } from './getAdminUsers'
 
-export function useAdminUsers() {
+export function useAdminUsers(keywordSearch?: string) {
   return useQuery({
-    queryKey: ['adminUsers'],
-    queryFn: () => getAdminUsers(),
+    queryKey: ['adminUsers', keywordSearch ?? ''],
+    queryFn: () => getAdminUsers(keywordSearch),
+    placeholderData: (prev) => prev,
   })
 }

@@ -47,8 +47,8 @@ export const dishService = {
 }
 
 export const dishAdmin = {
-  async getAll() {
-    return dishRepositoryAdmin.findAll()
+  async getAll(keywordSearch?: string) {
+    return dishRepositoryAdmin.findAll(keywordSearch)
   },
 
   async getOptions() {

@@ -1,6 +1,7 @@
 import { z } from 'zod'
+import { searchQuerySchema } from '../../shared/schemas.js'
 
-export const dishQuerySchema = z.object({
+export const dishQuerySchema = searchQuerySchema.extend({
   lang: z.enum(['ru', 'en']).default('ru'),
   category: z.string().optional(),
   tags: z.string().optional().transform((s) => (s ? s.split(',') : [])),

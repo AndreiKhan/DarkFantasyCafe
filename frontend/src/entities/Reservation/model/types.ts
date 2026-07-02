@@ -34,6 +34,31 @@ export interface AvailabilityParams {
   guests: number
 }
 
+export interface MastersParams {
+  date: string
+  start: string
+  duration: number
+}
+
+export interface MasterOption {
+  id: string
+  name: string
+  available: boolean
+}
+
+export interface MastersResponse {
+  prices: { oneshot: number; campaign: number }
+  masters: MasterOption[]
+}
+
+export interface AdminMastersParams {
+  startsAt: string
+  endsAt: string
+  excludeId?: string
+}
+
+export type MasterSessionType = 'ONESHOT' | 'CAMPAIGN'
+
 export type ReservationStatus = 'DRAFT' | 'PENDING_PAYMENT' | 'CONFIRMED' | 'CANCELLED'
 
 export interface ReservationItem {
@@ -56,6 +81,8 @@ export interface ReservationSummary {
 
 export interface CreateReservation {
   tableId: string
+  masterId?: string | null
+  masterSessionType?: MasterSessionType | null
   date: string
   start: string
   duration: number
@@ -87,6 +114,8 @@ export interface ReservationItemFull {
 export interface ReservationFull {
   id: string
   userId: string
+  masterId: string | null
+  masterSessionType: MasterSessionType | null
   tableId: string
   startsAt: string
   endsAt: string
@@ -107,6 +136,8 @@ export interface ReservationDishLine {
 
 export interface CreateReservationAdmin {
   userId: string
+  masterId: string | null
+  masterSessionType: MasterSessionType | ''
   tableId: string
   startsAt: string
   endsAt: string

@@ -1,4 +1,4 @@
-import type { AvailabilityParams, AvailabilityTable, AvailabilityZone } from '@/entities/Reservation'
+import type { AvailabilityParams, AvailabilityTable, AvailabilityZone, MasterOption, MasterSessionType } from '@/entities/Reservation'
 import { buildStartOptions, buildDurationOptions, todayStr } from './options'
 import { HallMap } from './HallMap'
 import { ZoneList } from './ZoneList'
@@ -15,6 +15,12 @@ export function StepWindow({
   selectedTable,
   selectedZone,
   onSelectTable,
+  masters,
+  masterPrices,
+  masterId,
+  onSelectMaster,
+  masterSessionType,
+  onSelectMasterSessionType,
   isLoading,
   isError,
   onNext,
@@ -27,12 +33,53 @@ export function StepWindow({
   selectedTable: AvailabilityTable | undefined
   selectedZone: AvailabilityZone | undefined
   onSelectTable: (table: AvailabilityTable) => void
+  masters: MasterOption[]
+  masterPrices?: { oneshot: number; campaign: number }
+  masterId: string
+  onSelectMaster: (id: string) => void
+  masterSessionType: MasterSessionType | ''
+  onSelectMasterSessionType: (type: MasterSessionType | '') => void
   isLoading: boolean
   isError: boolean
   onNext: () => void
 }) {
   return (
     <>
+      <div className="reserve__master">
+        <span>Мастер</span>
+        <select
+          className="reserve-input"
+          value={masterId}
+          onChange={(e) => onSelectMaster(e.target.value)}
+        >
+          <option value="">Без мастера</option>
+          {masters.map((master) => (
+            <option key={master.id} value={master.id} disabled={!master.available}>
+              {master.name}{master.available ? '' : ' (занят)'}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {masterId && (
+        <div className="reserve__master">
+          <span>Тип истории</span>
+          <select
+            className="reserve-input"
+            value={masterSessionType}
+            onChange={(e) => onSelectMasterSessionType(e.target.value as MasterSessionType | '')}
+          >
+            <option value="">Выберите тип</option>
+            {masterPrices && (
+              <>
+                <option value="ONESHOT">Короткая (oneshot) — {masterPrices.oneshot} ₽</option>
+                <option value="CAMPAIGN">Длинная (кампания) — {masterPrices.campaign} ₽</option>
+              </>
+            )}
+          </select>
+        </div>
+      )}
+
       <div className="reserve__summary">
         {selectedTable && selectedZone ? (
           <p>
@@ -45,7 +92,7 @@ export function StepWindow({
         <button
           type="button"
           className="reserve__next"
-          disabled={!selectedId}
+          disabled={!selectedId || Boolean(masterId && !masterSessionType)}
           onClick={onNext}
         >
           дальше

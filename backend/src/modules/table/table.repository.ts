@@ -2,8 +2,21 @@ import { prisma } from '../../db/prisma.js'
 import type { TableCreate, TableUpdate } from './table.schema.js'
 
 export const tableRepositoryAdmin = {
-  findAll() {
-    return prisma.table.findMany({ orderBy: { number: 'asc' }, include: { zone: true } })
+  findAll(keywordSearch?: string) {
+    const num = keywordSearch !== undefined && keywordSearch !== '' && Number.isInteger(Number(keywordSearch)) ? Number(keywordSearch) : null
+    return prisma.table.findMany({
+      where: keywordSearch
+        ? {
+            OR: [
+              { zone: { nameRu: { contains: keywordSearch, mode: 'insensitive' } } },
+              { zone: { nameEn: { contains: keywordSearch, mode: 'insensitive' } } },
+              ...(num !== null ? [{ number: num }] : []),
+            ],
+          }
+        : {},
+      orderBy: { number: 'asc' },
+      include: { zone: true },
+    })
   },
 
   findById(id: string) {

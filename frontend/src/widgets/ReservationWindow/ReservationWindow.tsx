@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import './ReservationWindow.scss'
-import { useAvailability, type AvailabilityParams, type AvailabilityTable, type ReservationSummary } from '@/entities/Reservation'
+import { useAvailability, useMasters, type AvailabilityParams, type AvailabilityTable, type MasterSessionType, type ReservationSummary } from '@/entities/Reservation'
 import { todayStr } from './options'
 import { StepWindow } from './StepWindow'
 import { StepDishes } from './StepDishes'
@@ -18,6 +18,8 @@ function ReservationWindow() {
   })
 
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [masterId, setMasterId] = useState<string>('')
+  const [masterSessionType, setMasterSessionType] = useState<MasterSessionType | ''>('')
   const [step, setStep] = useState<Step>(1)
   const [dishQuantity, setDishQuantity] = useState<Record<string, number>>({})
   const [reservation, setReservation] = useState<ReservationSummary | null>(null)
@@ -25,6 +27,14 @@ function ReservationWindow() {
   const { data, isLoading, isError } = useAvailability(params)
   const zones = data?.zones ?? []
   const allTables = zones.flatMap((zone) => zone.tables)
+
+  const { data: mastersData } = useMasters({
+    date: params.date,
+    start: params.start,
+    duration: params.duration,
+  })
+  const masterList = mastersData?.masters ?? []
+  const masterPrices = mastersData?.prices
 
   useEffect(() => {
     if (!selectedId) {
@@ -37,6 +47,26 @@ function ReservationWindow() {
       setSelectedId(null)
     }
   }, [data])
+
+  useEffect(() => {
+    if (!masterId) {
+      return
+    }
+
+    const master = masterList.find((m) => m.id === masterId)
+
+    if (!master || !master.available) {
+      setMasterId('')
+      setMasterSessionType('')
+    }
+  }, [mastersData])
+
+  const selectMaster = (id: string) => {
+    setMasterId(id)
+    if (!id) {
+      setMasterSessionType('')
+    }
+  }
 
   const update = (patch: Partial<AvailabilityParams>) => setParams((p) => ({ ...p, ...patch }))
 
@@ -82,6 +112,12 @@ function ReservationWindow() {
             selectedTable={selectedTable}
             selectedZone={selectedZone}
             onSelectTable={selectTable}
+            masters={masterList}
+            masterPrices={masterPrices}
+            masterId={masterId}
+            onSelectMaster={selectMaster}
+            masterSessionType={masterSessionType}
+            onSelectMasterSessionType={setMasterSessionType}
             isLoading={isLoading}
             isError={isError}
             onNext={() => setStep(2)}
@@ -103,6 +139,10 @@ function ReservationWindow() {
             table={selectedTable}
             zone={selectedZone}
             dishQuantity={dishQuantity}
+            masterId={masterId}
+            masterSessionType={masterSessionType}
+            master={masterList.find((m) => m.id === masterId) ?? null}
+            masterPrices={masterPrices}
             onBack={() => setStep(2)}
             onCreated={(r) => {
               setReservation(r);

@@ -4,6 +4,7 @@ import { ThemeSwitcher } from '@/features/ThemeSwitcher'
 import { LanguageSwitcher } from '@/features/LanguageSwitcher'
 import { Link } from 'react-router-dom'
 import { useMe, useLogout } from '@/entities/Auth'
+import { ROUTES } from '@/shared/config/routes'
 
 
 function Header() {
@@ -49,9 +50,14 @@ function Header() {
           </nav>
           <div className='header__menu'>
             {isAuth ? (
-              <button type='button' className='header__profile' onClick={() => logout.mutate()}>
-                Выйти
-              </button>
+              <>
+                <Link to={ROUTES.profileUser(data!.user.sub)} className='header__profile'>
+                  Профиль
+                </Link>
+                <button type='button' className='header__profile' onClick={() => logout.mutate()}>
+                  Выйти
+                </button>
+              </>
             ) : (
               <Link to='/login' className='header__profile'>
                 Войти

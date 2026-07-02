@@ -2,7 +2,7 @@ import {
   useAdminDishes, useDishOptions, useCreateDish, useUpdateDish, useDeleteDish,
   dishFormSchema, type CreateDish, type DishFull, type DishAdminOptions,
 } from '@/entities/Dish'
-import { AdminModal, Dropdown, ArrayField } from '@/shared/ui'
+import { AdminModal, Dropdown, ArrayField, KeywordSearchField } from '@/shared/ui'
 import { formatReadOnlyValue } from '@/shared/lib/datetime'
 import { Controller, FormProvider, useFormContext } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
@@ -34,7 +34,8 @@ const toForm = (item: DishFull): CreateDish => ({
 })
 
 function DishAdminList() {
-  const { data, isLoading, isError } = useAdminDishes()
+  const [query, setQuery] = useState('')
+  const { data, isLoading, isError } = useAdminDishes(query)
   const { data: options } = useDishOptions()
   const create = useCreateDish()
   const update = useUpdateDish()
@@ -96,6 +97,8 @@ function DishAdminList() {
       <button type="button" onClick={openCreate}>
         Создать блюдо
       </button>
+
+      <KeywordSearchField onSearch={setQuery} placeholder="Название, описание..." />
 
       {data.map((item) => (
         <div key={item.id} onClick={() => openEdit(item)}>

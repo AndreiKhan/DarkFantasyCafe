@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './Menu.scss'
 import { useDishes, useDishFilters, type DishFilters, type DishRef, DishCard } from '@/entities/Dish'
-import { Pagination } from '@/shared/ui'
+import { KeywordSearchField, Pagination } from '@/shared/ui'
 
 function FilterGroup({ title, options, isActive, onSelect, className }: {
   title: string
@@ -112,13 +112,20 @@ function Menu({ dishQuantity, onQuantityChange }: {
             onSelect={toggleAllergen}
           />
 
-          <div className='menu__filter-type menu__filter-sort'>
-            <h4 className='menu__filter-title'>
-              Sort
-            </h4>
-            <button type='button' className='menu__sort-type' onClick={toggleSort}>
-              {filters.sort === 'price_desc' ? 'Price: High to Low' : 'Price: Low to High'}
-            </button>
+          <div>
+            <div className='menu__filter-type menu__filter-sort'>
+              <h4 className='menu__filter-title'>
+                Sort
+              </h4>
+              <button type='button' className='menu__sort-type' onClick={toggleSort}>
+                {filters.sort === 'price_desc' ? 'Price: High to Low' : 'Price: Low to High'}
+              </button>
+            </div>
+
+            <KeywordSearchField
+              onSearch={(text) => setFilters((filter) => ({ ...filter, keywordSearch: text || undefined }))}
+              placeholder='Название...'
+            />
           </div>
         </form>
 

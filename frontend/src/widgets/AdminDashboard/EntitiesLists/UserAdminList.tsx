@@ -3,7 +3,7 @@ import {
   userFormSchema, type CreateUser, type UserFull,
 } from '@/entities/User'
 import { useAdminReservations, type ReservationFull } from '@/entities/Reservation'
-import { AdminModal, Dropdown } from '@/shared/ui'
+import { AdminModal, Dropdown, KeywordSearchField, PhoneInput } from '@/shared/ui'
 import { formatDateTime, formatReadOnlyValue } from '@/shared/lib/datetime'
 import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -16,12 +16,14 @@ const EMPTY_USER: CreateUser = {
   secondName: '',
   phone: '',
   image: '',
+  bio: '',
   role: 'USER',
 }
 
 const ROLE_OPTIONS = [
   { value: 'USER', label: 'USER' },
   { value: 'ADMIN', label: 'ADMIN' },
+  { value: 'MASTER', label: 'MASTER' },
 ]
 
 const toForm = (item: UserFull): CreateUser => ({
@@ -29,13 +31,15 @@ const toForm = (item: UserFull): CreateUser => ({
   password: '',
   firstName: item.firstName,
   secondName: item.secondName,
-  phone: item.phone,
+  phone: item.phone ?? '',
   image: item.image ?? '',
+  bio: item.bio ?? '',
   role: item.role,
 })
 
 function UserAdminList() {
-  const { data, isLoading, isError } = useAdminUsers()
+  const [query, setQuery] = useState('')
+  const { data, isLoading, isError } = useAdminUsers(query)
   const { data: reservations } = useAdminReservations()
   const create = useCreateUser()
   const update = useUpdateUser()
@@ -88,6 +92,10 @@ function UserAdminList() {
       )
 
     } else {
+      if (!values.password) {
+        methods.setError('password', { message: 'Минимум 8 символов' })
+        return
+      }
       create.mutate(values, { onSuccess: close })
     }
   }
@@ -104,6 +112,8 @@ function UserAdminList() {
       <button type="button" onClick={openCreate}>
         Создать пользователя
       </button>
+
+      <KeywordSearchField onSearch={setQuery} placeholder="Email, имя, телефон, bio..." />
 
       {data.map((item) => (
         <div key={item.id} onClick={() => openEdit(item)}>
@@ -146,6 +156,7 @@ function UserForm({ meta, reservations, removedTokenIds, onRemoveToken }: {
     ['secondName', 'Фамилия'],
     ['phone', 'Телефон'],
     ['image', 'Изображение (URL)'],
+    ['bio', 'О себе'],
   ]
 
   const readOnly: [keyof UserFull, string][] = [
@@ -198,10 +209,54 @@ function UserForm({ meta, reservations, removedTokenIds, onRemoveToken }: {
         </div>
       )}
 
+      {meta && (
+        <div>
+          <span>Персонажи:</span>
+          {meta.characters.length === 0 && <p>—</p>}
+          {meta.characters.map((character) => (
+            <div key={character.id} className="news-form__readonly">
+              <p><strong>Имя:</strong> {character.name}</p>
+              <p><strong>Уровень:</strong> {character.level}</p>
+              <p><strong>Класс:</strong> {character.class}</p>
+              <p><strong>Раса:</strong> {character.race}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {meta && (
+        <div>
+          <span>Достижения:</span>
+          {meta.achievements.length === 0 && <p>—</p>}
+          {meta.achievements.map((achievement) => (
+            <div key={achievement.id} className="news-form__readonly">
+              <p><strong>Название:</strong> {achievement.nameRu}</p>
+              <p><strong>Статус:</strong> {achievement.status}</p>
+              <p><strong>Бонусы:</strong> {achievement.bonuses}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
       {texts.map(([key, label]) => (
         <label key={key}>
           {label}
-          <input {...register(key)} />
+          {key === 'phone' ? (
+            <Controller
+              name="phone"
+              control={control}
+              render={({ field }) => (
+                <PhoneInput
+                  name={field.name}
+                  value={field.value ?? ''}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                />
+              )}
+            />
+          ) : (
+            <input {...register(key)} />
+          )}
           {errors[key] &&
             <span className="news-form__error">
               {errors[key]?.message}

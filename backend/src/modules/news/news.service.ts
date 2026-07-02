@@ -53,8 +53,8 @@ async function assertSlugAvailable(slug: string, excludeId?: string) {
 }
 
 export const newsAdmin = {
-  async getAll() {
-    return await newsRepositoryAdmin.findAll()
+  async getAll(keywordSearch?: string) {
+    return await newsRepositoryAdmin.findAll(keywordSearch)
   },
 
   async create(input: NewsCreate) {

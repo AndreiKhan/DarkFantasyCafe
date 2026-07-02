@@ -1,14 +1,18 @@
 import { Link } from 'react-router-dom'
-import type { AvailabilityParams, AvailabilityTable, AvailabilityZone, ReservationSummary } from '@/entities/Reservation'
+import type { AvailabilityParams, AvailabilityTable, AvailabilityZone, MasterOption, MasterSessionType, ReservationSummary } from '@/entities/Reservation'
 import { useCreateReservation } from '@/entities/Reservation'
 import { useDishes } from '@/entities/Dish'
 import { useMe } from '@/entities/Auth'
 
-export function StepConfirm({ params, table, zone, dishQuantity, onBack, onCreated }: {
+export function StepConfirm({ params, table, zone, dishQuantity, masterId, masterSessionType, master, masterPrices, onBack, onCreated }: {
   params: AvailabilityParams
   table: AvailabilityTable
   zone: AvailabilityZone
   dishQuantity: Record<string, number>
+  masterId: string
+  masterSessionType: MasterSessionType | ''
+  master: MasterOption | null
+  masterPrices?: { oneshot: number; campaign: number }
   onBack: () => void
   onCreated: (reserve: ReservationSummary) => void
 }) {
@@ -22,12 +26,22 @@ export function StepConfirm({ params, table, zone, dishQuantity, onBack, onCreat
     .filter((q) => q.quantity > 0)
 
   const dishesTotal = chosen.reduce((p, d) => p + d.dish.price * d.quantity, 0)
-  const total = zone.price + dishesTotal
+  const masterTotal = masterId && masterSessionType && masterPrices
+    ? (masterSessionType === 'CAMPAIGN' ? masterPrices.campaign : masterPrices.oneshot)
+    : 0
+  const sessionLabel = masterSessionType === 'CAMPAIGN'
+    ? 'Длинная (кампания)'
+    : masterSessionType === 'ONESHOT'
+      ? 'Короткая (oneshot)'
+      : ''
+  const total = zone.price + dishesTotal + masterTotal
 
   const handleConfirm = () => {
     create.mutate(
       {
         tableId: table.id,
+        masterId: masterId || null,
+        masterSessionType: masterId && masterSessionType ? masterSessionType : null,
         date: params.date,
         start: params.start,
         duration: params.duration,
@@ -50,6 +64,11 @@ export function StepConfirm({ params, table, zone, dishQuantity, onBack, onCreat
         <li>
           гостей: {params.guests}
         </li>
+        {master && masterSessionType && (
+          <li>
+            Мастер: {master.name} ({sessionLabel}) — {masterTotal} ₽
+          </li>
+        )}
         <li>
           Стоимость стола: {zone.price} ₽
         </li>

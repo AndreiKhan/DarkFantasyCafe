@@ -2,23 +2,44 @@ import argon2 from 'argon2'
 import { userRepository, userRepositoryAdmin } from './user.repository.js'
 import { refreshTokenRepository } from '../auth/refreshToken.repository.js'
 import { AppError } from '../../shared/AppError.js'
-import type { UserCreate, UserUpdate } from './user.schema.js'
+import type { UserCreate, UserSelfUpdate, UserUpdate } from './user.schema.js'
 
 export const userService = {
-  async getProfile(userId: string) {
-    const user = await userRepository.findById(userId)
+  async getProfile(profileId: string, viewerId: string | null) {
+    const isOwn = viewerId === profileId
+
+    const user = isOwn
+      ? await userRepository.findById(profileId)
+      : await userRepository.findByPublicId(profileId)
 
     if (!user) {
       throw AppError.notFound('User not found', 'USER_NOT_FOUND')
     }
-    
+
     return user
+  },
+
+  async updateProfile(userId: string, input: UserSelfUpdate) {
+    const existing = await userRepository.findById(userId)
+
+    if (!existing) {
+      throw AppError.notFound('User not found', 'USER_NOT_FOUND')
+    }
+    
+    return userRepository.updateProfile(userId, {
+      firstName: input.firstName,
+      secondName: input.secondName,
+      email: input.email,
+      phone: input.phone === '' ? null : input.phone,
+      image: input.image,
+      bio: input.bio,
+    })
   },
 }
 
 export const userAdmin = {
-  async getAll() {
-    return userRepositoryAdmin.findAll()
+  async getAll(keywordSearch?: string) {
+    return userRepositoryAdmin.findAll(keywordSearch)
   },
 
   async create(input: UserCreate) {
@@ -34,8 +55,9 @@ export const userAdmin = {
       passwordHash,
       firstName: input.firstName,
       secondName: input.secondName,
-      phone: input.phone,
+      phone: input.phone || null,
       image: input.image ?? null,
+      bio: input.bio ?? null,
       role: input.role,
     })
   },
@@ -55,8 +77,9 @@ export const userAdmin = {
       email: input.email,
       firstName: input.firstName,
       secondName: input.secondName,
-      phone: input.phone,
+      phone: input.phone === '' ? null : input.phone,
       image: input.image,
+      bio: input.bio,
       role: input.role,
     })
   },

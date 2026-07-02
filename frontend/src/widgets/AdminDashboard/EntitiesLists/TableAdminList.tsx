@@ -9,7 +9,7 @@ import {
   type TableFull,
   type TableAdminZones,
 } from '@/entities/Table'
-import { AdminModal, Dropdown } from '@/shared/ui'
+import { AdminModal, Dropdown, KeywordSearchField } from '@/shared/ui'
 import { formatReadOnlyValue } from '@/shared/lib/datetime'
 import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -34,7 +34,8 @@ const toForm = (item: TableFull): CreateTable => ({
 })
 
 function TableAdminList() {
-  const { data, isLoading, isError } = useAdminTables()
+  const [query, setQuery] = useState('')
+  const { data, isLoading, isError } = useAdminTables(query)
   const { data: zones } = useTableZones()
   
   const create = useCreateTable()
@@ -97,6 +98,8 @@ function TableAdminList() {
       <button type="button" onClick={openCreate}>
         Создать столик
       </button>
+
+      <KeywordSearchField onSearch={setQuery} placeholder="Зона или номер стола..." />
 
       {data.map((item) => (
         <div

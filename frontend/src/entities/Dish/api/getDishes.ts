@@ -4,6 +4,9 @@ import { apiClient } from '@/shared/api'
 export function getDishes(params: { lang: string } & DishFilters): Promise<Dish[]> {
   const search = new URLSearchParams()
   search.set('lang', params.lang)
+  if (params.keywordSearch) {
+    search.set('keywordSearch', params.keywordSearch)
+  }
   if (params.category) {
     search.set('category', params.category)
   }

@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, redirect } from 'react-router-dom'
 import { default as RequireRole } from './RequireRole'
 import MainLayout from '@/app/layouts/MainLayout'
 import AdminLayout from '@/app/layouts/AdminLayout'
@@ -11,6 +11,7 @@ import NewsPage from '@/pages/NewsPage/NewsPage'
 import NewsSlugPage from '@/pages/NewsSlugPage/NewsSlugPage'
 import ProfilePage from '@/pages/ProfilePage/ProfilePage'
 import AdminPage from '@/pages/AdminPage/AdminPage'
+import { getMe } from '@/entities/Auth'
 
 export const router = createBrowserRouter([
   {
@@ -23,7 +24,18 @@ export const router = createBrowserRouter([
       { path: 'reserve/success', element: <ReservationSuccessPage /> },
       { path: 'news', element: <NewsPage /> },
       { path: 'news/:slug', element: <NewsSlugPage /> },
-      { path: 'profile', element: <ProfilePage /> },
+      {
+        path: 'profile',
+        loader: async () => {
+          try {
+            const { user } = await getMe()
+            return redirect(`/profile/${user.sub}`)
+          } catch {
+            return redirect('/login')
+          }
+        },
+      },
+      { path: 'profile/:userId', element: <ProfilePage /> },
     ],
   },
   {

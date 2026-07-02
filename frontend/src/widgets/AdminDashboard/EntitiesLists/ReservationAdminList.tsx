@@ -1,17 +1,19 @@
 import {
-  useAdminReservations, useReservationOptions,
+  useAdminReservations, useReservationOptions, useMasters,
   useCreateReservationAdmin, useUpdateReservationAdmin, useDeleteReservationAdmin,
   reservationFormSchema, type CreateReservationAdmin,
   type ReservationFull, type ReservationAdminOptions,
 } from '@/entities/Reservation'
-import { AdminModal, Dropdown, DateTimeField } from '@/shared/ui'
+import { AdminModal, Dropdown, DateTimeField, KeywordSearchField } from '@/shared/ui'
 import { formatReadOnlyValue } from '@/shared/lib/datetime'
-import { Controller, FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form'
+import { Controller, FormProvider, useFieldArray, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 
 const EMPTY_RESERVATION: CreateReservationAdmin = {
   userId: '',
+  masterId: '',
+  masterSessionType: '',
   tableId: '',
   startsAt: '',
   endsAt: '',
@@ -30,6 +32,8 @@ const STATUS_OPTIONS = [
 
 const toForm = (item: ReservationFull): CreateReservationAdmin => ({
   userId: item.userId,
+  masterId: item.masterId ?? '',
+  masterSessionType: item.masterSessionType ?? '',
   tableId: item.tableId,
   startsAt: item.startsAt,
   endsAt: item.endsAt,
@@ -42,7 +46,8 @@ const toForm = (item: ReservationFull): CreateReservationAdmin => ({
 })
 
 function ReservationAdminList() {
-  const { data, isLoading, isError } = useAdminReservations()
+  const [query, setQuery] = useState('')
+  const { data, isLoading, isError } = useAdminReservations(query)
   const { data: options } = useReservationOptions()
   const create = useCreateReservationAdmin()
   const update = useUpdateReservationAdmin()
@@ -79,10 +84,17 @@ function ReservationAdminList() {
   }
 
   const save = (values: CreateReservationAdmin) => {
+    const payload = {
+      ...values,
+      masterId: values.masterId || null,
+      masterSessionType: values.masterId && values.masterSessionType
+        ? values.masterSessionType
+        : null,
+    }
     if (editItem) {
-      update.mutate({ id: editItem.id, ...values }, { onSuccess: close })
+      update.mutate({ id: editItem.id, ...payload }, { onSuccess: close })
     } else {
-      create.mutate(values, { onSuccess: close })
+      create.mutate(payload, { onSuccess: close })
     }
   }
 
@@ -102,6 +114,8 @@ function ReservationAdminList() {
       <button type="button" onClick={openCreate}>
         Создать бронь
       </button>
+
+      <KeywordSearchField onSearch={setQuery} placeholder="Email/имя гостя или номер стола..." />
 
       {data.map((item) => (
         <div key={item.id} onClick={() => openEdit(item)}>
@@ -126,7 +140,24 @@ function ReservationAdminList() {
 }
 
 function ReservationForm({ meta, options }: { meta: ReservationFull | null; options?: ReservationAdminOptions }) {
-  const { register, control, formState: { errors } } = useFormContext<CreateReservationAdmin>()
+  const { register, control, setValue, formState: { errors } } = useFormContext<CreateReservationAdmin>()
+
+  const startsAt = useWatch({ control, name: 'startsAt' })
+  const endsAt = useWatch({ control, name: 'endsAt' })
+  const masterId = useWatch({ control, name: 'masterId' })
+  const { data: mastersData } = useMasters(
+    { startsAt, endsAt, excludeId: meta?.id },
+    Boolean(startsAt && endsAt),
+  )
+  const masters = mastersData?.masters ?? []
+  const prices = mastersData?.prices
+
+  const sessionOptions = prices
+    ? [
+        { value: 'ONESHOT', label: `Короткая (oneshot) — ${prices.oneshot} ₽` },
+        { value: 'CAMPAIGN', label: `Длинная (кампания) — ${prices.campaign} ₽` },
+      ]
+    : []
 
   const userOptions = (options?.users ?? []).map((u) => ({
     value: u.id,
@@ -136,6 +167,12 @@ function ReservationForm({ meta, options }: { meta: ReservationFull | null; opti
     value: t.id,
     label: `Стол ${t.number} — ${t.zoneNameRu}`,
   }))
+  const masterOptions = [
+    { value: '', label: 'Без мастера' },
+    ...masters
+      .filter((master) => master.available)
+      .map((master) => ({ value: master.id, label: master.name })),
+  ]
 
   const dates: [keyof CreateReservationAdmin, string][] = [
     ['startsAt', 'Начало'],
@@ -180,6 +217,22 @@ function ReservationForm({ meta, options }: { meta: ReservationFull | null; opti
           />
         )} />
       ))}
+
+      <Controller name="masterId" control={control} render={({ field }) => (
+        <Dropdown label="Мастер" value={field.value || ''} options={masterOptions}
+          onChange={(value) => {
+            field.onChange(value)
+            if (!value) setValue('masterSessionType', '')
+          }}
+          error={errors.masterId?.message} />
+      )} />
+
+      {masterId && (
+        <Controller name="masterSessionType" control={control} render={({ field }) => (
+          <Dropdown label="Тип истории" value={field.value || ''} options={sessionOptions}
+            onChange={field.onChange} error={errors.masterSessionType?.message} />
+        )} />
+      )}
 
       <label>
         Гостей

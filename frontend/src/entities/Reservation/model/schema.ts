@@ -8,6 +8,8 @@ const workingSlot = z
 
 export const reservationFormSchema = z.object({
   userId: z.string().min(1, 'Выберите пользователя'),
+  masterId: z.string(),
+  masterSessionType: z.union([z.enum(['ONESHOT', 'CAMPAIGN']), z.literal('')]),
   tableId: z.string().min(1, 'Выберите стол'),
   startsAt: workingSlot,
   endsAt: workingSlot,

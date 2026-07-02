@@ -10,7 +10,7 @@ export const authRepository = {
     passwordHash: string
     firstName: string
     secondName: string
-    phone: string
+    phone?: string | null
   }) {
     return prisma.user.create({ data })
   }

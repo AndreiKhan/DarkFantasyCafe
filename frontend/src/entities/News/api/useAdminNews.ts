@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { getAdminNews } from './getAdminNews'
 
-export function useAdminNews() {
+export function useAdminNews(keywordSearch?: string) {
   return useQuery({
-    queryKey: ['adminNews'],
-    queryFn: () => getAdminNews(),
+    queryKey: ['adminNews', keywordSearch ?? ''],
+    queryFn: () => getAdminNews(keywordSearch),
+    placeholderData: (prev) => prev,
   })
 }

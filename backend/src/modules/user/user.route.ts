@@ -1,20 +1,27 @@
 import type { FastifyInstance } from 'fastify'
 import { userService, userAdmin } from './user.service.js'
-import { userCreateSchema, userUpdateSchema } from './user.schema.js'
-import { idParamSchema } from '../../shared/schemas.js'
+import { userCreateSchema, userUpdateSchema, userSelfUpdateSchema } from './user.schema.js'
+import { idParamSchema, searchQuerySchema } from '../../shared/schemas.js'
 import { requireRole } from '../../plugins/auth.js'
 
 export async function userRoutes(app: FastifyInstance) {
-  app.get('/', { preHandler: app.authenticate }, async (request) => {
-    return userService.getProfile(request.user!.sub)
+  app.get('/:id', { preHandler: app.authenticateOptional }, async (request) => {
+    const { id } = idParamSchema.parse(request.params)
+    return userService.getProfile(id, request.user?.sub ?? null)
+  })
+
+  app.patch('/', { preHandler: app.authenticate }, async (request) => {
+    const data = userSelfUpdateSchema.parse(request.body)
+    return userService.updateProfile(request.user!.sub, data)
   })
 }
 
 export async function userAdminRoutes(app: FastifyInstance) {
   const admin = { preHandler: [app.authenticate, requireRole('ADMIN')] }
 
-  app.get('/all', admin, async () => {
-    return userAdmin.getAll()
+  app.get('/all', admin, async (request) => {
+    const { keywordSearch } = searchQuerySchema.parse(request.query)
+    return userAdmin.getAll(keywordSearch)
   })
 
   app.post('/', admin, async (request) => {

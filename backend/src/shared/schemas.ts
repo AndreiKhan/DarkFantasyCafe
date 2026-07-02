@@ -9,6 +9,14 @@ export const idParamSchema = z.object({
   id: z.string().uuid()
 })
 
+export const searchQuerySchema = z.object({
+  keywordSearch: z.string().trim().optional(),
+})
+export type SearchQuery = z.infer<typeof searchQuerySchema>
+
+export const PHONE_REGEX = /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/
+export const optionalPhone = z.union([z.string().regex(PHONE_REGEX, 'Телефон в формате +7 (999) 123-45-67'), z.literal('')]).optional()
+
 export const WORK_START_HOUR = 12
 export const WORK_END_HOUR = 23
 

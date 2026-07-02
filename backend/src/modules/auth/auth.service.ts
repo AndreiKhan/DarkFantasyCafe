@@ -40,7 +40,7 @@ export const authService = {
       passwordHash,
       firstName: input.firstName,
       secondName: input.secondName,
-      phone: input.phone,
+      phone: input.phone || null,
     })
     return issueTokens(user.id, user.role)
   },

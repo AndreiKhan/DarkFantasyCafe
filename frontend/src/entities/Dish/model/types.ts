@@ -10,6 +10,7 @@ export interface Dish {
 }
 
 export interface DishFilters {
+  keywordSearch?: string
   category?: string
   tags: string[]
   allergens: string[]

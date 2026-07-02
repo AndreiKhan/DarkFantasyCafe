@@ -1,10 +1,16 @@
 import { reservationRepository, reservationRepositoryAdmin, type ReservationItem } from './reservation.repository.js'
-import type { CreateReservation, TablesQuery, ReservationCreate, ReservationUpdate } from './reservation.schema.js'
+import type { CreateReservation, TablesQuery, ReservationCreate, ReservationUpdate, MastersQuery, MasterSessionType } from './reservation.schema.js'
 import { createYooKassaPayment, getYooKassaPayment } from '../../lib/yookassa.js'
 import { env } from '../../config/env.js'
 import { AppError } from '../../shared/AppError.js'
 
 const BUFFER_MS = 30 * 60 * 1000
+const MASTER_PRICE_ONESHOT = 2000
+const MASTER_PRICE_CAMPAIGN = 5000
+
+function masterSessionPrice(type: MasterSessionType) {
+  return type === 'CAMPAIGN' ? MASTER_PRICE_CAMPAIGN : MASTER_PRICE_ONESHOT
+}
 
 export const reservationService = {
   async getTables(query: TablesQuery) {
@@ -62,6 +68,15 @@ export const reservationService = {
       window: { startsAt, endsAt, duration: query.duration, guests: query.guests },
       zones: [...zonesMap.values()],
     }
+  },
+
+  async getMasters(query: MastersQuery) {
+    const { startsAt, endsAt } = buildWindow(query.date, query.start, query.duration)
+    return listMasters(startsAt, endsAt)
+  },
+
+  async getMastersForWindow(startsAt: Date, endsAt: Date, excludeId?: string) {
+    return listMasters(startsAt, endsAt, excludeId)
   },
 
   async createDraft(userId: string, input: CreateReservation) {
@@ -126,11 +141,18 @@ export const reservationService = {
       }
     }
 
+    if (input.masterId) {
+      const master = await assertMasterAvailable(input.masterId, startsAt, endsAt)
+      items.push(buildMasterItem(master, input.masterSessionType!))
+    }
+
     const totalAmount = items.reduce((sum, i) => sum + i.unitPrice * i.quantity, 0)
 
     const reservation = await reservationRepository.createReservation({
       userId,
       tableId: table.id,
+      masterId: input.masterId ?? null,
+      masterSessionType: input.masterId ? input.masterSessionType ?? null : null,
       startsAt,
       endsAt,
       guests: input.guests,
@@ -214,8 +236,8 @@ export const reservationService = {
 }
 
 export const reservationAdmin = {
-  async getAll() {
-    return reservationRepositoryAdmin.findAll()
+  async getAll(keywordSearch?: string) {
+    return reservationRepositoryAdmin.findAll(keywordSearch)
   },
 
   async getOptions() {
@@ -241,7 +263,13 @@ export const reservationAdmin = {
 
     const items = await buildDishItems(input.dishes)
 
-    return reservationRepositoryAdmin.create(input, items)
+    if (input.masterId) {
+      const master = await assertMasterAvailable(input.masterId, input.startsAt, input.endsAt)
+      items.push(buildMasterItem(master, input.masterSessionType!))
+    }
+
+    const totalAmount = sumItems(items)
+    return reservationRepositoryAdmin.create(input, items, totalAmount)
   },
 
   async update(id: string, input: ReservationUpdate) {
@@ -251,16 +279,36 @@ export const reservationAdmin = {
       throw AppError.notFound('Reservation not found', 'RESERVATION_NOT_FOUND')
     }
 
+    const startsAt = input.startsAt ?? existing.startsAt
+    const endsAt = input.endsAt ?? existing.endsAt
+
     await assertAdminReservationValid({
       tableId: input.tableId ?? existing.tableId,
-      startsAt: input.startsAt ?? existing.startsAt,
-      endsAt: input.endsAt ?? existing.endsAt,
+      startsAt,
+      endsAt,
       guests: input.guests ?? existing.guests,
     }, id)
 
-    const items = input.dishes !== undefined ? await buildDishItems(input.dishes) : undefined
+    const effectiveMasterId = input.masterId !== undefined ? input.masterId : existing.masterId
+    const effectiveSessionType = input.masterSessionType !== undefined
+      ? input.masterSessionType
+      : existing.masterSessionType
 
-    return reservationRepositoryAdmin.update(id, input, items)
+    const dishLines = input.dishes ?? existingDishLines(existing.items)
+    const items = await buildDishItems(dishLines)
+
+    if (effectiveMasterId) {
+      if (!effectiveSessionType) {
+        throw AppError.badRequest('Выберите тип истории', 'MASTER_SESSION_TYPE_REQUIRED')
+      }
+      const master = await assertMasterAvailable(effectiveMasterId, startsAt, endsAt, id)
+      items.push(buildMasterItem(master, effectiveSessionType))
+    }
+
+    const timeItems = existing.items.filter((item) => item.type === 'TIME')
+    const totalAmount = sumItems(timeItems) + sumItems(items)
+
+    return reservationRepositoryAdmin.update(id, input, items, totalAmount)
   },
 
   async remove(id: string) {
@@ -299,6 +347,73 @@ async function buildDishItems(lines: { dishId: string; quantity: number }[]): Pr
       quantity: line.quantity,
     }
   })
+}
+
+async function listMasters(startsAt: Date, endsAt: Date, excludeId?: string) {
+  const [masters, busyIds] = await Promise.all([
+    reservationRepository.findMasters(),
+    reservationRepository.findBusyMasterIds(startsAt, endsAt, excludeId),
+  ])
+  const busy = new Set(busyIds)
+
+  return {
+    prices: {
+      oneshot: MASTER_PRICE_ONESHOT,
+      campaign: MASTER_PRICE_CAMPAIGN
+    },
+    masters: masters.map((master) => ({
+      id: master.id,
+      name: masterName(master),
+      available: !busy.has(master.id),
+    })),
+  }
+}
+
+async function assertMasterAvailable(masterId: string, startsAt: Date, endsAt: Date, excludeId?: string) {
+  const master = await reservationRepository.findMasterById(masterId)
+
+  if (!master || master.role !== 'MASTER') {
+    throw AppError.badRequest('Master not found', 'MASTER_NOT_FOUND')
+  }
+
+  const busyIds = await reservationRepository.findBusyMasterIds(startsAt, endsAt, excludeId)
+
+  if (busyIds.includes(masterId)) {
+    throw AppError.conflict('Master is already booked for this time', 'MASTER_UNAVAILABLE')
+  }
+
+  return master
+}
+
+function buildMasterItem(
+  master: { firstName: string; secondName: string; email: string },
+  sessionType: MasterSessionType,
+): ReservationItem {
+  const name = masterName(master)
+  const campaign = sessionType === 'CAMPAIGN'
+  return {
+    type: 'EXTRA',
+    dishId: null,
+    titleRu: `Мастер: ${name} (${campaign ? 'кампания' : 'короткая'})`,
+    titleEn: `Master: ${name} (${campaign ? 'campaign' : 'oneshot'})`,
+    unitPrice: masterSessionPrice(sessionType),
+    quantity: 1,
+  }
+}
+
+function sumItems(items: { unitPrice: number; quantity: number }[]) {
+  return items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0)
+}
+
+function masterName(master: { firstName: string; secondName: string; email: string }) {
+  const full = `${master.firstName} ${master.secondName}`.trim()
+  return full || master.email
+}
+
+function existingDishLines(items: { type: string; dishId: string | null; quantity: number }[]) {
+  return items
+    .filter((item) => item.type === 'DISH' && item.dishId)
+    .map((item) => ({ dishId: item.dishId as string, quantity: item.quantity }))
 }
 
 function assertHalfHourAligned(date: Date) {

@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { reservationService, reservationAdmin } from './reservation.service.js'
-import { createReservationSchema, tablesQuerySchema, reservationCreateSchema, reservationUpdateSchema } from './reservation.schema.js'
-import { langSchema, idParamSchema } from '../../shared/schemas.js'
+import { createReservationSchema, tablesQuerySchema, reservationCreateSchema, reservationUpdateSchema, mastersQuerySchema, adminMastersQuerySchema } from './reservation.schema.js'
+import { langSchema, idParamSchema, searchQuerySchema } from '../../shared/schemas.js'
 import { requireRole } from '../../plugins/auth.js'
 
 export async function reservationRoutes(app: FastifyInstance) {
@@ -13,6 +13,11 @@ export async function reservationRoutes(app: FastifyInstance) {
   app.get('/tables', async (request) => {
     const query = tablesQuerySchema.parse(request.query)
     return reservationService.getTables(query)
+  })
+
+  app.get('/masters', async (request) => {
+    const query = mastersQuerySchema.parse(request.query)
+    return reservationService.getMasters(query)
   })
 
   app.get('/:id', { preHandler: app.authenticate }, async (request) => {
@@ -36,12 +41,18 @@ export async function reservationRoutes(app: FastifyInstance) {
 export async function reservationAdminRoutes(app: FastifyInstance) {
   const admin = { preHandler: [app.authenticate, requireRole('ADMIN')] }
 
-  app.get('/all', admin, async () => {
-    return reservationAdmin.getAll()
+  app.get('/all', admin, async (request) => {
+    const { keywordSearch } = searchQuerySchema.parse(request.query)
+    return reservationAdmin.getAll(keywordSearch)
   })
 
   app.get('/options', admin, async () => {
     return reservationAdmin.getOptions()
+  })
+
+  app.get('/masters', admin, async (request) => {
+    const { startsAt, endsAt, excludeId } = adminMastersQuerySchema.parse(request.query)
+    return reservationService.getMastersForWindow(startsAt, endsAt, excludeId)
   })
 
   app.post('/', admin, async (request) => {

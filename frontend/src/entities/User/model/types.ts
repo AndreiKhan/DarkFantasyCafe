@@ -1,15 +1,26 @@
 export interface UserProfile {
   id: string
-  email: string
   firstName: string
   secondName: string
-  phone: string
   image: string | null
-  role: string
+  bio: string | null
   createdAt: string
+  email?: string
+  phone?: string | null
+  role?: string
+  bonuses?: number
 }
 
-export type UserRole = 'USER' | 'ADMIN'
+export interface UpdateProfileInput {
+  firstName?: string
+  secondName?: string
+  email?: string
+  phone?: string
+  image?: string | null
+  bio?: string | null
+}
+
+export type UserRole = 'USER' | 'ADMIN' | 'MASTER'
 
 export interface RefreshTokenInfo {
   id: string
@@ -17,15 +28,34 @@ export interface RefreshTokenInfo {
   expiresAt: string
 }
 
+export interface CharacterInfo {
+  id: string
+  name: string
+  level: number
+  class: string
+  race: string
+}
+
+export interface AchievementInfo {
+  id: string
+  nameRu: string
+  nameEn: string
+  status: string
+  bonuses: number
+}
+
 export interface UserFull {
   id: string
   email: string
   firstName: string
   secondName: string
-  phone: string
+  phone: string | null
   image: string | null
+  bio: string | null
   role: UserRole
   refreshTokens: RefreshTokenInfo[]
+  characters: CharacterInfo[]
+  achievements: AchievementInfo[]
   createdAt: string
   updatedAt: string
 }
@@ -37,6 +67,7 @@ export interface CreateUser {
   secondName: string
   phone: string
   image: string
+  bio: string
   role: UserRole
 }
 

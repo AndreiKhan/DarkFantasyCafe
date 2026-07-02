@@ -1,14 +1,15 @@
 import type { FastifyInstance } from 'fastify'
 import { tableAdmin } from './table.service.js'
 import { tableCreateSchema, tableUpdateSchema } from './table.schema.js'
-import { idParamSchema } from '../../shared/schemas.js'
+import { idParamSchema, searchQuerySchema } from '../../shared/schemas.js'
 import { requireRole } from '../../plugins/auth.js'
 
 export async function tableAdminRoutes(app: FastifyInstance) {
   const admin = { preHandler: [app.authenticate, requireRole('ADMIN')] }
 
-  app.get('/all', admin, async () => {
-    return tableAdmin.getAll()
+  app.get('/all', admin, async (request) => {
+    const { keywordSearch } = searchQuerySchema.parse(request.query)
+    return tableAdmin.getAll(keywordSearch)
   })
 
   app.get('/zones', admin, async () => {

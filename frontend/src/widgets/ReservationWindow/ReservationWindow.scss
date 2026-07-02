@@ -11,6 +11,13 @@
     margin-bottom: 16px;
   }
 
+  &__master {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
   &-input {
     border: 1px solid red;
   }

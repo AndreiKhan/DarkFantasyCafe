@@ -30,23 +30,76 @@ model Dish {
 }
 
 model User {
-  id            String         @id @default(uuid())
-  email         String         @unique
-  passwordHash  String
-  firstName     String
-  secondName    String
-  phone         String
-  image         String?
-  role          Role           @default(USER)
-  refreshTokens RefreshToken[]
-  reservations  Reservation[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id                 String         @id @default(uuid())
+  email              String         @unique
+  passwordHash       String
+  firstName          String
+  secondName         String
+  phone              String?
+  image              String?
+  bio                String?
+  bonuses            Int            @default(0)
+  role               Role           @default(USER)
+  refreshTokens      RefreshToken[]
+  reservations       Reservation[]  @relation("UserReservations")
+  masterReservations Reservation[]  @relation("MasterReservations")
+  characters         Character[]
+  achievements       Achievements[]
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+}
+
+model Character {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  level        Int
+  bio          String?
+  class        String
+  subclass     String
+  race         String
+  strength     Int
+  dexterity    Int
+  constitution Int
+  intelligence Int
+  wisdom       Int
+  charisma     Int
+  inventory    String[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Achievements {
+  id         String              @id @default(uuid())
+  status     achievementStatus   @default(DRAFT)
+  nameRu     String
+  nameEn     String
+  howToGetEn String
+  howToGetRu String
+  bonuses    Int
+  rarity     achievementRarity[]
+  users      User[]
+}
+
+enum achievementRarity {
+  COMMON
+  UNCOMMON
+  RARE
+  EPIC
+  LEGENDARY
+}
+
+enum achievementStatus {
+  ARCHIVED
+  PUBLISHED
+  DRAFT
 }
 
 enum Role {
   USER
   ADMIN
+  MASTER
 }
 
 model RefreshToken {
@@ -106,20 +159,23 @@ model Table {
 }
 
 model Reservation {
-  id          String            @id @default(uuid())
-  userId      String
-  user        User              @relation(fields: [userId], references: [id])
-  tableId     String
-  table       Table             @relation(fields: [tableId], references: [id])
-  startsAt    DateTime
-  endsAt      DateTime
-  guests      Int
-  status      ReservationStatus @default(DRAFT)
-  totalAmount Int               @default(0)
-  items       OrderItem[]
-  payment     Payment?
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  id                  String             @id @default(uuid())
+  userId              String
+  user                User               @relation("UserReservations", fields: [userId], references: [id])
+  masterId            String?
+  master              User?              @relation("MasterReservations", fields: [masterId], references: [id])
+  masterSessionType   MasterSessionType?
+  tableId             String
+  table               Table              @relation(fields: [tableId], references: [id])
+  startsAt            DateTime
+  endsAt              DateTime
+  guests              Int
+  status              ReservationStatus  @default(DRAFT)
+  totalAmount         Int                @default(0)
+  items               OrderItem[]
+  payment             Payment?
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
 }
 
 model OrderItem {
@@ -163,6 +219,11 @@ enum PaymentStatus {
   PENDING
   SUCCEEDED
   CANCELED
+}
+
+enum MasterSessionType {
+  ONESHOT
+  CAMPAIGN
 }
 
 model News {

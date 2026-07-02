@@ -2,7 +2,6 @@ import './ThemeSwitcher.scss'
 import { useState } from 'react'
 
 function ThemeSwitcher() {
-  // const { t } = useTranslation()
   const [theme, setTheme] = useState(
     () => document.documentElement.getAttribute('data-theme') || 'light'
   )
@@ -16,7 +15,6 @@ function ThemeSwitcher() {
   return (
     <button className='theme-switcher' type='button' onClick={toggleTheme}>
       {theme === 'dark' ? 'dark' : 'light'}
-      {/* {t('header.nav.booking')} */}
     </button>
   )
 }

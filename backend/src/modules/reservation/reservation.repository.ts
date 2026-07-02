@@ -1,6 +1,7 @@
 import { prisma } from '../../db/prisma.js'
 import type { OrderItemType, ReservationStatus } from '../../../generated/prisma/index.js'
 import type { ReservationCreate, ReservationUpdate } from './reservation.schema.js'
+import type { MasterSessionType } from '../../../generated/prisma/index.js'
 
 export interface ReservationItem {
   type: OrderItemType
@@ -62,9 +63,54 @@ export const reservationRepository = {
     })
   },
 
+  findMasters() {
+    return prisma.user.findMany({
+      where: { role: 'MASTER' },
+      orderBy: [
+        { firstName: 'asc' },
+        { secondName: 'asc' }
+      ],
+      select: {
+        id: true,
+        firstName: true,
+        secondName: true,
+        email: true
+      },
+    })
+  },
+
+  findMasterById(id: string) {
+    return prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        role: true,
+        firstName: true,
+        secondName: true,
+        email: true
+      },
+    })
+  },
+
+  async findBusyMasterIds(from: Date, to: Date, excludeId?: string): Promise<string[]> {
+    const rows = await prisma.reservation.findMany({
+      where: {
+        masterId: { not: null },
+        status: { in: ['DRAFT', 'PENDING_PAYMENT', 'CONFIRMED'] },
+        startsAt: { lt: to },
+        endsAt: { gt: from },
+        ...(excludeId ? { id: { not: excludeId } } : {}),
+      },
+      select: { masterId: true },
+    })
+    return rows.map((row) => row.masterId!).filter(Boolean)
+  },
+
   createReservation(data: {
     userId: string
     tableId: string
+    masterId?: string | null
+    masterSessionType?: MasterSessionType | null
     startsAt: Date
     endsAt: Date
     guests: number
@@ -80,6 +126,8 @@ export const reservationRepository = {
         guests: data.guests,
         totalAmount: data.totalAmount,
         status: 'DRAFT',
+        masterId: data.masterId ?? null,
+        masterSessionType: data.masterId ? data.masterSessionType ?? null : null,
         items: { create: data.items },
       },
       include: { items: true, table: { include: { zone: true } } },
@@ -129,8 +177,22 @@ export const reservationRepository = {
 }
 
 export const reservationRepositoryAdmin = {
-  findAll() {
-    return prisma.reservation.findMany({ orderBy: { createdAt: 'desc' },
+  findAll(keywordSearch?: string) {
+    const num = keywordSearch !== undefined && keywordSearch !== '' && Number.isInteger(Number(keywordSearch))
+      ? Number(keywordSearch)
+      : null
+    return prisma.reservation.findMany({
+      where: keywordSearch
+        ? {
+            OR: [
+              { user: { email: { contains: keywordSearch, mode: 'insensitive' } } },
+              { user: { firstName: { contains: keywordSearch, mode: 'insensitive' } } },
+              { user: { secondName: { contains: keywordSearch, mode: 'insensitive' } } },
+              ...(num !== null ? [{ table: { number: num } }] : []),
+            ],
+          }
+        : {},
+      orderBy: { createdAt: 'desc' },
       include: {
         user: { select: { id: true, email: true, firstName: true, secondName: true } },
         table: { select: { id: true, number: true } },
@@ -169,7 +231,7 @@ export const reservationRepositoryAdmin = {
     })
   },
 
-  create(input: ReservationCreate, items: ReservationItem[]) {
+  create(input: ReservationCreate, items: ReservationItem[], totalAmount: number) {
     return prisma.reservation.create({
       data: {
         user: { connect: { id: input.userId } },
@@ -178,7 +240,9 @@ export const reservationRepositoryAdmin = {
         endsAt: input.endsAt,
         guests: input.guests,
         status: input.status,
-        totalAmount: input.totalAmount,
+        totalAmount,
+        masterId: input.masterId ?? null,
+        masterSessionType: input.masterId ? input.masterSessionType ?? null : null,
         items: { create: items },
       },
       include: {
@@ -189,7 +253,7 @@ export const reservationRepositoryAdmin = {
     })
   },
 
-  update(id: string, input: ReservationUpdate, items?: ReservationItem[]) {
+  update(id: string, input: ReservationUpdate, items: ReservationItem[] | undefined, totalAmount: number | undefined) {
     return prisma.reservation.update({
       where: { id },
       data: {
@@ -197,10 +261,14 @@ export const reservationRepositoryAdmin = {
         endsAt: input.endsAt,
         guests: input.guests,
         status: input.status,
-        totalAmount: input.totalAmount,
+        ...(totalAmount !== undefined ? { totalAmount } : {}),
         ...(input.userId !== undefined ? { user: { connect: { id: input.userId } } } : {}),
         ...(input.tableId !== undefined ? { table: { connect: { id: input.tableId } } } : {}),
-        ...(items !== undefined ? { items: { deleteMany: { type: 'DISH' }, create: items } } : {}),
+        ...(input.masterId !== undefined && {
+          masterId: input.masterId,
+          masterSessionType: input.masterId ? input.masterSessionType ?? null : null,
+        }),
+        ...(items !== undefined ? { items: { deleteMany: { type: { in: ['DISH', 'EXTRA'] } }, create: items } } : {}),
       },
       include: {
         user: { select: { id: true, email: true, firstName: true, secondName: true } },

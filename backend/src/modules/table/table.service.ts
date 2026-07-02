@@ -3,8 +3,8 @@ import type { TableCreate, TableUpdate } from './table.schema.js'
 import { AppError } from '../../shared/AppError.js'
 
 export const tableAdmin = {
-  async getAll() {
-    return tableRepositoryAdmin.findAll()
+  async getAll(keywordSearch?: string) {
+    return tableRepositoryAdmin.findAll(keywordSearch)
   },
 
   async getTableZones() {

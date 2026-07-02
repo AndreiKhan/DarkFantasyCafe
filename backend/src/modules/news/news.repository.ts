@@ -23,8 +23,23 @@ export const newsRepository = {
 }
 
 export const newsRepositoryAdmin = {
-  findAll() {
-    return prisma.news.findMany({ orderBy: { createdAt: 'desc' } })
+  findAll(keywordSearch?: string) {
+    return prisma.news.findMany({
+      where: keywordSearch
+        ? {
+            OR: [
+              { slug: { contains: keywordSearch, mode: 'insensitive' } },
+              { titleRu: { contains: keywordSearch, mode: 'insensitive' } },
+              { titleEn: { contains: keywordSearch, mode: 'insensitive' } },
+              { shortDescriptionRu: { contains: keywordSearch, mode: 'insensitive' } },
+              { shortDescriptionEn: { contains: keywordSearch, mode: 'insensitive' } },
+              { bodyRu: { contains: keywordSearch, mode: 'insensitive' } },
+              { bodyEn: { contains: keywordSearch, mode: 'insensitive' } },
+            ],
+          }
+        : {},
+      orderBy: { createdAt: 'desc' },
+    })
   },
 
   findById(id: string) {

@@ -1,22 +1,6 @@
 import { prisma } from '../../db/prisma.js'
 import type { Prisma } from '../../../generated/prisma/index.js'
 
-const safeSelect = {
-  id: true,
-  email: true,
-  firstName: true,
-  secondName: true,
-  phone: true,
-  image: true,
-  role: true,
-  createdAt: true,
-  updatedAt: true,
-  refreshTokens: {
-    select: { id: true, createdAt: true, expiresAt: true },
-    orderBy: { createdAt: 'desc' },
-  },
-} satisfies Prisma.UserSelect
-
 export const userRepository = {
   findById(id: string) {
     return prisma.user.findUnique({
@@ -28,6 +12,41 @@ export const userRepository = {
         secondName: true,
         phone: true,
         image: true,
+        bio: true,
+        bonuses: true,
+        role: true,
+        createdAt: true,
+      },
+    })
+  },
+
+  findByPublicId(id: string) {
+    return prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        firstName: true,
+        secondName: true,
+        image: true,
+        bio: true,
+        createdAt: true,
+      },
+    })
+  },
+
+  updateProfile(id: string, data: Prisma.UserUpdateInput) {
+    return prisma.user.update({
+      where: { id },
+      data,
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        secondName: true,
+        phone: true,
+        image: true,
+        bio: true,
+        bonuses: true,
         role: true,
         createdAt: true,
       },
@@ -35,9 +54,43 @@ export const userRepository = {
   },
 }
 
+const safeSelect = {
+  id: true,
+  email: true,
+  firstName: true,
+  secondName: true,
+  phone: true,
+  image: true,
+  bio: true,
+  bonuses: true,
+  role: true,
+  createdAt: true,
+  updatedAt: true,
+  refreshTokens: {
+    select: { id: true, createdAt: true, expiresAt: true },
+    orderBy: { createdAt: 'desc' },
+  },
+  characters: true,
+  achievements: true,
+} satisfies Prisma.UserSelect
+
 export const userRepositoryAdmin = {
-  findAll() {
-    return prisma.user.findMany({ orderBy: { createdAt: 'desc' }, select: safeSelect })
+  findAll(keywordSearch?: string) {
+    return prisma.user.findMany({
+      where: keywordSearch
+        ? {
+            OR: [
+              { email: { contains: keywordSearch, mode: 'insensitive' } },
+              { firstName: { contains: keywordSearch, mode: 'insensitive' } },
+              { secondName: { contains: keywordSearch, mode: 'insensitive' } },
+              { phone: { contains: keywordSearch, mode: 'insensitive' } },
+              { bio: { contains: keywordSearch, mode: 'insensitive' } },
+            ],
+          }
+        : {},
+      orderBy: { createdAt: 'desc' },
+      select: safeSelect,
+    })
   },
 
   findById(id: string) {
