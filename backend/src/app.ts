@@ -1,16 +1,22 @@
 import Fastify from 'fastify'
 import cors from '@fastify/cors'
 import cookie from '@fastify/cookie'
+import multipart from '@fastify/multipart'
+import fastifyStatic from '@fastify/static'
+import { mkdirSync } from 'node:fs'
 import { ZodError } from 'zod'
 import { AppError } from './shared/AppError.js'
 import { dishRoutes, dishAdminRoutes } from './modules/dish/dish.route.js'
 import { authRoutes } from './modules/auth/auth.route.js'
 import { newsRoutes, newsAdminRoutes } from './modules/news/news.route.js'
+import { faqRoutes, faqAdminRoutes } from './modules/faq/faq.route.js'
+import { contactRequestRoutes, contactRequestAdminRoutes } from './modules/contactRequest/contactRequest.route.js'
 import { userRoutes, userAdminRoutes } from './modules/user/user.route.js'
 import { registerAuthGuard } from './plugins/auth.js'
 import { reservationRoutes, reservationAdminRoutes } from './modules/reservation/reservation.route.js'
 import { reservationService } from './modules/reservation/reservation.service.js'
 import { tableAdminRoutes } from './modules/table/table.route.js'
+import { uploadRoutes, UPLOAD_DIR } from './modules/upload/upload.route.js'
 
 
 export function buildApp() {
@@ -23,6 +29,11 @@ export function buildApp() {
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
   app.register(cookie)
+  
+  app.register(multipart, { limits: { fileSize: 5 * 1024 * 1024 } })
+
+  mkdirSync(UPLOAD_DIR, { recursive: true })
+  app.register(fastifyStatic, { root: UPLOAD_DIR, prefix: '/uploads/' })
 
   registerAuthGuard(app)
 
@@ -53,11 +64,16 @@ export function buildApp() {
   app.register(authRoutes, { prefix: '/auth' })
   app.register(reservationRoutes, { prefix: '/reservation' })
   app.register(newsRoutes, { prefix: '/news' })
+  app.register(faqRoutes, { prefix: '/faq' })
+  app.register(contactRequestRoutes, { prefix: '/contact-request' })
   app.register(userRoutes, { prefix: '/user' })
+  app.register(uploadRoutes, { prefix: '/upload' })
 
   app.register(newsAdminRoutes, { prefix: '/admin/news' })
   app.register(dishAdminRoutes, { prefix: '/admin/dish' })
   app.register(reservationAdminRoutes, { prefix: '/admin/reservation' })
+  app.register(faqAdminRoutes, { prefix: '/admin/faq' })
+  app.register(contactRequestAdminRoutes, { prefix: '/admin/contact-request' })
   app.register(userAdminRoutes, { prefix: '/admin/user' })
   app.register(tableAdminRoutes, { prefix: '/admin/table' })
 

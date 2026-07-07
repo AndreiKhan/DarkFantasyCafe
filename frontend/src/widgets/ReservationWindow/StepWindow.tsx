@@ -1,7 +1,11 @@
 import type { AvailabilityParams, AvailabilityTable, AvailabilityZone, MasterOption, MasterSessionType } from '@/entities/Reservation'
+import { useTranslation } from 'react-i18next'
 import { buildStartOptions, buildDurationOptions, todayStr } from './options'
 import { HallMap } from './HallMap'
 import { ZoneList } from './ZoneList'
+import { TodayPerformance } from './TodayPerformance'
+import { useNewsList } from '@/entities/News'
+import { Dropdown, ErrorPlug, Loader } from '@/shared/ui'
 
 const START_OPTIONS = buildStartOptions()
 const DURATION_OPTIONS = buildDurationOptions()
@@ -43,141 +47,176 @@ export function StepWindow({
   isError: boolean
   onNext: () => void
 }) {
+  const { t } = useTranslation(['reservation', 'common'])
+  const selectedMaster = masters.find((master) => master.id === masterId)
+
+  const { data: performanceData } = useNewsList('PERFORMANCE')
+  const reservationStart = new Date(`${params.date}T${params.start}:00`)
+  const reservationEnd = new Date(reservationStart.getTime() + params.duration * 60000)
+  const activePerformance = (performanceData ?? []).find((item) => {
+    if (!item.startsAt || !item.endsAt) {
+      return false
+    }
+    return new Date(item.startsAt) < reservationEnd && new Date(item.endsAt) > reservationStart
+  })
+
   return (
     <>
-      <div className="reserve__master">
-        <span>Мастер</span>
-        <select
-          className="reserve-input"
-          value={masterId}
-          onChange={(e) => onSelectMaster(e.target.value)}
-        >
-          <option value="">Без мастера</option>
-          {masters.map((master) => (
-            <option key={master.id} value={master.id} disabled={!master.available}>
-              {master.name}{master.available ? '' : ' (занят)'}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {masterId && (
-        <div className="reserve__master">
-          <span>Тип истории</span>
-          <select
-            className="reserve-input"
-            value={masterSessionType}
-            onChange={(e) => onSelectMasterSessionType(e.target.value as MasterSessionType | '')}
-          >
-            <option value="">Выберите тип</option>
-            {masterPrices && (
-              <>
-                <option value="ONESHOT">Короткая (oneshot) — {masterPrices.oneshot} ₽</option>
-                <option value="CAMPAIGN">Длинная (кампания) — {masterPrices.campaign} ₽</option>
-              </>
-            )}
-          </select>
+      <form className='reserve__filters' onSubmit={(e) => e.preventDefault()}>
+        <div className='reserve__filter'>
+          <label className='reserve__label'>
+            {t('reservation:filters.date')}
+          </label>
+          <div className='input-parchment-wrapper'>
+            <input
+              className='reserve-input'
+              type='date'
+              min={todayStr()}
+              value={params.date}
+              onChange={(e) => onUpdate({ date: e.target.value })}
+            />
+          </div>
         </div>
-      )}
 
-      <div className="reserve__summary">
+        <Dropdown
+          options={START_OPTIONS.map((time) => ({ value: time, label: time }))}
+          value={params.start}
+          onChange={(value) => onUpdate({ start: value })}
+          label={t('reservation:filters.time')}
+        />
+
+        <Dropdown
+          options={DURATION_OPTIONS.map((dish) => ({ value: String(dish.value), label: dish.label }))}
+          value={String(params.duration)}
+          onChange={(value) => onUpdate({ duration: Number(value) })}
+          label={t('reservation:filters.duration')}
+        />
+
+        <div className='reserve__filter'>
+          <label className='reserve__label'>
+            {t('reservation:filters.guests')}
+          </label>
+          <div className='input-parchment-wrapper'>
+            <input
+              className='reserve-input'
+              type='number'
+              min={1}
+              value={params.guests}
+              onChange={(e) => onUpdate({ guests: Math.max(1, Number(e.target.value)) })}
+            />
+          </div>
+        </div>
+      </form>
+
+      <div className='reserve__summary'>
         {selectedTable && selectedZone ? (
-          <p>
-            Стол №{selectedTable.number} - {selectedZone.name} - до {selectedTable.capacity}<br/>
-            <b>{selectedZone.price} ₽</b> за {params.duration / 60} часов<br/><br/>
+          <p className='reserve__text-info'>
+            {t('reservation:summary.table')} <b>№{selectedTable.number}</b> - {selectedZone.name} |
+            {t('reservation:summary.upTo', { capacity: selectedTable.capacity })} |
+            <b> {selectedZone.price} ₽</b> {t('reservation:summary.forHours', { hours: params.duration / 60 })}
           </p>
         ) : (
-          <p>Выбрать стол</p>
+          <p className='reserve__text-info'>
+            {t('reservation:summary.selectTable')}
+          </p>
         )}
         <button
-          type="button"
-          className="reserve__next"
+          type='button'
+          className='reserve__button reserve__shadow'
           disabled={!selectedId || Boolean(masterId && !masterSessionType)}
           onClick={onNext}
         >
-          дальше
+          {t('reservation:actions.next')}
         </button>
       </div>
 
-      <form className="reserve__filters" onSubmit={(e) => e.preventDefault()}>
-        <span>дата</span>
-        <input
-          className='reserve-input'
-          type="date"
-          min={todayStr()}
-          value={params.date}
-          onChange={(e) => onUpdate({ date: e.target.value })}
-        />
+      <div className='reserve__visual'>
+        <div className='reserve__top-row'>
+          <div className='reserve__master'>
+            <div className='reserve__master-avatar'>
+              {selectedMaster?.image ? (
+                <img src={selectedMaster.image} alt={selectedMaster.name} />
+              ) : (
+                <span>{t('reservation:master.photo')}</span>
+              )}
+            </div>
+            {selectedMaster?.bio &&
+              <p className='reserve__master-bio'>
+                {selectedMaster.bio}
+              </p>
+            }
+            <div className='reserve__master-info'>
+              <Dropdown
+                options={[
+                  { value: '', label: t('reservation:master.none') },
+                  ...masters.map((master) => ({
+                    value: master.id,
+                    label: `${master.name}${master.available ? '' : ` ${t('reservation:master.busy')}`}`,
+                    disabled: !master.available,
+                  })),
+                ]}
+                value={masterId}
+                onChange={(value) => onSelectMaster(value)}
+                label={t('reservation:master.label')}
+              />
 
-        <span>Время</span>
-        <select
-          className='reserve-input'
-          value={params.start}
-          onChange={(e) => onUpdate({ start: e.target.value })}
-        >
-          {START_OPTIONS.map((time) =>
-            <option key={time} value={time}>
-              {time}
-            </option>
-          )}
-        </select>
+              {masterId && (
+                <Dropdown
+                  options={masterPrices ? [
+                    { value: 'ONESHOT', label: t('reservation:master.sessionOneshot', { price: masterPrices.oneshot }) },
+                    { value: 'CAMPAIGN', label: t('reservation:master.sessionCampaign', { price: masterPrices.campaign }) },
+                  ] : []}
+                  value={masterSessionType}
+                  onChange={(value) => onSelectMasterSessionType(value as MasterSessionType | '')}
+                  placeholder={t('reservation:master.selectType')}
+                  label={t('reservation:master.sessionType')}
+                />
+              )}
+            </div>
+          </div>
 
-        <span>Длительность</span>
-        <select
-          className='reserve-input'
-          value={params.duration}
-          onChange={(e) => onUpdate({ duration: Number(e.target.value) })}
-        >
-          {DURATION_OPTIONS.map((dish) =>
-            <option key={dish.value} value={dish.value}>
-              {dish.label}
-            </option>
-          )}
-        </select>
-
-        <span>количество гостей</span>
-        <input
-          className='reserve-input'
-          type="number"
-          min={1}
-          value={params.guests}
-          onChange={(e) => onUpdate({ guests: Math.max(1, Number(e.target.value)) })}
-        />
-      </form>
-
-      <div className="reserve__legend">
-        <div>
-          <div className="reserve__legend-item reserve__legend-item--free" />
-          Свободно
+          <TodayPerformance date={params.date} />
         </div>
-        <div>
-          <div className="reserve__legend-item reserve__legend-item--busy" />
-          Занято
-        </div>
-        <div>
-          <div className="reserve__legend-item reserve__legend-item--small" />
-          Мало мест
-        </div>
-      </div>
 
-      {isLoading &&
-        <p>загрущка</p>
-      }
-      {isError &&
-        <p>ошибка</p>
-      }
-
-      <HallMap tables={allTables} selectedId={selectedId} onSelect={onSelectTable} />
-
-      <div className="hall-list">
-        {zones.map((zone) => (
-          <ZoneList
-            key={zone.id}
-            zone={zone}
+        <div className='reserve__map'>
+          <div className='reserve__legend' role='group' aria-label={t('reservation:a11y.mapLegend')}>
+            <div className='reserve__legend-item'>
+              <div className='reserve__legend-item--free' aria-hidden='true' />
+              <span>{t('reservation:legend.free')}</span>
+            </div>
+            <div className='reserve__legend-item'>
+              <div className='reserve__legend-item--busy' aria-hidden='true' />
+              <span>{t('reservation:legend.busy')}</span>
+            </div>
+            <div className='reserve__legend-item'>
+              <div className='reserve__legend-item--small' aria-hidden='true' />
+              <span>{t('reservation:legend.small')}</span>
+            </div>
+          </div>
+          {isLoading &&
+            <Loader width='100px' height='100px' />
+          }
+          {isError &&
+            <ErrorPlug />
+          }
+          <HallMap
+            tables={allTables}
             selectedId={selectedId}
             onSelect={onSelectTable}
+            showStage={!!activePerformance}
+            stageImage={activePerformance?.image}
           />
-        ))}
+          <div className='hall-list'>
+            {zones.map((zone) => (
+              <ZoneList
+                key={zone.id}
+                zone={zone}
+                selectedId={selectedId}
+                onSelect={onSelectTable}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </>
   )

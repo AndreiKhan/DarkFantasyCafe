@@ -1,0 +1,46 @@
+@use 'app/styles/mixins' as m;
+
+.dropdown {
+  &__label {
+    font-size: 18px;
+    padding-bottom: 4px;
+  }
+  &__wrapper {
+    position: relative;
+  }
+  &__head {
+    @include m.stone-row-bg;
+    width: 100%;
+  }
+  &__list {
+    z-index: 2;
+    position: absolute;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  &__option {
+    cursor: pointer;
+    text-align: center;
+    @include m.small-stone-button-bg;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+  &__option--active {
+    color: var(--color-text-secondary);
+    &::after {
+      background-color: var(--color-bg-secondary);
+    }
+  }
+  &__option--disabled {
+    cursor: not-allowed;
+    color: var(--color-error);
+    &::after {
+      background-color: var(--color-error-bg);
+    }
+  }
+}

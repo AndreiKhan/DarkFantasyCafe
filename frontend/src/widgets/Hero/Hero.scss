@@ -7,14 +7,19 @@
     flex-direction: column;
     align-items: center;
     gap: 8px;
+    font-size: 56px;
+  }
+  &__title {
+    text-align: center;
+    text-shadow: var(--text-shadow-bg);
   }
   &__subtitle {
-
+    font-size: 28px;
+    text-shadow: var(--text-shadow-bg);
   }
   &__main-button {
-    padding: 40px 60px;
-    color: red;
-
+    font-size: 20px;
+    color: var(--color-text);
     @include m.plate-with-frame-button-bg;
   }
 }

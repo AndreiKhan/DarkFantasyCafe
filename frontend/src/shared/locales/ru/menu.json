@@ -1,0 +1,11 @@
+{
+  "title": "МЕНЮ",
+  "categories": "Категории",
+  "all": "Все",
+  "tags": "Теги",
+  "allergens": "Аллергены",
+  "sort": "Сортировка",
+  "sortPriceAsc": "Цена: по возрастанию",
+  "sortPriceDesc": "Цена: по убыванию",
+  "searchPlaceholder": "Поиск по названию"
+}

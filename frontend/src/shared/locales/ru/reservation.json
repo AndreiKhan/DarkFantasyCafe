@@ -1,0 +1,73 @@
+{
+  "title": "БРОНИРОВАНИЕ",
+  "filters": {
+    "date": "Дата",
+    "time": "Время",
+    "duration": "Длительность",
+    "guests": "Количество гостей"
+  },
+  "summary": {
+    "table": "Стол",
+    "upTo": "до {{capacity}} человек",
+    "forHours": "за {{hours}} Ч",
+    "selectTable": "Выберите стол"
+  },
+  "actions": {
+    "next": "ДАЛЬШЕ",
+    "back": "НАЗАД",
+    "skip": "ПРОПУСТИТЬ"
+  },
+  "master": {
+    "none": "Без мастера",
+    "busy": "(занят)",
+    "label": "Мастер",
+    "photo": "Фото",
+    "sessionType": "Тип истории",
+    "selectType": "Выберите тип",
+    "sessionOneshot": "Короткая (oneshot) — {{price}} ₽",
+    "sessionCampaign": "Длинная (кампания) — {{price}} ₽",
+    "sessionOneshotShort": "Короткая (oneshot)",
+    "sessionCampaignShort": "Длинная (кампания)"
+  },
+  "performance": {
+    "label": "Новости на выбранный день",
+    "at": "Начало в {{time}}",
+    "none": "На выбранный день ничего не запланировано",
+    "stage": "Сегодня здесь кто-то выступает"
+  },
+  "legend": {
+    "free": "Свободно",
+    "busy": "Занято",
+    "small": "Мало мест"
+  },
+  "zoneList": {
+    "table": "№{{number}} - до {{capacity}}",
+    "busy": " · занято",
+    "small": " · мало мест"
+  },
+  "dishes": {
+    "tip": "Вы можете выбрать блюда к своему столику, мы начнем готовить их заранее",
+    "subtotal": "Цена выбранных блюд: {{price}} ₽"
+  },
+  "confirm": {
+    "title": "ПОДТВЕРЖДЕНИЕ",
+    "table": "Стол №{{number}} - {{zoneName}}",
+    "datetime": "{{date}} - {{start}} - {{hours}} ч",
+    "guests": "Гостей: {{count}}",
+    "master": "Мастер: {{name}} ({{sessionType}}) — {{price}} ₽",
+    "tableCost": "Стоимость стола: {{price}} ₽",
+    "total": "ОБЩАЯ СТОИМОСТЬ: {{total}} ₽"
+  },
+  "payment": {
+    "total": "Общая плата"
+  },
+  "success": {
+    "noReservation": "НЕТ БРОНИ",
+    "confirmed": "ЗАРЕЗЕРВИРОВАНО",
+    "error": "ОШИБКА",
+    "checking": "ПРОВЕРКА"
+  },
+  "a11y": {
+    "mapLegend": "Обозначения на карте"
+  }
+}

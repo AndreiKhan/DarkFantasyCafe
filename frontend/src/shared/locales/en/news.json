@@ -1,0 +1,10 @@
+{
+  "title": "NEWS",
+  "latestTitle": "LATEST NEWS",
+  "backToNews": "← Back to news",
+  "types": {
+    "NEWS": "News",
+    "PERFORMANCE": "Performance",
+    "MONSTER": "Monster"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "title": "КАК НАС НАЙТИ",
+  "visitUs": "Приходите к нам",
+  "address": "Адрес",
+  "addressValue": "Москва, Красная площадь, 1",
+  "phone": "Телефон",
+  "hours": "Часы работы",
+  "leaveRequest": "Оставить заявку",
+  "sendRaven": "Отправить ворона",
+  "contactPlaceholder": "Ваш email или телефон",
+  "messagePlaceholder": "Сообщение",
+  "requestSent": "Ворон отправлен! Мы скоро с вами свяжемся."
+}

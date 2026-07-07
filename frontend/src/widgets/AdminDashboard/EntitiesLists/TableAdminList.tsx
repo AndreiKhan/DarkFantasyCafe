@@ -9,7 +9,7 @@ import {
   type TableFull,
   type TableAdminZones,
 } from '@/entities/Table'
-import { AdminModal, Dropdown, KeywordSearchField } from '@/shared/ui'
+import { AdminModal, AdminTable, Dropdown, ErrorPlug, Loader, type AdminTableColumn } from '@/shared/ui'
 import { formatReadOnlyValue } from '@/shared/lib/datetime'
 import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -23,6 +23,19 @@ const EMPTY_TABLE: CreateTable = {
   y: 0,
   isActive: true,
 }
+
+const COLUMNS: AdminTableColumn<TableFull>[] = [
+  { key: 'number', header: 'Номер', render: (item) => `№${item.number}` },
+  { key: 'zone', header: 'Зона', render: (item) => item.zone.nameRu },
+  { key: 'capacity', header: 'Вместимость', render: (item) => item.capacity },
+  {
+    key: 'isActive',
+    header: 'Активен',
+    render: (item) => (
+      <span className='admin-table__badge'>{item.isActive ? 'Да' : 'Нет'}</span>
+    ),
+  },
+]
 
 const toForm = (item: TableFull): CreateTable => ({
   number: item.number,
@@ -87,28 +100,24 @@ function TableAdminList() {
   }
 
   if (isLoading) {
-    return <p>isLoading</p>
+    return <Loader width='100px' height='100px' />
   }
   if (isError || !data) {
-    return <p>isError</p>
+    return <ErrorPlug />
   }
 
   return (
-    <div>
-      <button type="button" onClick={openCreate}>
-        Создать столик
-      </button>
-
-      <KeywordSearchField onSearch={setQuery} placeholder="Зона или номер стола..." />
-
-      {data.map((item) => (
-        <div
-          key={item.id}
-          onClick={() => openEdit(item)}
-        >
-          <p><strong>Стол {item.number} — {item.zone.nameRu}</strong></p>
-        </div>
-      ))}
+    <div className='admin-entity'>
+      <AdminTable
+        columns={COLUMNS}
+        data={data}
+        getRowKey={(item) => item.id}
+        onRowClick={openEdit}
+        onCreate={openCreate}
+        createLabel='Создать столик'
+        searchPlaceholder='Зона или номер стола...'
+        onSearch={setQuery}
+      />
 
       <AdminModal
         title={editItem ? 'Редактировать столик' : 'Новый столик'}
@@ -143,9 +152,9 @@ function TableForm({ meta, options }: { meta: TableFull | null; options?: TableA
   ]
 
   return (
-    <div style={{ display: 'flex', gap: '20px', flexDirection: 'column' }}>
+    <div className='admin-form'>
       {meta && (
-        <div className="news-form__readonly">
+        <div className='admin-form__readonly'>
           {readOnly.map(([key, label]) => (
             <p key={key}>
               <strong>{label}:</strong> {formatReadOnlyValue(key, meta[key])}
@@ -155,24 +164,24 @@ function TableForm({ meta, options }: { meta: TableFull | null; options?: TableA
       )}
 
       {numbers.map(([key, label]) => (
-        <label key={key}>
+        <label key={key} className='admin-form__field'>
           {label}
-          <input type="number" {...register(key)} />
+          <input type='number' {...register(key)} />
           {errors[key] &&
-            <span className="news-form__error">
+            <span className='admin-form__error'>
               {errors[key]?.message}
             </span>
           }
         </label>
       ))}
 
-      <Controller name="zoneId" control={control} render={({ field }) => (
-        <Dropdown label="Зона" value={field.value} options={zoneOptions}
+      <Controller name='zoneId' control={control} render={({ field }) => (
+        <Dropdown label='Зона' value={field.value} options={zoneOptions}
           onChange={field.onChange} error={errors.zoneId?.message} />
       )} />
 
-      <label>
-        <input type="checkbox" {...register('isActive')} /> Активен (доступен для бронирования)
+      <label className='admin-form__checkbox'>
+        <input type='checkbox' {...register('isActive')} /> Активен (доступен для бронирования)
       </label>
     </div>
   )

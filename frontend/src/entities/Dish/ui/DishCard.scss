@@ -1,27 +1,68 @@
 @use 'app/styles/mixins' as m;
 
 .dish-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   &__content {
-    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     @include m.product-border-bg;
+
+    &--clickable {
+      cursor: pointer;
+    }
   }
   &__present-block {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
+    min-height: 150px;
 
     @include m.wood-background-small-bg;
-  }
-  &__image {
-    padding: 50px;
   }
   &__info {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: maroon;
-    gap: 10px;
+    justify-content: space-between;
+    color: var(--color-text);
+    gap: 8px;
     padding: 10px 12px 15px;
+    height: 100%;
+    @include m.parchment-text-bg;
+    margin-top: -5px;
+    z-index: -2;
+  }
+  &__title {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 5px;
+  }
+  &__description {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  &__price {
+    font-size: 18px;
+  }
+  &__quantity {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 5px;
+  }
+  &__button {
+    @include m.small-stone-button-bg;
+    padding: 5px 12px 5px 12px;
+    color: var(--color-text);
+  }
+  &__number {
+    font-size: 24px;
   }
 }

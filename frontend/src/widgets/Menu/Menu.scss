@@ -1,34 +1,23 @@
 @use 'app/styles/mixins' as m;
 
 .menu {
-  &__header {
-
-  }
-  &__title {
-
-  }
   &__filter {
     display: flex;
     justify-content: space-between;
-    gap: 25px;
-    padding: 40px 80px;
-    
+    gap: 12px;
     @include m.half-rolled-parchment-button-bg-variant-2;
+
     &-type {
 
     }
     &-title {
-
+      font-size: 18px;
+      margin-bottom: 10px;
     }
     &-categories {
 
     }
     &-tags {
-      .menu__billet {
-        padding: 10px;
-
-        @include m.parchment-damaged-bg;
-      }
     }
     &-sort {
 
@@ -40,26 +29,45 @@
     gap: 12px;
   }
   &__billet {
-    padding: 10px;
-
     @include m.plywood-bg;
+    color: var(--color-text);
+    font-size: 14px;
   }
   &__billet--active {
-    filter: drop-shadow(0 0 5px gold)
-    drop-shadow(0 0 10px orange);
-    &::after {
-      background-color: darkcyan;
-    }
+    filter: drop-shadow(0 0 3px var(--color-chosen))
+    drop-shadow(0 0 7px var(--color-chosen));
   }
   &__sort-type {
-    padding: 10px;
-    color: red;
+    color: var(--color-text);
     @include m.wood-button-bg;
+    width: 100%;
+    margin-bottom: 10px;
   }
   &__cards {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 30px;
     padding: 20px;
+  }
+  &__dish-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 480px;
+  }
+  &__dish-modal-description {
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+  &__dish-modal-meta {
+    line-height: 1.4;
+  }
+  &__dish-modal-label {
+    font-weight: 600;
+    margin-right: 6px;
+  }
+  &__dish-modal-price {
+    font-size: 20px;
+    font-family: var(--font-display);
   }
 }

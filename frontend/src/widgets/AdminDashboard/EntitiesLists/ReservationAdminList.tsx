@@ -4,8 +4,8 @@ import {
   reservationFormSchema, type CreateReservationAdmin,
   type ReservationFull, type ReservationAdminOptions,
 } from '@/entities/Reservation'
-import { AdminModal, Dropdown, DateTimeField, KeywordSearchField } from '@/shared/ui'
-import { formatReadOnlyValue } from '@/shared/lib/datetime'
+import { AdminModal, AdminTable, Dropdown, DateTimeField, type AdminTableColumn, ErrorPlug, Loader } from '@/shared/ui'
+import { formatDateTime, formatReadOnlyValue } from '@/shared/lib/datetime'
 import { Controller, FormProvider, useFieldArray, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
@@ -28,6 +28,13 @@ const STATUS_OPTIONS = [
   { value: 'PENDING_PAYMENT', label: 'PENDING_PAYMENT' },
   { value: 'CONFIRMED', label: 'CONFIRMED' },
   { value: 'CANCELLED', label: 'CANCELLED' },
+]
+
+const COLUMNS: AdminTableColumn<ReservationFull>[] = [
+  { key: 'table', header: 'Стол', render: (item) => `№${item.table.number}` },
+  { key: 'guest', header: 'Гость', render: (item) => `${item.user.firstName} ${item.user.secondName} (${item.user.email})` },
+  { key: 'startsAt', header: 'Начало', render: (item) => formatDateTime(item.startsAt) },
+  { key: 'totalAmount', header: 'Сумма', render: (item) => `${item.totalAmount} ₽` },
 ]
 
 const toForm = (item: ReservationFull): CreateReservationAdmin => ({
@@ -103,25 +110,24 @@ function ReservationAdminList() {
   }
 
   if (isLoading) {
-    return <p>isLoading</p>
+    return <Loader width='100px' height='100px' />
   }
   if (isError || !data) {
-    return <p>isError</p>
+    return <ErrorPlug />
   }
 
   return (
-    <div>
-      <button type="button" onClick={openCreate}>
-        Создать бронь
-      </button>
-
-      <KeywordSearchField onSearch={setQuery} placeholder="Email/имя гостя или номер стола..." />
-
-      {data.map((item) => (
-        <div key={item.id} onClick={() => openEdit(item)}>
-          <p><strong>Стол {item.table.number} — {item.user.email}</strong></p>
-        </div>
-      ))}
+    <div className='admin-entity'>
+      <AdminTable
+        columns={COLUMNS}
+        data={data}
+        getRowKey={(item) => item.id}
+        onRowClick={openEdit}
+        onCreate={openCreate}
+        createLabel='Создать бронь'
+        searchPlaceholder='Email/имя гостя или номер стола...'
+        onSearch={setQuery}
+      />
 
       <AdminModal
         title={editItem ? 'Редактировать бронь' : 'Новая бронь'}
@@ -186,9 +192,9 @@ function ReservationForm({ meta, options }: { meta: ReservationFull | null; opti
   ]
 
   return (
-    <div style={{ display: 'flex', gap: '20px', flexDirection: 'column' }}>
+    <div className='admin-form'>
       {meta && (
-        <div className="news-form__readonly">
+        <div className='admin-form__readonly'>
           {readOnly.map(([key, label]) => (
             <p key={key}>
               <strong>{label}:</strong> {formatReadOnlyValue(key, meta[key])}
@@ -197,13 +203,13 @@ function ReservationForm({ meta, options }: { meta: ReservationFull | null; opti
         </div>
       )}
 
-      <Controller name="userId" control={control} render={({ field }) => (
-        <Dropdown label="Пользователь" value={field.value} options={userOptions}
+      <Controller name='userId' control={control} render={({ field }) => (
+        <Dropdown label='Пользователь' value={field.value} options={userOptions}
           onChange={field.onChange} error={errors.userId?.message} />
       )} />
 
-      <Controller name="tableId" control={control} render={({ field }) => (
-        <Dropdown label="Стол" value={field.value} options={tableOptions}
+      <Controller name='tableId' control={control} render={({ field }) => (
+        <Dropdown label='Стол' value={field.value} options={tableOptions}
           onChange={field.onChange} error={errors.tableId?.message} />
       )} />
 
@@ -218,8 +224,8 @@ function ReservationForm({ meta, options }: { meta: ReservationFull | null; opti
         )} />
       ))}
 
-      <Controller name="masterId" control={control} render={({ field }) => (
-        <Dropdown label="Мастер" value={field.value || ''} options={masterOptions}
+      <Controller name='masterId' control={control} render={({ field }) => (
+        <Dropdown label='Мастер' value={field.value || ''} options={masterOptions}
           onChange={(value) => {
             field.onChange(value)
             if (!value) setValue('masterSessionType', '')
@@ -228,32 +234,32 @@ function ReservationForm({ meta, options }: { meta: ReservationFull | null; opti
       )} />
 
       {masterId && (
-        <Controller name="masterSessionType" control={control} render={({ field }) => (
-          <Dropdown label="Тип истории" value={field.value || ''} options={sessionOptions}
+        <Controller name='masterSessionType' control={control} render={({ field }) => (
+          <Dropdown label='Тип истории' value={field.value || ''} options={sessionOptions}
             onChange={field.onChange} error={errors.masterSessionType?.message} />
         )} />
       )}
 
-      <label>
+      <label className='admin-form__field'>
         Гостей
-        <input type="number" {...register('guests')} />
+        <input type='number' {...register('guests')} />
         {errors.guests &&
-          <span className="news-form__error">
+          <span className='admin-form__error'>
             {errors.guests.message}
           </span>
         }
       </label>
 
-      <Controller name="status" control={control} render={({ field }) => (
-        <Dropdown label="Статус" value={field.value} options={STATUS_OPTIONS}
+      <Controller name='status' control={control} render={({ field }) => (
+        <Dropdown label='Статус' value={field.value} options={STATUS_OPTIONS}
           onChange={field.onChange} error={errors.status?.message} />
       )} />
 
-      <label>
+      <label className='admin-form__field'>
         Сумма
-        <input type="number" {...register('totalAmount')} />
+        <input type='number' {...register('totalAmount')} />
         {errors.totalAmount &&
-            <span className="news-form__error">
+            <span className='admin-form__error'>
               {errors.totalAmount.message}
             </span>
           }
@@ -278,24 +284,30 @@ function DishLines({ options }: { options?: ReservationAdminOptions }) {
   const nameById = (id: string) => dishes.find((dish) => dish.id === id)?.nameRu ?? id
 
   return (
-    <div className="dish-lines">
+    <div className='dish-lines'>
       <Dropdown
-        label="Блюда"
+        label='Блюда'
         value={null}
-        placeholder="Добавить блюдо"
+        placeholder='Добавить блюдо'
         options={addOptions}
         onChange={(dishId) => append({ dishId, quantity: 1 })}
       />
 
       {fields.map((field, index) => (
-        <div key={field.id} className="dish-lines__row">
+        <div key={field.id} className='dish-lines__row'>
           <span>{nameById(field.dishId)}</span>
 
-          <input type="number" min={1} max={10} {...register(`dishes.${index}.quantity`)} />
-          
-          <button type="button" onClick={() => remove(index)}>X</button>
+          <input type='number' min={1} max={10} {...register(`dishes.${index}.quantity`)} />
+
+          <button
+            type='button'
+            className='admin-modal__button admin-modal__button--danger'
+            onClick={() => remove(index)}
+          >
+            X
+          </button>
           {errors.dishes?.[index]?.quantity && (
-            <span className="news-form__error">
+            <span className='admin-form__error'>
               {errors.dishes[index]?.quantity?.message}
             </span>
           )}

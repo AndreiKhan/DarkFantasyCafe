@@ -2,9 +2,6 @@
 
 .faq {
   padding: 0 0 50px 0;
-  &__title {
-
-  }
   &__questions {
     display: flex;
     flex-direction: column;
@@ -12,25 +9,34 @@
     width: 100%;
   }
   &__question {
-    &-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 80px;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    &__header {
       @include m.faq-closed-bg;
+      position: relative;
+      padding: 11px 32px 12px 33px;
     }
-    &-name {
-      
+    &__name {
+      font-size: 24px;
     }
-    &-svg {
-
+    &__switch {
+      @include m.faq-switch;
+      position: absolute;
+      height: 50px;
+      width: 80px;
+      top: 3px;
+      right: 10px;
     }
-    &-answer {
-      height: 180px;
-      margin: -21px 58px;
-      padding: 40px 20px;
+    &__switch--opened {
+      transform: rotate(-90deg);
+    }
+    &__answer {
+      margin: -12px 27px 0;
       z-index: -1;
       @include m.faq-opened-bg;
+      padding: 14px;
+      font-size: 18px;
     }
   }
 }

@@ -1,0 +1,29 @@
+@use 'app/styles/mixins' as m;
+
+.pagination {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  &__button {
+    @include m.plywood-with-nails;
+    padding: 7px 14px 7px 14px;
+    color: var(--color-text);
+
+    &:first-child {
+      @include m.arrow-iron;
+      transform: rotate(180deg);
+      width: 70px;
+    }
+    &:last-child {
+      @include m.arrow-iron;
+      width: 70px;
+    }
+  }
+  &__button--active {
+    filter: drop-shadow(0 0 3px var(--color-chosen))
+    drop-shadow(0 0 7px var(--color-chosen));
+    &::after {
+    }
+  }
+}

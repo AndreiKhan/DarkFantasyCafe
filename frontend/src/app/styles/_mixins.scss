@@ -1,11 +1,13 @@
-@mixin bw-coloring-image ($img, $color, $slice, $width, $index: -1, $repeat: stretch) {
+@mixin bw-coloring-image ($img, $color, $slice, $width, $index: -1, $repeat: stretch, $padding: $width) {
   position: relative;
   isolation: isolate;
+  padding: $padding;
   &::before {
     content: '';
     position: absolute;
     inset: 0;
     z-index: $index;
+    pointer-events: none;
     border-image: url($img) $slice fill / $width / 0 $repeat;
   }
   &::after {
@@ -13,6 +15,7 @@
     position: absolute;
     inset: 0;
     z-index: $index;
+    pointer-events: none;
     background-color: $color;
     mix-blend-mode: multiply;
 
@@ -21,60 +24,197 @@
   }
 }
 
+@mixin bw-image ($img, $slice, $width, $index: -1, $repeat: stretch, $padding: $width) {
+  position: relative;
+  isolation: isolate;
+  padding: $padding;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: $index;
+    pointer-events: none;
+    border-image: url($img) $slice fill / $width / 0 $repeat;
+  }
+}
+
+@mixin bw-coloring-flat($img, $color, $index: -1, $padding) {
+  position: relative;
+  isolation: isolate;
+  background: url($img) center / contain no-repeat;
+  padding: $padding;
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: $index;
+    pointer-events: none;
+    background-color: $color;
+    mix-blend-mode: multiply;
+    -webkit-mask-image: url($img);
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-image: url($img);
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+  }
+}
+
+@mixin stone-with-frame-bg {
+  @include bw-coloring-image('@/assets/images/stone-2.webp', var(--frame-stone), 41 39 50 39, 41px 39px 50px 39px, $padding: 29px 29px 40px 26px)
+}
+
+@mixin profile-button {
+  @include bw-coloring-flat('@/assets/images/profile-1.webp', var(--frame-leather-dark), $padding: 31px 60px 11px 13px)
+}
+
+@mixin stone-circle-button {
+  @include bw-coloring-flat('@/assets/images/BWE1_0006_stone-circle-button.webp', var(--frame-stone), $padding: 9px 12px 11px 13px)
+}
+
 @mixin faq-opened-bg {
-  @include bw-coloring-image('@/assets/images/BWE7_0003_faq-opened.png', var(--frame-tint), 10 10 10 10, 10px 10px 10px 10px)
+  @include bw-coloring-image('@/assets/images/BWE12_0001_1-faq-o.webp', var(--frame-stone), 6 31 30 24, 6px 31px 30px 24px)
+}
+
+@mixin parchment-big-bg {
+  @include bw-coloring-image('@/assets/images/BWE3_0006_background-paper-stone.webp', var(--frame-parchment), 9 9 8 13, 9px 9px 8px 13px)
 }
 
 @mixin faq-closed-bg {
-  @include bw-coloring-image('@/assets/images/BWE7_0002_faq-closed.png', var(--frame-tint), 10 10 10 10, 10px 10px 10px 10px)
+  @include bw-coloring-image('@/assets/images/BWE12_0000_1-faq-c.webp', var(--frame-stone), 14 37 15 36, 14px 37px 15px 36px)
+}
+
+@mixin faq-switch {
+  @include bw-coloring-flat('@/assets/images/BWE1_0014_wooden-switch.webp', var(--frame-stone-dark), $padding: 0)
 }
 
 @mixin runes-line-bg {
-  @include bw-coloring-image('@/assets/images/BWE7_0004_runes-line.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px, repeat)
+  @include bw-coloring-image('@/assets/images/BWE7_0004_runes-line.webp', var(--frame-tint), 4 8 6 9, 4px 8px 6px 9px, $repeat: repeat)
 }
 
 @mixin wood-background-bg {
-  @include bw-coloring-image('@/assets/images/BWE7_0005_wood-background.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
+  @include bw-coloring-image('@/assets/images/BWE7_0005_wood-background.webp', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
 }
 
 @mixin wood-background-small-bg {
-  @include bw-coloring-image('@/assets/images/BWE2_0004_background-wood.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
+  @include bw-coloring-image('@/assets/images/BWE2_0004_background-wood.webp', var(--frame-tint), 28 89 38 107, 28px 89px 38px 107px, $padding: 0, $repeat: repeat)
 }
 
 @mixin half-rolled-parchment-button-bg-variant-1 {
-  @include bw-coloring-image('@/assets/images/BWE1_0000_parchment-half-rolled.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
+  @include bw-coloring-image('@/assets/images/BWE1_0000_parchment-half-rolled.webp', var(--frame-tint), 10 14 12 14, 10px 14px 12px 14px, $padding: 10px 15px 8px 15px)
 }
 
 @mixin half-rolled-parchment-button-bg-variant-2 {
-  @include bw-coloring-image('@/assets/images/BWE2_0005_parchment-half-rolled.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
+  @include bw-coloring-image('@/assets/images/BWE2_0005_parchment-half-rolled.webp', var(--frame-tint), 23 39 20 38, 23px 39px 20px 38px, $padding: 21px 43px 19px 40px)
 }
 
 @mixin big-opened-parchment-bg {
-  @include bw-coloring-image('@/assets/images/BWE6_0004_big-opened-parchment.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
+  @include bw-coloring-image('@/assets/images/BWE6_0004_big-opened-parchment.webp', var(--frame-tint), 40 37 37 45, 40px 37px 37px 45px, $padding: 19px 31px 43px 31px)
 }
 
 @mixin plate-with-frame-button-bg {
-  @include bw-coloring-image('@/assets/images/BWE1_0005_plate-with-frame.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
-}
-
-@mixin input-bg {
-  @include bw-coloring-image('@/assets/images/BWE6_0003_input-background.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
+  @include bw-coloring-image('@/assets/images/BWE1_0005_plate-with-frame.webp', var(--frame-tint), 40 68 31 68, 30px 45px 28px 44px, $padding: 24px 16px 21px 19px)
 }
 
 @mixin wood-button-bg {
-  @include bw-coloring-image('@/assets/images/BWE5_0000_wood-button.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
+  @include bw-coloring-image('@/assets/images/BWE5_0000_wood-button.webp', var(--frame-tint), 6 7 8 7, 6px 7px 8px 7px, $padding: 6px 7px 8px 7px)
 }
 
 @mixin parchment-damaged-bg {
-  @include bw-coloring-image('@/assets/images/BWE1_0013_parchment-damaged.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
+  @include bw-coloring-image('@/assets/images/BWE1_0013_parchment-damaged.webp', var(--frame-parchment), 6 7 9 5, 6px 7px 9px 5px, $padding: 4px 8px 7px 8px)
 }
 
 @mixin plywood-bg {
-  @include bw-coloring-image('@/assets/images/BWE1_0017_plywood.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px)
+  @include bw-coloring-image('@/assets/images/BWE1_0017_plywood.webp', var(--frame-tint), 6 7 6 6, 6px 7px 6px 6px, $padding: 6px 7px 6px 6px)
 }
 
 @mixin product-border-bg {
-  @include bw-coloring-image('@/assets/images/product-border-small.png', var(--frame-tint), 30 45 28 44, 30px 45px 28px 44px, 1)
+  @include bw-coloring-image('@/assets/images/product-border-small.webp', var(--frame-tint), 23 24 24 24, 23px 24px 24px 24px, 1, $padding: 6px 7px 6px 6px)
+}
+
+@mixin ornament-border-bg {
+  @include bw-coloring-image('@/assets/images/BWE11_0001_2-frame.webp', var(--frame-tint), 28 29 29 28, 28px 29px 29px 28px, 1, $padding: 4px)
+}
+
+@mixin wood-frame-bg {
+  @include bw-coloring-image('@/assets/images/wood-frame-new.webp', var(--frame-tint), 50 47 52 46, 50px 47px 52px 46px, 1, $padding: 8px 9px 9px 9px)
+}
+
+@mixin wood-row-bg {
+  @include bw-coloring-image('@/assets/images/wood-1.webp', var(--frame-tint), 5 14 6 14, 5px 14px 6px 14px)
+}
+
+@mixin wood-bg-with-frame {
+  @include bw-coloring-image('@/assets/images/bg-wood-with-frame.webp', var(--frame-tint), 9 10 10 9, 9px 10px 10px 9px)
+}
+
+@mixin input-bg {
+  @include bw-coloring-image('@/assets/images/BWE3_0005_something-like-input.webp', var(--frame-parchment-input), 6 6 6 7, 6px 6px 6px 7px, $padding: 6px 7px 6px 6px)
+}
+
+@mixin small-stone-button-bg {
+  @include bw-coloring-image('@/assets/images/BWE2_0010_stone-button.webp', var(--frame-stone), 9 9 8 10, 9px 9px 8px 10px)
+}
+
+@mixin arrow-iron {
+  @include bw-coloring-image('@/assets/images/BWE2_0003_small-arrow-right.webp', var(--frame-parchment-input), 17 42 17 16, 17px 42px 17px 16px)
+}
+
+@mixin plywood-with-nails {
+  @include bw-coloring-image('@/assets/images/BWE1_0008_button-wood-with-nails.webp', var(--frame-tint), 10 10 12 11, 10px 10px 12px 11px)
+}
+
+@mixin divide-with-runes-bg {
+  @include bw-coloring-image('@/assets/images/BWE3_0001_runs-line.webp', var(--frame-tint), 13 15 13 13, 13px 15px 13px 13px)
+}
+
+@mixin divide-with-runes {
+  @include bw-coloring-flat('@/assets/images/BWE3_0001_runs-line.webp', var(--frame-tint), $padding: 13px 15px 13px 13px)
+}
+
+@mixin map-border-bg {
+  @include bw-coloring-image('@/assets/images/BWE11_0005_6-frame.webp', var(--frame-stone), 26 27 28 26, 26px 27px 28px 26px, 1, $padding: 0, $repeat: repeat)
+}
+
+@mixin title-decorate-arrow {
+  @include bw-coloring-image('@/assets/images/BWE5_0003_arrow-right.webp', var(--frame-stone), 13 49 12 4, 13px 49px 12px 4px, $padding: 16px)
+}
+
+@mixin rune1 {
+  @include bw-coloring-flat('@/assets/images/BWE8_0006_7-rune.webp', var(--frame-stone), $padding: 9px 12px 11px 13px)
+}
+
+@mixin rune2 {
+  @include bw-coloring-flat('@/assets/images/BWE8_0002_3-rune.webp', var(--frame-stone), $padding: 9px 12px 11px 13px)
+}
+
+@mixin rune3 {
+  @include bw-coloring-flat('@/assets/images/BWE8_0004_5-rune.webp', var(--frame-stone), $padding: 9px 12px 11px 13px)
+}
+
+@mixin rune4 {
+  @include bw-coloring-flat('@/assets/images/BWE8_0000_1-rune.webp', var(--frame-stone), $padding: 9px 12px 11px 13px)
+}
+
+@mixin rune5 {
+  @include bw-coloring-flat('@/assets/images/BWE8_0001_2-rune.webp', var(--frame-stone), $padding: 9px 12px 11px 13px)
+}
+
+@mixin rune6 {
+  @include bw-coloring-flat('@/assets/images/BWE8_0008_9-rune.webp', var(--frame-stone), $padding: 9px 12px 11px 13px)
+}
+
+@mixin parchment-text-bg {
+  @include bw-coloring-image('@/assets/images/BWE7_0003_faq-opened.webp', var(--frame-parchment), 6 10 9 10, 6px 10px 9px 10px)
+}
+
+@mixin modal-variant-1 {
+  @include bw-image('@/assets/images/BWE13_0001_2-modal.webp', 98 99 75 62, 98px 99px 75px 62px, $repeat: repeat)
+}
+@mixin stone-row-bg {
+  @include bw-coloring-image('@/assets/images/stone-1.webp', var(--frame-stone), 9 22 11 18, 9px 22px 11px 18px)
 }
 
 @mixin tablet ($width: 1024px) {

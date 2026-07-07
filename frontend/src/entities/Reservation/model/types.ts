@@ -44,6 +44,8 @@ export interface MasterOption {
   id: string
   name: string
   available: boolean
+  image: string | null
+  bio: string | null
 }
 
 export interface MastersResponse {

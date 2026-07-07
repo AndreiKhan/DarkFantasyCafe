@@ -1,4 +1,7 @@
-@use './themes'; 
+@use './themes';
+@use './fonts';
+@use './variables';
+@use './mixins' as m;
 
 * {
   margin: 0;
@@ -16,14 +19,36 @@ body {
   background: var(--color-bg);
 }
 
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+input {
+  background: transparent;
+  border: none;
+  outline: none;
+  font: inherit;
+  color: inherit;
+}
+
+textarea {
+  background: transparent;
+  border: none;
+  outline: none;
+  font: inherit;
+  color: inherit;
+}
+
+.input-parchment-wrapper {
+  @include m.input-bg;
+}
+
 #root {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-}
-
-main {
-  flex: 1;
+  position: relative;
 }
 
 a {
@@ -51,4 +76,10 @@ ul, ol {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 24px;
+  @include m.tablet {
+    padding: 0 12px;
+  }
+  @include m.mobile {
+    padding: 0 6px;
+  }
 }

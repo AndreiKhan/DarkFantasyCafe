@@ -2,7 +2,7 @@ import {
   useAdminDishes, useDishOptions, useCreateDish, useUpdateDish, useDeleteDish,
   dishFormSchema, type CreateDish, type DishFull, type DishAdminOptions,
 } from '@/entities/Dish'
-import { AdminModal, Dropdown, ArrayField, KeywordSearchField } from '@/shared/ui'
+import { AdminModal, AdminTable, Dropdown, ErrorPlug, ImageDropzone, Loader, type AdminTableColumn } from '@/shared/ui'
 import { formatReadOnlyValue } from '@/shared/lib/datetime'
 import { Controller, FormProvider, useFormContext } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
@@ -20,6 +20,19 @@ const EMPTY_DISH: CreateDish = {
   tagIds: [],
   allergenIds: [],
 }
+
+const COLUMNS: AdminTableColumn<DishFull>[] = [
+  { key: 'name', header: 'Название', render: (item) => item.nameRu },
+  { key: 'category', header: 'Категория', render: (item) => item.category.nameRu },
+  { key: 'price', header: 'Цена', render: (item) => `${item.price} ₽` },
+  {
+    key: 'allergens',
+    header: 'Аллергены',
+    render: (item) => item.allergens.length > 0
+      ? item.allergens.map((allergen) => allergen.nameRu).join(', ')
+      : '—',
+  },
+]
 
 const toForm = (item: DishFull): CreateDish => ({
   nameRu: item.nameRu,
@@ -86,25 +99,24 @@ function DishAdminList() {
   }
 
   if (isLoading) {
-    return <p>isLoading</p>
+    return <Loader width='100px' height='100px' />
   }
   if (isError || !data) {
-    return <p>isError</p>
+    return <ErrorPlug />
   }
 
   return (
-    <div>
-      <button type="button" onClick={openCreate}>
-        Создать блюдо
-      </button>
-
-      <KeywordSearchField onSearch={setQuery} placeholder="Название, описание..." />
-
-      {data.map((item) => (
-        <div key={item.id} onClick={() => openEdit(item)}>
-          <p><strong>{item.nameRu}</strong></p>
-        </div>
-      ))}
+    <div className='admin-entity'>
+      <AdminTable
+        columns={COLUMNS}
+        data={data}
+        getRowKey={(item) => item.id}
+        onRowClick={openEdit}
+        onCreate={openCreate}
+        createLabel='Создать блюдо'
+        searchPlaceholder='Название, описание...'
+        onSearch={setQuery}
+      />
 
       <AdminModal
         title={editItem ? 'Редактировать блюдо' : 'Новое блюдо'}
@@ -132,18 +144,20 @@ function MultiCheck({ label, options, value, onChange }: {
     value.includes(id) ? onChange(value.filter((v) => v !== id)) : onChange([...value, id])
 
   return (
-    <div>
-      <span>{label}</span>
-      {options.map((option) => (
-        <label key={option.value} style={{ display: 'block' }}>
-          <input
-            type="checkbox"
-            checked={value.includes(option.value)}
-            onChange={() => toggle(option.value)}
-          />
-          {option.label}
-        </label>
-      ))}
+    <div className='admin-form__multi-check'>
+      <span className='admin-form__section-title'>{label}</span>
+      <div className='admin-form__multi-check-options'>
+        {options.map((option) => (
+          <label key={option.value} className='admin-form__multi-check-option'>
+            <input
+              type='checkbox'
+              checked={value.includes(option.value)}
+              onChange={() => toggle(option.value)}
+            />
+            {option.label}
+          </label>
+        ))}
+      </div>
     </div>
   )
 }
@@ -170,9 +184,9 @@ function DishForm({ meta, options }: { meta: DishFull | null; options?: DishAdmi
   ]
 
   return (
-    <div style={{ display: 'flex', gap: '20px', flexDirection: 'column' }}>
+    <div className='admin-form'>
       {meta && (
-        <div className="news-form__readonly">
+        <div className='admin-form__readonly'>
           {readOnly.map(([key, label]) => (
             <p key={key}>
               <strong>{label}:</strong> {formatReadOnlyValue(key, meta[key])}
@@ -182,37 +196,45 @@ function DishForm({ meta, options }: { meta: DishFull | null; options?: DishAdmi
       )}
 
       {texts.map(([key, label, area]) => (
-        <label key={key}>
+        <label key={key} className='admin-form__field'>
           {label}
           {area ? <textarea {...register(key)} /> : <input {...register(key)} />}
-          {errors[key] && <span className="news-form__error">{errors[key]?.message}</span>}
+          {errors[key] && <span className='admin-form__error'>{errors[key]?.message}</span>}
         </label>
       ))}
 
-      <label>
+      <label className='admin-form__field'>
         Цена
-        <input type="number" {...register('price')} />
+        <input type='number' {...register('price')} />
         {errors.price &&
-          <span className="news-form__error">
+          <span className='admin-form__error'>
             {errors.price.message}
           </span>
         }
       </label>
 
-      <Controller name="categoryId" control={control} render={({ field }) => (
-        <Dropdown label="Категория" value={field.value} options={categoryOptions}
+      <Controller name='categoryId' control={control} render={({ field }) => (
+        <Dropdown label='Категория' value={field.value} options={categoryOptions}
           onChange={field.onChange} error={errors.categoryId?.message} />
       )} />
 
-      <Controller name="tagIds" control={control} render={({ field }) => (
-        <MultiCheck label="Теги" options={tagOptions} value={field.value} onChange={field.onChange} />
+      <Controller name='tagIds' control={control} render={({ field }) => (
+        <MultiCheck label='Теги' options={tagOptions} value={field.value} onChange={field.onChange} />
       )} />
 
-      <Controller name="allergenIds" control={control} render={({ field }) => (
-        <MultiCheck label="Аллергены" options={allergenOptions} value={field.value} onChange={field.onChange} />
+      <Controller name='allergenIds' control={control} render={({ field }) => (
+        <MultiCheck label='Аллергены' options={allergenOptions} value={field.value} onChange={field.onChange} />
       )} />
 
-      <ArrayField name="images" label="Изображения" />
+      <Controller name='images' control={control} render={({ field }) => (
+        <ImageDropzone
+          label='Изображения'
+          value={field.value}
+          onChange={field.onChange}
+          multiple
+          error={errors.images?.message}
+        />
+      )} />
     </div>
   )
 }

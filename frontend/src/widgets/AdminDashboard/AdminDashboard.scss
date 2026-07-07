@@ -1,5 +1,33 @@
 @use 'app/styles/mixins' as m;
 
 .admin-dashboard {
-  
+  padding: 24px 0 60px;
+  width: 100%;
+
+  &__title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 48px;
+    margin-bottom: 20px;
+  }
+
+  &__entities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  &__entity {
+    @include m.plywood-bg;
+    color: var(--color-text);
+    font-size: 15px;
+    padding: 8px 16px;
+  }
+
+  &__entity--active {
+    filter: drop-shadow(0 0 3px var(--color-chosen))
+      drop-shadow(0 0 7px var(--color-chosen));
+  }
 }

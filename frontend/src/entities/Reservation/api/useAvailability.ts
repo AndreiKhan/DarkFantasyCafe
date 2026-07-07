@@ -10,5 +10,6 @@ export function useAvailability(params: AvailabilityParams) {
   return useQuery({
     queryKey: ['availability', lang, params],
     queryFn: () => getAvailability({ lang, ...params }),
+    placeholderData: (prev) => prev,
   })
 }

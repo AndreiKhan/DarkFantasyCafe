@@ -1,13 +1,15 @@
 @use 'app/styles/mixins' as m;
 
 .header {
+  margin: 25px 0 25px;
   &__content {
     display: flex;
     align-items: center;
     gap: 50px;
   }
   &__logo {
-    background-color: pink;
+    max-width: 100px;
+    
   }
   &__container {
     width: 100%;
@@ -26,18 +28,26 @@
     &-item {
       width: min-content;
       padding: 20px 40px;
-
+      font-size: 18px;
       @include m.half-rolled-parchment-button-bg-variant-1;
+      cursor: pointer;
     }
     &-item--active {
-      filter: drop-shadow(0 0 5px gold)
-      drop-shadow(0 0 10px orange);
+      filter: drop-shadow(0 0 5px var(--color-chosen))
+      drop-shadow(0 0 10px var(--color-chosen));
     }
   }
   &__menu {
-
-  }
-  &__profile {
-    color: red;
+    display: flex;
+    gap: 4px;
+    &-profile {
+      height: max-content;
+      @include m.profile-button;
+      cursor: pointer;
+    }
+    &-options {
+      display: flex;
+      gap: 4px;
+    }
   }
 }

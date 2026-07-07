@@ -1,0 +1,46 @@
+@use 'app/styles/mixins' as m;
+
+.section-decorated-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 48px;
+  margin-bottom: 20px;
+  &__name {
+    margin-right: 10px;
+    margin-left: 10px;
+    white-space: nowrap;
+    text-shadow: var(--text-shadow-bg);
+  }
+  &__decorator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    &--arrow {
+      @include m.title-decorate-arrow;
+      width: 100%;
+      &:first-child {
+        transform: rotate(180deg);
+      }
+    }
+    &--rune1 {
+      @include m.rune1;
+    }
+    &--rune2 {
+      @include m.rune2;
+    }
+    &--rune3 {
+      @include m.rune3;
+    }
+    &--rune4 {
+      @include m.rune4;
+    }
+    &--rune5 {
+      @include m.rune5;
+    }
+    &--rune6 {
+      @include m.rune6;
+    }
+  }
+}

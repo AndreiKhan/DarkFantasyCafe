@@ -1,0 +1,66 @@
+{
+  "fields": {
+    "firstName": "First name",
+    "secondName": "Last name",
+    "phone": "Phone",
+    "email": "Email",
+    "password": "Password",
+    "bio": "About",
+    "image": "Image"
+  },
+  "actions": {
+    "save": "Save",
+    "saved": "Saved",
+    "back": "Back",
+    "next": "Next",
+    "skip": "Skip",
+    "confirm": "Confirm",
+    "pay": "Pay",
+    "select": "Select",
+    "search": "Search",
+    "find": "Find",
+    "close": "Close"
+  },
+  "states": {
+    "error": "Failed to load data"
+  },
+  "theme": {
+    "dark": "Dark",
+    "light": "Light"
+  },
+  "roles": {
+    "USER": "Visitor",
+    "ADMIN": "Keeper",
+    "MASTER": "Game master"
+  },
+  "upload": {
+    "removeImage": "Remove image",
+    "replace": "Replace",
+    "file": "file",
+    "dragHere": "Drag a file here",
+    "orClickToSelect": "or click to browse"
+  },
+  "a11y": {
+    "mainNav": "Main navigation",
+    "siteLogo": "The Bald Goose",
+    "profile": "Profile",
+    "login": "Sign in",
+    "themeToggle": "Toggle color theme",
+    "languageToggle": "Switch language",
+    "pagination": "Pagination",
+    "prevPage": "Previous page",
+    "nextPage": "Next page",
+    "page": "Page {{page}}",
+    "currentPage": "Current page, {{page}}",
+    "decreaseQuantity": "Decrease quantity",
+    "increaseQuantity": "Increase quantity",
+    "quantity": "Quantity: {{count}}",
+    "loading": "Loading",
+    "hallMap": "Hall map",
+    "selectTable": "Select table №{{number}}",
+    "uploadImage": "Upload or replace image",
+    "socialLinks": "Social media",
+    "interfaceOptions": "Language and theme",
+    "decorative": "Decorative element"
+  }
+}

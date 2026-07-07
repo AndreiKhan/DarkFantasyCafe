@@ -7,6 +7,16 @@ import { AppError } from '../../shared/AppError.js'
 const BUFFER_MS = 30 * 60 * 1000
 const MASTER_PRICE_ONESHOT = 2000
 const MASTER_PRICE_CAMPAIGN = 5000
+const DRAFT_TTL_MS = 15 * 60 * 1000
+const PENDING_PAYMENT_TTL_MS = 60 * 60 * 1000
+
+function cleanupStaleReservations() {
+  const now = Date.now()
+  return reservationRepository.cleanupStale(
+    new Date(now - DRAFT_TTL_MS),
+    new Date(now - PENDING_PAYMENT_TTL_MS),
+  )
+}
 
 function masterSessionPrice(type: MasterSessionType) {
   return type === 'CAMPAIGN' ? MASTER_PRICE_CAMPAIGN : MASTER_PRICE_ONESHOT
@@ -80,6 +90,8 @@ export const reservationService = {
   },
 
   async createDraft(userId: string, input: CreateReservation) {
+    await cleanupStaleReservations()
+
     const { startsAt, endsAt } = buildWindow(input.date, input.start, input.duration)
 
     if (startsAt.getTime() <= Date.now()) {
@@ -365,6 +377,8 @@ async function listMasters(startsAt: Date, endsAt: Date, excludeId?: string) {
       id: master.id,
       name: masterName(master),
       available: !busy.has(master.id),
+      image: master.image,
+      bio: master.bio,
     })),
   }
 }

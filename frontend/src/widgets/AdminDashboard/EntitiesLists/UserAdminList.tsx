@@ -3,7 +3,7 @@ import {
   userFormSchema, type CreateUser, type UserFull,
 } from '@/entities/User'
 import { useAdminReservations, type ReservationFull } from '@/entities/Reservation'
-import { AdminModal, Dropdown, KeywordSearchField, PhoneInput } from '@/shared/ui'
+import { AdminModal, AdminTable, Dropdown, PhoneInput, ImageDropzone, type AdminTableColumn, Loader, ErrorPlug } from '@/shared/ui'
 import { formatDateTime, formatReadOnlyValue } from '@/shared/lib/datetime'
 import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -24,6 +24,13 @@ const ROLE_OPTIONS = [
   { value: 'USER', label: 'USER' },
   { value: 'ADMIN', label: 'ADMIN' },
   { value: 'MASTER', label: 'MASTER' },
+]
+
+const COLUMNS: AdminTableColumn<UserFull>[] = [
+  { key: 'email', header: 'Email', render: (item) => item.email },
+  { key: 'name', header: 'Имя', render: (item) => `${item.firstName} ${item.secondName}` },
+  { key: 'phone', header: 'Телефон', render: (item) => item.phone ?? '—' },
+  { key: 'role', header: 'Роль', render: (item) => <span className='admin-table__badge'>{item.role}</span> },
 ]
 
 const toForm = (item: UserFull): CreateUser => ({
@@ -101,25 +108,24 @@ function UserAdminList() {
   }
 
   if (isLoading) {
-    return <p>isLoading</p>
+    return <Loader width='100px' height='100px' />
   }
   if (isError || !data) {
-    return <p>isError</p>
+    return <ErrorPlug />
   }
 
   return (
-    <div>
-      <button type="button" onClick={openCreate}>
-        Создать пользователя
-      </button>
-
-      <KeywordSearchField onSearch={setQuery} placeholder="Email, имя, телефон, bio..." />
-
-      {data.map((item) => (
-        <div key={item.id} onClick={() => openEdit(item)}>
-          <p><strong>{item.email}</strong></p>
-        </div>
-      ))}
+    <div className='admin-entity'>
+      <AdminTable
+        columns={COLUMNS}
+        data={data}
+        getRowKey={(item) => item.id}
+        onRowClick={openEdit}
+        onCreate={openCreate}
+        createLabel='Создать пользователя'
+        searchPlaceholder='Email, имя, телефон, bio...'
+        onSearch={setQuery}
+      />
 
       <AdminModal
         title={editItem ? 'Редактировать пользователя' : 'Новый пользователь'}
@@ -155,7 +161,6 @@ function UserForm({ meta, reservations, removedTokenIds, onRemoveToken }: {
     ['firstName', 'Имя'],
     ['secondName', 'Фамилия'],
     ['phone', 'Телефон'],
-    ['image', 'Изображение (URL)'],
     ['bio', 'О себе'],
   ]
 
@@ -166,9 +171,9 @@ function UserForm({ meta, reservations, removedTokenIds, onRemoveToken }: {
   ]
 
   return (
-    <div style={{ display: 'flex', gap: '20px', flexDirection: 'column' }}>
+    <div className='admin-form'>
       {meta && (
-        <div className="news-form__readonly">
+        <div className='admin-form__readonly'>
           {readOnly.map(([key, label]) => (
             <p key={key}>
               <strong>{label}:</strong> {formatReadOnlyValue(key, meta[key])}
@@ -178,11 +183,11 @@ function UserForm({ meta, reservations, removedTokenIds, onRemoveToken }: {
       )}
 
       {meta && (
-        <div>
-          <span>Бронирования:</span>
+        <div className='admin-form__section'>
+          <span className='admin-form__section-title'>Бронирования:</span>
           {reservations.length === 0 && <p>—</p>}
           {reservations.map((r) => (
-            <div key={r.id} className="news-form__readonly">
+            <div key={r.id} className='admin-form__readonly'>
               <p><strong>Стол:</strong> {r.table.number}</p>
               <p><strong>Начало:</strong> {formatDateTime(r.startsAt)}</p>
               <p><strong>Конец:</strong> {formatDateTime(r.endsAt)}</p>
@@ -194,15 +199,21 @@ function UserForm({ meta, reservations, removedTokenIds, onRemoveToken }: {
       )}
 
       {meta && (
-        <div>
-          <span>Сессии (refresh-токены):</span>
+        <div className='admin-form__section'>
+          <span className='admin-form__section-title'>Сессии (refresh-токены):</span>
           {meta.refreshTokens
             .filter((token) => !removedTokenIds.includes(token.id))
             .map((token) => (
-              <div key={token.id} className="news-form__readonly">
+              <div key={token.id} className='admin-form__readonly admin-form__readonly--row'>
                 <p><strong>Выдан:</strong> {formatDateTime(token.createdAt)}</p>
                 <p><strong>Истекает:</strong> {formatDateTime(token.expiresAt)}</p>
-                <button type="button" onClick={() => onRemoveToken(token.id)}>X</button>
+                <button
+                  type='button'
+                  className='admin-modal__button admin-modal__button--danger'
+                  onClick={() => onRemoveToken(token.id)}
+                >
+                  X
+                </button>
               </div>
             ))}
           {meta.refreshTokens.every((token) => removedTokenIds.includes(token.id)) && <p>—</p>}
@@ -210,11 +221,11 @@ function UserForm({ meta, reservations, removedTokenIds, onRemoveToken }: {
       )}
 
       {meta && (
-        <div>
-          <span>Персонажи:</span>
+        <div className='admin-form__section'>
+          <span className='admin-form__section-title'>Персонажи:</span>
           {meta.characters.length === 0 && <p>—</p>}
           {meta.characters.map((character) => (
-            <div key={character.id} className="news-form__readonly">
+            <div key={character.id} className='admin-form__readonly'>
               <p><strong>Имя:</strong> {character.name}</p>
               <p><strong>Уровень:</strong> {character.level}</p>
               <p><strong>Класс:</strong> {character.class}</p>
@@ -225,11 +236,11 @@ function UserForm({ meta, reservations, removedTokenIds, onRemoveToken }: {
       )}
 
       {meta && (
-        <div>
-          <span>Достижения:</span>
+        <div className='admin-form__section'>
+          <span className='admin-form__section-title'>Достижения:</span>
           {meta.achievements.length === 0 && <p>—</p>}
           {meta.achievements.map((achievement) => (
-            <div key={achievement.id} className="news-form__readonly">
+            <div key={achievement.id} className='admin-form__readonly'>
               <p><strong>Название:</strong> {achievement.nameRu}</p>
               <p><strong>Статус:</strong> {achievement.status}</p>
               <p><strong>Бонусы:</strong> {achievement.bonuses}</p>
@@ -238,12 +249,21 @@ function UserForm({ meta, reservations, removedTokenIds, onRemoveToken }: {
         </div>
       )}
 
+      <Controller name='image' control={control} render={({ field }) => (
+        <ImageDropzone
+          label='Изображение'
+          value={field.value ? [field.value] : []}
+          onChange={(urls) => field.onChange(urls[0] ?? '')}
+          error={errors.image?.message}
+        />
+      )} />
+
       {texts.map(([key, label]) => (
-        <label key={key}>
+        <label key={key} className='admin-form__field'>
           {label}
           {key === 'phone' ? (
             <Controller
-              name="phone"
+              name='phone'
               control={control}
               render={({ field }) => (
                 <PhoneInput
@@ -258,7 +278,7 @@ function UserForm({ meta, reservations, removedTokenIds, onRemoveToken }: {
             <input {...register(key)} />
           )}
           {errors[key] &&
-            <span className="news-form__error">
+            <span className='admin-form__error'>
               {errors[key]?.message}
             </span>
           }
@@ -266,19 +286,19 @@ function UserForm({ meta, reservations, removedTokenIds, onRemoveToken }: {
       ))}
 
       {!meta && (
-        <label>
+        <label className='admin-form__field'>
           Пароль
-          <input type="password" {...register('password')} />
+          <input type='password' {...register('password')} />
           {errors.password &&
-            <span className="news-form__error">
+            <span className='admin-form__error'>
               {errors.password.message}
             </span>
           }
         </label>
       )}
 
-      <Controller name="role" control={control} render={({ field }) => (
-        <Dropdown label="Роль" value={field.value} options={ROLE_OPTIONS}
+      <Controller name='role' control={control} render={({ field }) => (
+        <Dropdown label='Роль' value={field.value} options={ROLE_OPTIONS}
           onChange={field.onChange} error={errors.role?.message} />
       )} />
     </div>

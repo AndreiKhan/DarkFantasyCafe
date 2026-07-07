@@ -16,7 +16,7 @@ export const newsFormSchema = z.object({
   shortDescriptionEn: z.string().min(1, 'Enter short description'),
   bodyRu: z.string().min(1, 'Текст обязателен'),
   bodyEn: z.string().min(1, 'Body is required'),
-  images: z.array(z.string().url('Некорректный URL')),
+  images: z.array(z.string()),
   startsAt: workingSlot,
   endsAt: workingSlot,
 })

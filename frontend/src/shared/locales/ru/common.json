@@ -1,0 +1,66 @@
+{
+  "fields": {
+    "firstName": "Имя",
+    "secondName": "Фамилия",
+    "phone": "Телефон",
+    "email": "Email",
+    "password": "Пароль",
+    "bio": "О себе",
+    "image": "Изображение"
+  },
+  "actions": {
+    "save": "Сохранить",
+    "saved": "Сохранено",
+    "back": "Назад",
+    "next": "Дальше",
+    "skip": "Пропустить",
+    "confirm": "Подтвердить",
+    "pay": "Оплатить",
+    "select": "Выбрать",
+    "search": "Поиск",
+    "find": "Найти",
+    "close": "Закрыть"
+  },
+  "states": {
+    "error": "Не удалось загрузить данные"
+  },
+  "theme": {
+    "dark": "Тёмная",
+    "light": "Светлая"
+  },
+  "roles": {
+    "USER": "Посетитель",
+    "ADMIN": "Хранитель",
+    "MASTER": "Мастер"
+  },
+  "upload": {
+    "removeImage": "Удалить изображение",
+    "replace": "Заменить",
+    "file": "файл",
+    "dragHere": "Перетащите файл сюда",
+    "orClickToSelect": "или нажмите для выбора"
+  },
+  "a11y": {
+    "mainNav": "Основная навигация",
+    "siteLogo": "Лысый Гусь",
+    "profile": "Профиль",
+    "login": "Войти",
+    "themeToggle": "Переключить тему оформления",
+    "languageToggle": "Переключить язык",
+    "pagination": "Навигация по страницам",
+    "prevPage": "Предыдущая страница",
+    "nextPage": "Следующая страница",
+    "page": "Страница {{page}}",
+    "currentPage": "Текущая страница, {{page}}",
+    "decreaseQuantity": "Уменьшить количество",
+    "increaseQuantity": "Увеличить количество",
+    "quantity": "Количество: {{count}}",
+    "loading": "Загрузка",
+    "hallMap": "Карта зала",
+    "selectTable": "Выбрать стол №{{number}}",
+    "uploadImage": "Загрузить или заменить изображение",
+    "socialLinks": "Социальные сети",
+    "interfaceOptions": "Язык и тема оформления",
+    "decorative": "Декоративный элемент"
+  }
+}

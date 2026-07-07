@@ -1,0 +1,82 @@
+@use 'app/styles/mixins' as m;
+
+.auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 48px 24px;
+
+  &__container {
+    width: 100%;
+    max-width: 460px;
+    @include m.wood-frame-bg;
+  }
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+
+    @include m.small-stone-button-bg;
+  }
+
+  &__title {
+    font-size: 30px;
+    text-align: center;
+  }
+
+  &__divider {
+    @include m.divide-with-runes;
+    width: 100%;
+  }
+
+  &__footer {
+    font-size: 14px;
+    text-align: center;
+    z-index: 2;
+
+    a {
+      color: var(--color-accent);
+      text-decoration: underline;
+    }
+  }
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  z-index: 2;
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+  }
+
+  &__field-error {
+    font-size: 13px;
+    color: var(--color-error);
+  }
+
+  &__error {
+    padding: 8px 12px;
+    border-radius: 4px;
+    background-color: var(--color-error-bg);
+    color: var(--color-error);
+    font-size: 14px;
+    text-align: center;
+  }
+
+  &__submit {
+    align-self: center;
+    margin-top: 4px;
+    color: var(--color-text);
+
+    @include m.wood-button-bg;
+  }
+}

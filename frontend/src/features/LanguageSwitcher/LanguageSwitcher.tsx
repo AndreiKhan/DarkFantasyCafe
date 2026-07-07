@@ -2,7 +2,8 @@ import './LanguageSwitcher.scss'
 import { useTranslation } from 'react-i18next'
 
 function LanguageSwitcher() {
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation('common')
+  const currentLanguage = i18n.language === 'ru' ? 'RU' : 'EN'
 
   const toggleLanguage = () => {
     const language = i18n.language === 'ru' ? 'en' : 'ru'
@@ -11,8 +12,13 @@ function LanguageSwitcher() {
   }
 
   return (
-    <button className='language-switcher' type='button' onClick={toggleLanguage}>
-      {i18n.language === 'ru' ? 'RU' : 'EN'}
+    <button
+      className='language-switcher'
+      type='button'
+      onClick={toggleLanguage}
+      aria-label={`${t('a11y.languageToggle')}: ${currentLanguage}`}
+    >
+      {currentLanguage}
     </button>
   )
 }

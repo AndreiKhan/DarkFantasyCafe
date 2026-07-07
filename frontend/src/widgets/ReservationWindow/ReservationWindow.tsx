@@ -1,28 +1,59 @@
 import { useCallback, useEffect, useState } from 'react'
 import './ReservationWindow.scss'
+import { useTranslation } from 'react-i18next'
 import { useAvailability, useMasters, type AvailabilityParams, type AvailabilityTable, type MasterSessionType, type ReservationSummary } from '@/entities/Reservation'
 import { todayStr } from './options'
 import { StepWindow } from './StepWindow'
 import { StepDishes } from './StepDishes'
 import { StepConfirm } from './StepConfirm'
 import { StepPayment } from './StepPayment'
+import SectionDecoratedTitle from '@/shared/ui/SectionDecoratedTitle/SectionDecoratedTitle'
+import Modal from '@/shared/ui/Modal/Modal'
 
-type Step = 1 | 2 | 3 | 4
+type Step = 1 | 2 | 3
+
+type Draft = {
+  params: AvailabilityParams
+  selectedId: string | null
+  masterId: string
+  masterSessionType: MasterSessionType | ''
+  step: Step
+  dishQuantity: Record<string, number>
+}
+
+const DRAFT_KEY = 'reservation-draft'
+
+function loadDraft(): Partial<Draft> {
+  try {
+    return JSON.parse(sessionStorage.getItem(DRAFT_KEY) ?? '{}')
+  }
+  catch {
+    return {}
+  }
+}
 
 function ReservationWindow() {
-  const [params, setParams] = useState<AvailabilityParams>({
+  const { t } = useTranslation('reservation')
+  const [draft] = useState(loadDraft)
+
+  const [params, setParams] = useState<AvailabilityParams>(draft.params ?? {
     date: todayStr(),
     start: '18:00',
     duration: 60,
     guests: 2,
   })
 
-  const [selectedId, setSelectedId] = useState<string | null>(null)
-  const [masterId, setMasterId] = useState<string>('')
-  const [masterSessionType, setMasterSessionType] = useState<MasterSessionType | ''>('')
-  const [step, setStep] = useState<Step>(1)
-  const [dishQuantity, setDishQuantity] = useState<Record<string, number>>({})
+  const [selectedId, setSelectedId] = useState<string | null>(draft.selectedId ?? null)
+  const [masterId, setMasterId] = useState<string>(draft.masterId ?? '')
+  const [masterSessionType, setMasterSessionType] = useState<MasterSessionType | ''>(draft.masterSessionType ?? '')
+  const [step, setStep] = useState<Step>(draft.step ?? 1)
+  const [dishQuantity, setDishQuantity] = useState<Record<string, number>>(draft.dishQuantity ?? {})
   const [reservation, setReservation] = useState<ReservationSummary | null>(null)
+
+  useEffect(() => {
+    const draft: Draft = { params, selectedId, masterId, masterSessionType, step, dishQuantity }
+    sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft))
+  }, [params, selectedId, masterId, masterSessionType, step, dishQuantity])
 
   const { data, isLoading, isError } = useAvailability(params)
   const zones = data?.zones ?? []
@@ -96,11 +127,9 @@ function ReservationWindow() {
   const selectedTable = allTables.find((table) => table.id === selectedId)
 
   return (
-    <section className="reserve">
-      <div className="center">
-        <h2 className="reserve__title">
-          Бронирование
-        </h2>
+    <section className='reserve'>
+      <div className='center'>
+        <SectionDecoratedTitle title={t('title')}/>
 
         {step === 1 && (
           <StepWindow
@@ -144,17 +173,14 @@ function ReservationWindow() {
             master={masterList.find((m) => m.id === masterId) ?? null}
             masterPrices={masterPrices}
             onBack={() => setStep(2)}
-            onCreated={(r) => {
-              setReservation(r);
-              setStep(4)
-            }}
+            onCreated={(r) => { sessionStorage.removeItem(DRAFT_KEY); setReservation(r) }}
           />
         )}
-
-        {step === 4 && reservation &&
-          <StepPayment reservation={reservation} />
-        }
       </div>
+
+      <Modal isOpen={!!reservation} onClose={() => setReservation(null)}>
+        {reservation && <StepPayment reservation={reservation} />}
+      </Modal>
     </section>
   )
 }

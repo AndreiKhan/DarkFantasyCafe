@@ -1,0 +1,73 @@
+{
+  "title": "BOOKING",
+  "filters": {
+    "date": "Date",
+    "time": "Time",
+    "duration": "Duration",
+    "guests": "Number of guests"
+  },
+  "summary": {
+    "table": "Table",
+    "upTo": "up to {{capacity}} guests",
+    "forHours": "for {{hours}} H",
+    "selectTable": "Select a table"
+  },
+  "actions": {
+    "next": "NEXT",
+    "back": "BACK",
+    "skip": "SKIP"
+  },
+  "master": {
+    "none": "No game master",
+    "busy": "(busy)",
+    "label": "Game master",
+    "photo": "Photo",
+    "sessionType": "Session type",
+    "selectType": "Select a type",
+    "sessionOneshot": "Short (oneshot) — {{price}} ₽",
+    "sessionCampaign": "Long (campaign) — {{price}} ₽",
+    "sessionOneshotShort": "Short (oneshot)",
+    "sessionCampaignShort": "Long (campaign)"
+  },
+  "performance": {
+    "label": "News for the selected day",
+    "at": "Starts at {{time}}",
+    "none": "Nothing planned for the selected day",
+    "stage": "Someone is performing here today"
+  },
+  "legend": {
+    "free": "Available",
+    "busy": "Booked",
+    "small": "Too small"
+  },
+  "zoneList": {
+    "table": "№{{number}} - up to {{capacity}}",
+    "busy": " · busy",
+    "small": " · too small"
+  },
+  "dishes": {
+    "tip": "You can add dishes to your table — we'll start preparing them in advance",
+    "subtotal": "Selected dishes: {{price}} ₽"
+  },
+  "confirm": {
+    "title": "CONFIRMATION",
+    "table": "Table №{{number}} - {{zoneName}}",
+    "datetime": "{{date}} - {{start}} - {{hours}} h",
+    "guests": "Guests: {{count}}",
+    "master": "Game master: {{name}} ({{sessionType}}) — {{price}} ₽",
+    "tableCost": "Table price: {{price}} ₽",
+    "total": "TOTAL: {{total}} ₽"
+  },
+  "payment": {
+    "total": "Total due"
+  },
+  "success": {
+    "noReservation": "NO BOOKING",
+    "confirmed": "RESERVED",
+    "error": "ERROR",
+    "checking": "CHECKING"
+  },
+  "a11y": {
+    "mapLegend": "Map legend"
+  }
+}

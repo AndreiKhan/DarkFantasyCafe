@@ -1,7 +1,11 @@
 import { usePayReservation, type ReservationSummary } from '@/entities/Reservation'
+import { useTranslation } from 'react-i18next'
+import { getApiErrorMessage } from '@/shared/lib/apiError'
 
 export function StepPayment({ reservation }: { reservation: ReservationSummary }) {
   const pay = usePayReservation()
+  const { t } = useTranslation(['reservation', 'common'])
+
   const handlePay = () => {
     pay.mutate(reservation.id, {
       onSuccess: ({ confirmationUrl }) => {
@@ -11,19 +15,22 @@ export function StepPayment({ reservation }: { reservation: ReservationSummary }
       },
     })
   }
+
   return (
-    <div className="reserve-payment">
-      <p>
-        Общая плата: {reservation.totalAmount} ₽
+    <div className='reserve-payment'>
+      <p className='reserve-payment__text'>
+        {t('reservation:payment.total')} <br/>
+        {reservation.totalAmount} ₽
       </p>
       {pay.isError &&
-        <p className="reserve-confirm__error">
-          ошибка
+        <p className='reserve-confirm__error' role='alert'>
+          {getApiErrorMessage(pay.error, t)}
         </p>
       }
-      <button type="button" onClick={handlePay} disabled={pay.isPending}>
-        {pay.isPending ? 'переход' : 'Оплатить'}
+      <button className='reserve__button' type='button' onClick={handlePay} disabled={pay.isPending}>
+        {pay.isPending ? t('common:actions.redirecting') : t('common:actions.pay')}
       </button>
     </div>
   )
 }
+

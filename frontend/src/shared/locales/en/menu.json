@@ -1,0 +1,11 @@
+{
+  "title": "MENU",
+  "categories": "Categories",
+  "all": "All",
+  "tags": "Tags",
+  "allergens": "Allergens",
+  "sort": "Sort",
+  "sortPriceAsc": "Price: Low to High",
+  "sortPriceDesc": "Price: High to Low",
+  "searchPlaceholder": "Search by name"
+}

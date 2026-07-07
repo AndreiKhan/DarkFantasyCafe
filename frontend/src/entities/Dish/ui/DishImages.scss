@@ -1,0 +1,39 @@
+.dish-images {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+
+  &__arrow {
+    flex-shrink: 0;
+    color: var(--color-text);
+    padding: 2px;
+    background-color: var(--color-text-secondary);
+    border-radius: 100px;
+
+    svg {
+      display: block;
+      width: 22px;
+      height: 22px;
+    }
+
+    &--next svg {
+      transform: scaleX(-1);
+    }
+  }
+
+  &__img {
+    flex: 1;
+    min-width: 0;
+    object-fit: contain;
+  }
+
+  &--card &__img {
+    max-height: 120px;
+  }
+
+  &--modal &__img {
+    width: 100%;
+    max-height: 280px;
+  }
+}

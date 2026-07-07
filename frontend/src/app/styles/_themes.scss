@@ -1,19 +1,52 @@
 :root {
-  // неизменяемые цвета
+  --color-black: #000;
+  --color-white: #fff;
 }
 
 :root[data-theme='dark'] {
   --color-bg: #180f06;
+  --color-bg-secondary: #f5ecd9;
   --color-text: #c99253;
+  --color-text-secondary: #0a0504;
+  --color-title: #bf8c54;
   --color-accent: #c4a35a;
   --color-border: #3a2a18;
   --frame-tint: #6b3f1d;
+  --frame-stone: #4e4e4e;
+  --frame-stone-dark: #afafaf;
+  --frame-parchment-input: #777164;
+  // --frame-parchment-input-placeholder: #180f06;
+  --frame-parchment: #74644b;
+  --frame-leather-dark: #6b573e;
+  // --bg-dark-wood: #6b3f1d;
+  --color-chosen: #ffee00;
+  --color-error: #ff3f3f;
+  --color-error-bg: #ff5b5b62;
+  --color-success: #5fff3f;
+  --color-success-bg: #a5ff5b62;
+  --text-shadow-bg: 0 1px 2px var(--color-bg), 0 2px 8px var(--color-bg), 0 0 12px var(--color-bg);
 }
 
 :root[data-theme='light'] {
   --color-bg: #f5ecd9;
-  --color-text: #2a1f15;
+  --color-bg-secondary: #180f06;
+  --color-text: #0a0504;
+  --color-text-secondary: #c99253;
+  --color-title: #533d24;
   --color-accent: #8a5a2b;
   --color-border: #d8c4a0;
   --frame-tint: #c8965a;
+  --frame-stone: #cfcfcf;
+  --frame-stone-dark: #6d6d6d;
+  --frame-parchment-input: #dbceab;
+  // --frame-parchment-input-placeholder: #180f06;
+  --frame-parchment: #dec092;
+  --frame-leather-dark: #bba589;
+  // --bg-dark-wood: #ffe1bc;
+  --color-chosen: #000000;
+  --color-error: #831616;
+  --color-error-bg: #ff393959;
+  --color-success: #288316;
+  --color-success-bg: #61ff3959;
+  --text-shadow-bg: 0 1px 2px var(--color-bg), 0 2px 8px var(--color-bg), 0 0 12px var(--color-bg);
 }

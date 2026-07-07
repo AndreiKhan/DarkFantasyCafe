@@ -7,6 +7,21 @@
   justify-content: center;
   padding: 24px;
   background: rgba(0, 0, 0, 0.6);
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  &__title {
+    font-size: 24px;
+    font-family: var(--font-display);
+  }
+  &__close {
+    color: var(--color-text);
+    font-size: 20px;
+  }
 }
 
 .modal__content {

@@ -1,0 +1,23 @@
+@use 'app/styles/mixins' as m;
+
+.keyword-search {
+  &__label {
+    
+  }
+  &__container {
+    display: flex;
+    gap: 8px;
+  }
+  .vertical {
+    flex-direction: column;
+  }
+  &__input {
+    &::placeholder {
+      color: var(--color-text);
+    }
+  }
+  &__button {
+    @include m.wood-button-bg;
+    color: var(--color-text);
+  }
+}

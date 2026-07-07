@@ -2,7 +2,7 @@ import {
   useAdminNews, useCreateNews, useUpdateNews, useDeleteNews,
   newsFormSchema, type CreateNews, type NewsFull,
 } from '@/entities/News'
-import { AdminModal, Dropdown, ArrayField, DateTimeField, KeywordSearchField } from '@/shared/ui'
+import { AdminModal, AdminTable, Dropdown, ImageDropzone, DateTimeField, type AdminTableColumn, ErrorPlug, Loader } from '@/shared/ui'
 import { slugify } from '@/shared/lib/slugify'
 import { formatReadOnlyValue } from '@/shared/lib/datetime'
 import { useEffect, useRef, useState } from 'react'
@@ -34,6 +34,13 @@ const STATUS_OPTIONS = [
   { value: 'DRAFT', label: 'DRAFT' },
   { value: 'PUBLISHED', label: 'PUBLISHED' },
   { value: 'ARCHIVED', label: 'ARCHIVED' },
+]
+
+const COLUMNS: AdminTableColumn<NewsFull>[] = [
+  { key: 'title', header: 'Заголовок', render: (item) => item.titleRu },
+  { key: 'slug', header: 'Slug', render: (item) => item.slug },
+  { key: 'type', header: 'Тип', render: (item) => <span className='admin-table__badge'>{item.type}</span> },
+  { key: 'status', header: 'Статус', render: (item) => <span className='admin-table__badge'>{item.status}</span> },
 ]
 
 const toForm = (item: NewsFull): CreateNews =>
@@ -91,25 +98,24 @@ function NewsAdminList() {
   }
 
   if (isLoading) {
-    return <p>isLoading</p>
+    return <Loader width='100px' height='100px' />
   }
   if (isError || !data) {
-    return <p>isError</p>
+    return <ErrorPlug />
   }
 
   return (
-    <div>
-      <button type="button" onClick={openCreate}>
-        Создать новость
-      </button>
-
-      <KeywordSearchField onSearch={setQuery} placeholder="Slug, заголовок, текст..." />
-
-      {data.map((item) => (
-        <div key={item.id} onClick={() => openEdit(item)}>
-          <p><strong>{item.slug}</strong></p>
-        </div>
-      ))}
+    <div className='admin-entity'>
+      <AdminTable
+        columns={COLUMNS}
+        data={data}
+        getRowKey={(item) => item.id}
+        onRowClick={openEdit}
+        onCreate={openCreate}
+        createLabel='Создать новость'
+        searchPlaceholder='Slug, заголовок, текст...'
+        onSearch={setQuery}
+      />
 
       <AdminModal
         title={editItem ? 'Редактировать новость' : 'Новая новость'}
@@ -162,9 +168,9 @@ function NewsForm({ meta }: { meta: NewsFull | null }) {
   ]
 
   return (
-    <div style={{ display: 'flex', gap: '20px', flexDirection: 'column'}}>
+    <div className='admin-form'>
       {meta && (
-        <div className="news-form__readonly">
+        <div className='admin-form__readonly'>
           {readOnly.map(([key, label]) => (
             <p key={key}>
               <strong>{label}:</strong> {formatReadOnlyValue(key, meta[key])}
@@ -173,17 +179,17 @@ function NewsForm({ meta }: { meta: NewsFull | null }) {
         </div>
       )}
 
-      <Controller name="type" control={control} render={({ field }) => (
-        <Dropdown label="Тип" value={field.value} options={TYPE_OPTIONS}
+      <Controller name='type' control={control} render={({ field }) => (
+        <Dropdown label='Тип' value={field.value} options={TYPE_OPTIONS}
           onChange={field.onChange} error={errors.type?.message} />
       )} />
 
-      <Controller name="status" control={control} render={({ field }) => (
-        <Dropdown label="Статус" value={field.value} options={STATUS_OPTIONS}
+      <Controller name='status' control={control} render={({ field }) => (
+        <Dropdown label='Статус' value={field.value} options={STATUS_OPTIONS}
           onChange={field.onChange} error={errors.status?.message} />
       )} />
 
-      <label>
+      <label className='admin-form__field'>
         Slug
         <input
           {...register('slug', {
@@ -191,18 +197,18 @@ function NewsForm({ meta }: { meta: NewsFull | null }) {
           })}
         />
         {errors.slug &&
-          <span className="news-form__error">
+          <span className='admin-form__error'>
             {errors.slug.message}
           </span>
         }
       </label>
 
       {texts.map(([key, label, area]) => (
-        <label key={key}>
+        <label key={key} className='admin-form__field'>
           {label}
           {area ? <textarea {...register(key)} /> : <input {...register(key)} />}
           {errors[key] &&
-            <span className="news-form__error">
+            <span className='admin-form__error'>
               {errors[key]?.message}
             </span>
           }
@@ -220,7 +226,15 @@ function NewsForm({ meta }: { meta: NewsFull | null }) {
         )} />
       ))}
 
-      <ArrayField name="images" label="Изображения" />
+      <Controller name='images' control={control} render={({ field }) => (
+        <ImageDropzone
+          label='Изображения'
+          value={field.value}
+          onChange={field.onChange}
+          multiple
+          error={errors.images?.message}
+        />
+      )} />
     </div>
   )
 }

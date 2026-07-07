@@ -9,6 +9,7 @@ export interface NewsCard {
   shortDescription: string
   image: string | null
   startsAt: string | null
+  endsAt: string | null
   publishedAt: string | null
 }
 

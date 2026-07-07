@@ -17,23 +17,23 @@ function DateTimeField({ label, value, onChange, error }: {
     onChange(date && time ? fromDatetimeLocal(`${date}T${time}`) : null)
 
   return (
-    <div className="datetime-field">
+    <div className='datetime-field'>
       <span>
         {label}
       </span>
       <input
-        type="date"
+        type='date'
         value={datePart}
         onChange={(e) => emit(e.target.value, timePart || SLOT_OPTIONS[0].value)}
       />
       <Dropdown
         options={SLOT_OPTIONS}
         value={timePart || null}
-        placeholder="Время"
+        placeholder='Время'
         onChange={(time) => emit(datePart, time)}
       />
       {error &&
-        <span className="news-form__error">
+        <span className='admin-form__error'>
           {error}
         </span>
       }

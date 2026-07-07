@@ -1,5 +1,7 @@
 import { IMaskInput } from 'react-imask'
 
+const EMPTY_UNMASKED_VALUE = '7'
+
 function PhoneInput({ value, onChange, onBlur, name }: {
   value?: string
   onChange: (value: string) => void
@@ -8,14 +10,18 @@ function PhoneInput({ value, onChange, onBlur, name }: {
 }) {
   return (
     <IMaskInput
-      type="tel"
+      autoComplete='tel'
+      inputMode='tel'
       name={name}
-      mask="+{7} (000) 000-00-00"
+      mask='+{7} (000) 000-00-00'
+      type='tel'
       lazy={false}
       value={value ?? ''}
-      onAccept={onChange}
+      onAccept={(maskedValue, mask) => {
+        onChange(mask.unmaskedValue === EMPTY_UNMASKED_VALUE ? '' : maskedValue)
+      }}
       onBlur={onBlur}
-      placeholder="+7 (___) ___-__-__"
+      placeholder='+7 (___) ___-__-__'
     />
   )
 }

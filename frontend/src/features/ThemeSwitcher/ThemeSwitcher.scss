@@ -1,5 +1,27 @@
 @use 'app/styles/mixins' as m;
 
 .theme-switcher {
-  @include m.half-rolled-parchment-button-bg-variant-1
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--color-text);
+  @include m.stone-circle-button;
+
+  &__icon {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+
+    svg {
+      display: block;
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
+    }
+  }
 }

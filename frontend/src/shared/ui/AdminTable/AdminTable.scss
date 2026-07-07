@@ -1,0 +1,103 @@
+@use 'app/styles/mixins' as m;
+
+.admin-table {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__toolbar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    @include m.mobile($width: 545px) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  &__create {
+    @include m.wood-button-bg;
+    color: var(--color-text);
+    white-space: nowrap;
+  }
+
+  &__search {
+    flex: 1;
+    min-width: 220px;
+    max-width: 360px;
+  }
+
+  &__wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+  }
+
+  &__cell {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+    white-space: nowrap;
+    &:nth-last-child(-n+1) {
+      @include m.tablet {
+        display: none;
+      }
+    }
+    &:nth-last-child(-n+2) {
+      @include m.mobile {
+        display: none;
+      }
+    }
+    &:nth-last-child(-n+3) {
+      @include m.mobile($width: 500px) {
+        display: none;
+      }
+    }
+  }
+
+  &__cell--head {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+
+  &__cell--empty {
+    text-align: center;
+    padding: 28px;
+    white-space: normal;
+    opacity: 0.7;
+  }
+
+  &__row--body {
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+
+    &:hover {
+      background-color: var(--frame-tint);
+      color: var(--color-bg);
+    }
+
+    &:last-child .admin-table__cell {
+      border-bottom: none;
+    }
+  }
+
+  &__badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 10px;
+    background: var(--color-border);
+    font-size: 12px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+}

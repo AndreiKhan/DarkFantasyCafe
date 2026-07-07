@@ -1,0 +1,39 @@
+{
+  "api": {
+    "UNKNOWN": "Что-то пошло не так, попробуйте ещё раз",
+    "INVALID_CREDENTIALS": "Неверный email или пароль",
+    "EMAIL_TAKEN": "Этот email уже зарегистрирован",
+    "USER_NOT_FOUND": "Пользователь не найден",
+    "FILE_TOO_LARGE": "Файл слишком большой (максимум 5 МБ)",
+    "NO_FILE": "Файл не передан",
+    "UNSUPPORTED_TYPE": "Допустимы только изображения JPG, PNG или WEBP",
+    "TABLE_NOT_FOUND": "Стол не найден",
+    "TABLE_TOO_SMALL": "Стол слишком мал для такого количества гостей",
+    "TABLE_UNAVAILABLE": "Стол уже занят на это время",
+    "RESERVATION_IN_PAST": "Нельзя забронировать время в прошлом",
+    "RESERVATION_NOT_FOUND": "Бронирование не найдено",
+    "RESERVATION_CANCELLED": "Бронирование отменено",
+    "ALREADY_PAID": "Бронирование уже оплачено",
+    "DISH_NOT_FOUND": "Некоторые блюда не найдены",
+    "MASTER_NOT_FOUND": "Мастер не найден",
+    "MASTER_UNAVAILABLE": "Мастер занят в это время",
+    "MASTER_SESSION_TYPE_REQUIRED": "Выберите тип истории",
+    "TIME_NOT_ALIGNED": "Время должно быть кратно 30 минутам",
+    "INVALID_TIME_RANGE": "Время окончания должно быть позже начала",
+    "FORBIDDEN": "Недостаточно прав",
+    "ALREADY_EXISTS": "Такая запись уже существует",
+    "NOT_FOUND": "Запись не найдена",
+    "REFERENCED": "Запись используется и не может быть удалена"
+  },
+  "validation": {
+    "emailInvalid": "Некорректный email",
+    "passwordMin": "Минимум 8 символов",
+    "firstNameRequired": "Укажите имя",
+    "secondNameRequired": "Укажите фамилию",
+    "phoneFormat": "Формат: +7 (999) 123-45-67",
+    "imageType": "Допустимы только изображения JPG, PNG или WEBP",
+    "imageSize": "Размер файла не должен превышать 5 МБ",
+    "contactRequired": "Укажите контакт для связи",
+    "messageRequired": "Введите сообщение"
+  }
+}

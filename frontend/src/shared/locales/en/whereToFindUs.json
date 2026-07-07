@@ -1,0 +1,13 @@
+{
+  "title": "FIND US",
+  "visitUs": "Visit us",
+  "address": "Address",
+  "addressValue": "Moscow, Red Square, 1",
+  "phone": "Phone",
+  "hours": "Opening hours",
+  "leaveRequest": "Leave a request",
+  "sendRaven": "Send raven",
+  "contactPlaceholder": "Your email or phone",
+  "messagePlaceholder": "Message",
+  "requestSent": "Raven sent! We'll get back to you soon."
+}

@@ -1,5 +1,6 @@
-import { useEffect, type ReactNode } from "react"
-import { createPortal } from "react-dom"
+import { useEffect, useId, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
+import { createPortal } from 'react-dom'
 import './Modal.scss'
 
 type ModalProps = {
@@ -10,6 +11,9 @@ type ModalProps = {
 }
 
 function Modal({ title, isOpen, onClose, children }: ModalProps) {
+  const { t } = useTranslation('common')
+  const titleId = useId()
+
   useEffect(() => {
     if (!isOpen) {
       return
@@ -35,16 +39,23 @@ function Modal({ title, isOpen, onClose, children }: ModalProps) {
   }
 
   return createPortal(
-    <div className="modal" onClick={onClose}>
-      <div className="modal__content" onClick={(event) => event.stopPropagation()}>
-        <div className="modal__header">
+    <div className='modal' onClick={onClose} role='presentation'>
+      <div
+        className='modal__content'
+        role='dialog'
+        aria-modal='true'
+        aria-labelledby={title ? titleId : undefined}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className='modal__header'>
           {title && (
-            <p className="modal__title">
+            <p className='modal__title' id={titleId}>
               {title}
             </p>
           )}
-          <button type="button" onClick={onClose}>
-            X
+
+          <button className='modal__close' type='button' onClick={onClose} aria-label={t('actions.close')}>
+            <span aria-hidden='true'>X</span>
           </button>
         </div>
         {children}

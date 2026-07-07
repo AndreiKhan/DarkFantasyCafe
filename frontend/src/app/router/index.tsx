@@ -20,8 +20,13 @@ export const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'register', element: <RegisterPage /> },
-      { path: 'reserve', element: <ReservationPage /> },
-      { path: 'reserve/success', element: <ReservationSuccessPage /> },
+      {
+        element: <RequireRole />,
+        children: [
+          { path: 'reserve', element: <ReservationPage /> },
+          { path: 'reserve/success', element: <ReservationSuccessPage /> },
+        ],
+      },
       { path: 'news', element: <NewsPage /> },
       { path: 'news/:slug', element: <NewsSlugPage /> },
       {
@@ -39,7 +44,7 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    element: <RequireRole role="ADMIN" />,
+    element: <RequireRole role='ADMIN' />,
     children: [
       {
         element: <AdminLayout />,

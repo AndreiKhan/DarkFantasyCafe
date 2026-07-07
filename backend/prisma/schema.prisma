@@ -256,3 +256,20 @@ enum NewsStatus {
   PUBLISHED
   ARCHIVED
 }
+
+model Faq {
+  id            String   @id @default(uuid())
+  titleRu       String
+  titleEn       String
+  descriptionRu String
+  descriptionEn String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model ContactRequest {
+  id        String   @id @default(uuid())
+  contact   String
+  message   String
+  createdAt DateTime @default(now())
+}

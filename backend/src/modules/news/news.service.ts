@@ -11,6 +11,7 @@ function toCard(n: News, lang: 'ru' | 'en') {
     shortDescription: lang === 'en' ? n.shortDescriptionEn : n.shortDescriptionRu,
     image: n.images[0] ?? null,
     startsAt: n.startsAt,
+    endsAt: n.endsAt,
     publishedAt: n.publishedAt,
   }
 }

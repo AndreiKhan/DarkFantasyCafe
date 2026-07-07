@@ -46,14 +46,26 @@ function AdminModal({ title, isOpen, onClose, onRemove, onSave, error, children 
           )}
           <div className='admin-modal__footer'>
             {onRemove && (
-              <button type='button' onClick={handleRemoveClick}>
+              <button
+                type='button'
+                className='admin-modal__button admin-modal__button--danger'
+                onClick={handleRemoveClick}
+              >
                 Удалить
               </button>
             )}
-            <button type='button' onClick={onClose}>
+            <button
+              type='button'
+              className='admin-modal__button admin-modal__button--cancel'
+              onClick={onClose}
+            >
               Отменить
             </button>
-            <button type='button' onClick={onSave}>
+            <button
+              type='button'
+              className='admin-modal__button admin-modal__button--save'
+              onClick={onSave}
+            >
               Сохранить
             </button>
           </div>
@@ -61,26 +73,32 @@ function AdminModal({ title, isOpen, onClose, onRemove, onSave, error, children 
 
         {confirmRemove && createPortal(
           <div
-            className='modal'
+            className='admin-modal__confirm'
             onClick={(event) => {
               event.stopPropagation()
               setConfirmRemove(false)
             }}
           >
             <div
-              className='modal__content'
+              className='admin-modal__confirm-content'
               onClick={(event) => event.stopPropagation()}
             >
-              <div className='modal__header'>
-                <p className='modal__title'>
-                  Подтвердить?
-                </p>
-              </div>
-              <div className='admin-modal__footer'>
-                <button type='button' onClick={() => setConfirmRemove(false)}>
+              <p className='admin-modal__confirm-title'>
+                Подтвердить удаление?
+              </p>
+              <div className='admin-modal__confirm-actions'>
+                <button
+                  type='button'
+                  className='admin-modal__button admin-modal__button--cancel'
+                  onClick={() => setConfirmRemove(false)}
+                >
                   Нет
                 </button>
-                <button type='button' onClick={confirmRemoveYes}>
+                <button
+                  type='button'
+                  className='admin-modal__button admin-modal__button--danger'
+                  onClick={confirmRemoveYes}
+                >
                   Да
                 </button>
               </div>

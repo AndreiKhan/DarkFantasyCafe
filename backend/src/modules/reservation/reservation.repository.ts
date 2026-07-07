@@ -74,7 +74,9 @@ export const reservationRepository = {
         id: true,
         firstName: true,
         secondName: true,
-        email: true
+        email: true,
+        image: true,
+        bio: true
       },
     })
   },
@@ -172,6 +174,16 @@ export const reservationRepository = {
     return prisma.reservation.update({
       where: { id },
       data: { status }
+    })
+  },
+
+  async cleanupStale(draftBefore: Date, pendingPaymentBefore: Date) {
+    await prisma.reservation.deleteMany({
+      where: { status: 'DRAFT', createdAt: { lt: draftBefore } },
+    })
+    await prisma.reservation.updateMany({
+      where: { status: 'PENDING_PAYMENT', createdAt: { lt: pendingPaymentBefore } },
+      data: { status: 'CANCELLED' },
     })
   },
 }

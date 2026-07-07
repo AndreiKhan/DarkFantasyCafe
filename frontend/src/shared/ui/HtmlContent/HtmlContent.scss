@@ -1,0 +1,31 @@
+.html-content {
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    color: var(--color-bg);
+  }
+
+  a {
+    color: var(--color-bg-secondary);
+    text-decoration: underline;
+  }
+
+  ul, ol {
+    padding-left: 22px;
+    list-style: revert;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  img {
+    border-radius: 4px;
+    margin: 4px 0;
+  }
+
+  blockquote {
+    padding-left: 14px;
+    border-left: 3px solid var(--color-bg);
+    opacity: 0.85;
+    font-style: italic;
+  }
+}

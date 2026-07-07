@@ -1,4 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
+import './Pagination.scss'
 
 function Pagination<T>({ items, pageSize, children, resetPage } : {
   items: T[]
@@ -6,7 +8,7 @@ function Pagination<T>({ items, pageSize, children, resetPage } : {
   children: (pageItems: T[]) => ReactNode
   resetPage?: unknown
 }) {
-
+  const { t } = useTranslation('common')
   const [page, setPage] = useState(1)
   const pageCount = Math.ceil(items.length / pageSize)
 
@@ -29,24 +31,35 @@ function Pagination<T>({ items, pageSize, children, resetPage } : {
       {children(pageItems)}
 
       {pageCount > 1 && (
-        <nav className="pagination">
-          <button disabled={safePage === 1} onClick={() => setPage(safePage - 1)}>
-            -
-          </button>
+        <nav className='pagination' aria-label={t('a11y.pagination')}>
+          <button
+            type='button'
+            className='pagination__button'
+            disabled={safePage === 1}
+            aria-label={t('a11y.prevPage')}
+            onClick={() => setPage(safePage - 1)}
+          />
 
-          {Array.from({ length: pageCount }, (_, i) => i + 1).map((page) => (
+          {Array.from({ length: pageCount }, (_, i) => i + 1).map((pageNumber) => (
             <button
-              key={page}
-              className={page === safePage ? 'pagination__btn pagination__btn--active' : 'pagination__btn'}
-              onClick={() => setPage(page)}
+              key={pageNumber}
+              type='button'
+              className={pageNumber === safePage ? 'pagination__button pagination__button--active' : 'pagination__button'}
+              aria-label={pageNumber === safePage ? t('a11y.currentPage', { page: pageNumber }) : t('a11y.page', { page: pageNumber })}
+              aria-current={pageNumber === safePage ? 'page' : undefined}
+              onClick={() => setPage(pageNumber)}
             >
-              {page}
+              {pageNumber}
             </button>
           ))}
 
-          <button disabled={safePage === pageCount} onClick={() => setPage(safePage + 1)}>
-            +
-          </button>
+          <button
+            type='button'
+            className='pagination__button'
+            disabled={safePage === pageCount}
+            aria-label={t('a11y.nextPage')}
+            onClick={() => setPage(safePage + 1)}
+          />
         </nav>
       )}
     </>

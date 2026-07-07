@@ -10,7 +10,7 @@ const md = new MarkdownIt({
 function HtmlContent({ markdown }: { markdown: string }) {
   const html = DOMPurify.sanitize(md.render(markdown))
   
-  return <div className="news-content" dangerouslySetInnerHTML={{ __html: html }} />
+  return <div className='html-content' dangerouslySetInnerHTML={{ __html: html }} />
 }
 
 export default HtmlContent
