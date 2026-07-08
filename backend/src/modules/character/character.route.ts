@@ -3,7 +3,6 @@ import { characterService, characterAdmin } from './character.service.js'
 import {
   characterCreateSchema,
   characterUpdateSchema,
-  characterLangSchema,
   characterAdminCreateSchema,
   characterAdminUpdateSchema,
 } from './character.schema.js'
@@ -11,9 +10,8 @@ import { idParamSchema, searchQuerySchema } from '../../shared/schemas.js'
 import { requireRole } from '../../plugins/auth.js'
 
 export async function characterRoutes(app: FastifyInstance) {
-  app.get('/reference-data', async (request) => {
-    const { lang } = characterLangSchema.parse(request.query)
-    return characterService.getReferenceData(lang)
+  app.get('/reference-data', async () => {
+    return characterService.getReferenceData()
   })
 
   app.get('/', async () => {

@@ -1,7 +1,5 @@
 import { readFileSync } from 'node:fs'
 
-export type Lang = 'ru' | 'en'
-
 export type NamedEntry = { index: string; name: string }
 export type SpellEntry = { index: string; name: string; level: number }
 
@@ -18,27 +16,17 @@ export type DndData = {
 }
 
 const dataDir = new URL('./data/', import.meta.url)
-const cache = new Map<Lang, DndData>()
+let cache: DndData | null = null
 
-function readDataFile(lang: Lang): DndData {
-  return JSON.parse(readFileSync(new URL(`dnd-data-${lang}.json`, dataDir), 'utf-8'))
+function readDataFile(): DndData {
+  return JSON.parse(readFileSync(new URL('dnd-data-en.json', dataDir), 'utf-8'))
 }
 
-export function getDndData(lang: Lang): DndData {
-  const cached = cache.get(lang)
-  if (cached) {
-    return cached
+export function getDndData(): DndData {
+  if (cache) {
+    return cache
   }
 
-  const data = lang === 'en' ? readDataFile('en') : (tryReadDataFile(lang) ?? readDataFile('en'))
-  cache.set(lang, data)
-  return data
-}
-
-function tryReadDataFile(lang: Lang): DndData | null {
-  try {
-    return readDataFile(lang)
-  } catch {
-    return null
-  }
+  cache = readDataFile()
+  return cache
 }

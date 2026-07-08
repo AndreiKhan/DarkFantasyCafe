@@ -1,10 +1,6 @@
 import { z } from 'zod'
 import { MAX_CHARACTER_LEVEL, MAX_EQUIPMENT_ITEMS, MAX_INVENTORY_ITEMS } from './character.rules.js'
 
-export const characterLangSchema = z.object({
-  lang: z.enum(['ru', 'en']).default('ru'),
-})
-
 const abilityScore = z.coerce.number().int().min(1).max(20)
 
 export const characterCreateSchema = z.object({

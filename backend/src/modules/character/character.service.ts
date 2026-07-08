@@ -1,6 +1,6 @@
 import { AppError } from '../../shared/AppError.js'
 import { characterRepository, characterRepositoryAdmin } from './character.repository.js'
-import { getDndData, type Lang } from './character.reference.js'
+import { getDndData } from './character.reference.js'
 import { getMaxSpellLevel } from './character.rules.js'
 import type { CharacterCreate, CharacterUpdate, CharacterAdminCreate, CharacterAdminUpdate } from './character.schema.js'
 
@@ -25,7 +25,7 @@ function assertKnownIndex(validIndexes: string[], value: string | undefined, fie
 }
 
 function validateAgainstRules(input: CharacterRuleInput, level: number) {
-  const dnd = getDndData('en')
+  const dnd = getDndData()
 
   assertKnownIndex(dnd.races.map((r) => r.index), input.race, 'race')
   assertKnownIndex(dnd.classes.map((c) => c.index), input.class, 'class')
@@ -70,8 +70,8 @@ async function requireOwnCharacter(id: string, userId: string) {
 }
 
 export const characterService = {
-  getReferenceData(lang: Lang) {
-    return getDndData(lang)
+  getReferenceData() {
+    return getDndData()
   },
 
   listAll() {
