@@ -1,0 +1,67 @@
+{
+  "list": {
+    "title": "Персонажи",
+    "empty": "Персонажей пока нет",
+    "create": "Создать персонажа"
+  },
+  "sections": {
+    "identity": "Основное",
+    "abilities": "Характеристики",
+    "combat": "Боевые параметры",
+    "spellsAndSkills": "Заклинания и навыки",
+    "equipment": "Снаряжение"
+  },
+  "fields": {
+    "name": "Имя персонажа",
+    "race": "Раса",
+    "subrace": "Подраса",
+    "class": "Класс",
+    "subclass": "Подкласс",
+    "level": "Уровень",
+    "background": "Предыстория",
+    "alignment": "Мировоззрение",
+    "avatar": "Портрет",
+    "appearance": "Внешность",
+    "bio": "Предыстория (текст)",
+    "strength": "Сила",
+    "dexterity": "Ловкость",
+    "constitution": "Телосложение",
+    "intelligence": "Интеллект",
+    "wisdom": "Мудрость",
+    "charisma": "Харизма",
+    "hitPoints": "Хиты",
+    "armorClass": "Класс брони",
+    "speed": "Скорость",
+    "spells": "Заклинания",
+    "languages": "Языки",
+    "skills": "Навыки",
+    "equipment": "Экипировка",
+    "inventory": "Инвентарь",
+    "owner": "Владелец"
+  },
+  "placeholders": {
+    "addSpell": "Добавить заклинание",
+    "addLanguage": "Добавить язык",
+    "addSkill": "Добавить навык",
+    "addEquipment": "Добавить предмет экипировки",
+    "addInventoryItem": "Добавить предмет"
+  },
+  "hints": {
+    "spellsByLevel": "Доступны заклинания {{maxLevel}} круга и ниже"
+  },
+  "actions": {
+    "createCharacter": "Создать персонажа",
+    "editCharacter": "Редактировать",
+    "deleteCharacter": "Удалить персонажа",
+    "confirmDelete": "Точно удалить персонажа? Это необратимо.",
+    "cancel": "Отмена",
+    "downloadPdf": "Скачать в PDF",
+    "add": "Добавить",
+    "remove": "Удалить"
+  },
+  "notifications": {
+    "created": "Персонаж успешно создан!"
+  },
+  "notFound": "Персонаж не найден",
+  "notOwner": "Вы можете редактировать только своих персонажей"
+}

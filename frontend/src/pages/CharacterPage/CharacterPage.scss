@@ -1,0 +1,148 @@
+@use 'app/styles/mixins' as m;
+
+.character-page {
+  padding: 40px 0 60px;
+  margin-bottom: 40px !important;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 24px;
+
+    @include m.tablet {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+
+  &__avatar {
+    @include m.ornament-border-bg;
+    width: 140px;
+    height: 140px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--frame-tint);
+    font-family: var(--font-display);
+    font-size: 40px;
+    font-weight: 700;
+  }
+
+  &__name {
+    font-size: 32px;
+    text-shadow: var(--text-shadow-bg);
+  }
+
+  &__summary {
+    opacity: 0.85;
+    text-shadow: var(--text-shadow-bg);
+  }
+
+  &__pdf {
+    margin-top: 12px;
+    @include m.small-stone-button-bg;
+    padding: 8px 16px;
+    cursor: pointer;
+    color: var(--color-text);
+
+    &:disabled {
+      cursor: wait;
+    }
+  }
+
+  &__notice {
+    margin-bottom: 20px;
+    padding: 10px 16px;
+    color: var(--color-success);
+    @include m.small-stone-button-bg;
+    width: max-content;
+  }
+
+  &__sheet {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    @include m.big-opened-parchment-bg;
+  }
+
+  &__bio {
+    line-height: 1.6;
+  }
+
+  &__abilities {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 12px;
+    margin: 8px 0;
+  }
+
+  &__ability {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    @include m.small-stone-button-bg;
+    padding: 8px;
+  }
+
+  &__ability-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+
+  &__ability-value {
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+
+    li {
+      font-size: 13px;
+      padding: 4px 10px;
+      @include m.small-stone-button-bg;
+    }
+  }
+
+  &__delete {
+    margin-top: 20px;
+    color: var(--color-error);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .character-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    > :first-child {
+      grid-row: span 3;
+    }
+    > :nth-last-child(-n+2) {
+      grid-column: span 2;
+    }
+  }
+}

@@ -1,0 +1,62 @@
+@use 'app/styles/mixins' as m;
+
+.characters {
+  margin-bottom: 48px !important;
+
+  &__create {
+    display: inline-block;
+    margin-bottom: 24px;
+    color: var(--color-text);
+    @include m.wood-button-bg;
+  }
+
+  &__empty {
+    opacity: 0.75;
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+
+    @include m.tablet {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &__link {
+    display: flex;
+    flex-direction: column;
+    @include m.ornament-border-bg;
+    height: 100%;
+  }
+
+  &__avatar {
+    width: 100%;
+    height: 150px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: var(--frame-tint);
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    @include m.parchment-text-bg;
+    margin-top: -5px;
+    z-index: -2;
+  }
+
+  &__name {
+    padding: 5px 3px 0;
+    font-size: 22px;
+  }
+
+  &__meta {
+    padding: 0 3px 5px;
+    font-size: 15px;
+    opacity: 0.85;
+  }
+}

@@ -1,4 +1,7 @@
 {
   "joinedSince": "С нами с {{date}}",
-  "bonuses": "Бонусы:"
+  "bonuses": "Бонусы:",
+  "characters": {
+    "title": "Персонажи"
+  }
 }

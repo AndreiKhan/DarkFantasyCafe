@@ -23,7 +23,11 @@
     "FORBIDDEN": "Not enough permissions",
     "ALREADY_EXISTS": "This record already exists",
     "NOT_FOUND": "Record not found",
-    "REFERENCED": "The record is in use and cannot be deleted"
+    "REFERENCED": "The record is in use and cannot be deleted",
+    "CHARACTER_NOT_FOUND": "Character not found",
+    "CHARACTER_FORBIDDEN": "This is not your character",
+    "CHARACTER_INVALID_FIELD": "Please check the form for mistakes",
+    "CHARACTER_SPELL_LEVEL_TOO_HIGH": "This spell is not available at the character's current level"
   },
   "validation": {
     "emailInvalid": "Invalid email",
@@ -34,6 +38,13 @@
     "imageType": "Only JPG, PNG or WEBP images are allowed",
     "imageSize": "File size must not exceed 5 MB",
     "contactRequired": "Enter your contact details",
-    "messageRequired": "Enter a message"
+    "messageRequired": "Enter a message",
+    "characterNameRequired": "Enter the character's name",
+    "characterRaceRequired": "Choose a race",
+    "characterClassRequired": "Choose a class",
+    "characterBackgroundRequired": "Choose a background",
+    "characterAlignmentRequired": "Choose an alignment",
+    "characterLevelRange": "Level from 1 to {{max}}",
+    "characterAbilityRange": "Value from 1 to 20"
   }
 }

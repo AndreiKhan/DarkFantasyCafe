@@ -1,0 +1,15 @@
+.character-create {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 48px !important;
+  .character-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    > :first-child {
+      grid-row: span 3;
+    }
+    > :nth-last-child(-n+2) {
+      grid-column: span 2;
+    }
+  }
+}

@@ -17,6 +17,7 @@ import { reservationRoutes, reservationAdminRoutes } from './modules/reservation
 import { reservationService } from './modules/reservation/reservation.service.js'
 import { tableAdminRoutes } from './modules/table/table.route.js'
 import { uploadRoutes, UPLOAD_DIR } from './modules/upload/upload.route.js'
+import { characterRoutes, characterAdminRoutes } from './modules/character/character.route.js'
 
 
 export function buildApp() {
@@ -68,6 +69,7 @@ export function buildApp() {
   app.register(contactRequestRoutes, { prefix: '/contact-request' })
   app.register(userRoutes, { prefix: '/user' })
   app.register(uploadRoutes, { prefix: '/upload' })
+  app.register(characterRoutes, { prefix: '/character' })
 
   app.register(newsAdminRoutes, { prefix: '/admin/news' })
   app.register(dishAdminRoutes, { prefix: '/admin/dish' })
@@ -76,6 +78,7 @@ export function buildApp() {
   app.register(contactRequestAdminRoutes, { prefix: '/admin/contact-request' })
   app.register(userAdminRoutes, { prefix: '/admin/user' })
   app.register(tableAdminRoutes, { prefix: '/admin/table' })
+  app.register(characterAdminRoutes, { prefix: '/admin/character' })
 
   app.post('/payments/yookassa/webhook', async (request, reply) => {
     const body = request.body as { object?: { metadata?: { reservationId?: string } } }

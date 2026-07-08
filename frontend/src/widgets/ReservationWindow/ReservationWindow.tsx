@@ -68,7 +68,7 @@ function ReservationWindow() {
   const masterPrices = mastersData?.prices
 
   useEffect(() => {
-    if (!selectedId) {
+    if (!selectedId || !data) {
       return
     }
 
@@ -80,7 +80,7 @@ function ReservationWindow() {
   }, [data])
 
   useEffect(() => {
-    if (!masterId) {
+    if (!masterId || !mastersData) {
       return
     }
 

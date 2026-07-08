@@ -57,6 +57,63 @@
     padding: 6px 18px 8px;
   }
 
+  &__characters {
+    @include m.product-border-bg;
+  }
+
+  &__characters-info {
+    @include m.parchment-text-bg;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  &__characters-title {
+    font-size: 16px;
+    text-align: center;
+  }
+
+  &__characters-empty {
+    font-size: 13px;
+    opacity: 0.75;
+    text-align: center;
+  }
+
+  &__characters-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__characters-link {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px;
+    @include m.small-stone-button-bg;
+  }
+
+  &__characters-name {
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  &__characters-meta {
+    font-size: 12px;
+    opacity: 0.85;
+  }
+
+  &__characters-create {
+    align-self: center;
+    font-size: 13px;
+    @include m.wood-button-bg;
+  }
+
   &__info {
     flex: 1;
     min-width: 0;

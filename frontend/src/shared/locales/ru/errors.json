@@ -23,7 +23,11 @@
     "FORBIDDEN": "Недостаточно прав",
     "ALREADY_EXISTS": "Такая запись уже существует",
     "NOT_FOUND": "Запись не найдена",
-    "REFERENCED": "Запись используется и не может быть удалена"
+    "REFERENCED": "Запись используется и не может быть удалена",
+    "CHARACTER_NOT_FOUND": "Персонаж не найден",
+    "CHARACTER_FORBIDDEN": "Это не ваш персонаж",
+    "CHARACTER_INVALID_FIELD": "Проверьте правильность заполнения формы",
+    "CHARACTER_SPELL_LEVEL_TOO_HIGH": "Это заклинание недоступно на текущем уровне персонажа"
   },
   "validation": {
     "emailInvalid": "Некорректный email",
@@ -34,6 +38,13 @@
     "imageType": "Допустимы только изображения JPG, PNG или WEBP",
     "imageSize": "Размер файла не должен превышать 5 МБ",
     "contactRequired": "Укажите контакт для связи",
-    "messageRequired": "Введите сообщение"
+    "messageRequired": "Введите сообщение",
+    "characterNameRequired": "Укажите имя персонажа",
+    "characterRaceRequired": "Выберите расу",
+    "characterClassRequired": "Выберите класс",
+    "characterBackgroundRequired": "Выберите предысторию",
+    "characterAlignmentRequired": "Выберите мировоззрение",
+    "characterLevelRange": "Уровень от 1 до {{max}}",
+    "characterAbilityRange": "Значение от 1 до 20"
   }
 }

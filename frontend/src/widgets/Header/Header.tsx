@@ -37,11 +37,9 @@ function Header() {
                 {/* </NavLink> */}
               </li>
               <li>
-                {/* <NavLink to={ROUTES.news} className={navLinkClass}> */}
-                <div className='header__nav-item'>
+                <NavLink to={ROUTES.characters} className={navLinkClass}>
                   {t('nav.gallery')}
-                </div>
-                {/* </NavLink> */}
+                </NavLink>
               </li>
               <li>
                 <NavLink to={ROUTES.news} className={navLinkClass}>

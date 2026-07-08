@@ -1,0 +1,62 @@
+@use 'app/styles/mixins' as m;
+
+.tag-list-input {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &__label {
+    font-size: 14px;
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+  }
+
+  &__tag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    padding: 4px 8px 5px 12px;
+    @include m.small-stone-button-bg;
+  }
+
+  &__tag-remove {
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.7;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &__add {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    .input-parchment-wrapper {
+      flex: 1;
+    }
+  }
+
+  &__add-button {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+    color: var(--color-text);
+    @include m.wood-button-bg;
+  }
+
+  &__error {
+    font-size: 13px;
+    color: var(--color-error);
+  }
+}

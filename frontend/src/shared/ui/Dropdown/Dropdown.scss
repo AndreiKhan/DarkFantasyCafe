@@ -11,6 +11,7 @@
   &__head {
     @include m.stone-row-bg;
     width: 100%;
+    color: var(--color-text);
   }
   &__list {
     z-index: 2;

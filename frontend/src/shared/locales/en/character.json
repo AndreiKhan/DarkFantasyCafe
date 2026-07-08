@@ -1,0 +1,67 @@
+{
+  "list": {
+    "title": "Characters",
+    "empty": "No characters yet",
+    "create": "Create character"
+  },
+  "sections": {
+    "identity": "Basics",
+    "abilities": "Ability scores",
+    "combat": "Combat stats",
+    "spellsAndSkills": "Spells & skills",
+    "equipment": "Equipment"
+  },
+  "fields": {
+    "name": "Character name",
+    "race": "Race",
+    "subrace": "Subrace",
+    "class": "Class",
+    "subclass": "Subclass",
+    "level": "Level",
+    "background": "Background",
+    "alignment": "Alignment",
+    "avatar": "Portrait",
+    "appearance": "Appearance",
+    "bio": "Backstory",
+    "strength": "Strength",
+    "dexterity": "Dexterity",
+    "constitution": "Constitution",
+    "intelligence": "Intelligence",
+    "wisdom": "Wisdom",
+    "charisma": "Charisma",
+    "hitPoints": "Hit points",
+    "armorClass": "Armor class",
+    "speed": "Speed",
+    "spells": "Spells",
+    "languages": "Languages",
+    "skills": "Skills",
+    "equipment": "Equipment",
+    "inventory": "Inventory",
+    "owner": "Owner"
+  },
+  "placeholders": {
+    "addSpell": "Add a spell",
+    "addLanguage": "Add a language",
+    "addSkill": "Add a skill",
+    "addEquipment": "Add an equipment item",
+    "addInventoryItem": "Add an item"
+  },
+  "hints": {
+    "spellsByLevel": "Spells of level {{maxLevel}} and below are available"
+  },
+  "actions": {
+    "createCharacter": "Create character",
+    "editCharacter": "Edit",
+    "deleteCharacter": "Delete character",
+    "confirmDelete": "Delete this character? This cannot be undone.",
+    "cancel": "Cancel",
+    "downloadPdf": "Download PDF",
+    "add": "Add",
+    "remove": "Remove"
+  },
+  "notifications": {
+    "created": "Character created successfully!"
+  },
+  "notFound": "Character not found",
+  "notOwner": "You can only edit your own characters"
+}

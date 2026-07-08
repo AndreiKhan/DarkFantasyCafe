@@ -1,4 +1,7 @@
 {
   "joinedSince": "Member since {{date}}",
-  "bonuses": "Bonuses:"
+  "bonuses": "Bonuses:",
+  "characters": {
+    "title": "Characters"
+  }
 }

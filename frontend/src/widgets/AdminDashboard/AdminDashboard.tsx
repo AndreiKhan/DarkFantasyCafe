@@ -1,8 +1,17 @@
 import './AdminDashboard.scss'
 import { useState } from 'react'
-import { DishAdminList, NewsAdminList, ReservationAdminList, UserAdminList, TableAdminList, FaqAdminList, ContactRequestAdminList } from './EntitiesLists'
+import {
+  DishAdminList,
+  NewsAdminList,
+  ReservationAdminList,
+  UserAdminList,
+  TableAdminList,
+  FaqAdminList,
+  ContactRequestAdminList,
+  CharacterAdminList,
+} from './EntitiesLists'
 
-type EntityKey = 'news' | 'reservation' | 'dish' | 'user' | 'table' | 'faq' | 'contactRequest'
+type EntityKey = 'news' | 'reservation' | 'dish' | 'user' | 'table' | 'faq' | 'contactRequest' | 'character'
 
 const ENTITIES: { key: EntityKey; label: string }[] = [
   { key: 'news', label: 'Новости' },
@@ -12,6 +21,7 @@ const ENTITIES: { key: EntityKey; label: string }[] = [
   { key: 'table', label: 'Столики' },
   { key: 'faq', label: 'FAQ' },
   { key: 'contactRequest', label: 'Заявки' },
+  { key: 'character', label: 'Персонажи' },
 ]
 
 function AdminDashboard() {
@@ -45,6 +55,7 @@ function AdminDashboard() {
           {entity === 'table' && <TableAdminList />}
           {entity === 'faq' && <FaqAdminList />}
           {entity === 'contactRequest' && <ContactRequestAdminList />}
+          {entity === 'character' && <CharacterAdminList />}
         </div>
       </div>
     </section>

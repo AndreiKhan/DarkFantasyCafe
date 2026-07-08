@@ -1,0 +1,70 @@
+@use 'app/styles/mixins' as m;
+
+.character-form {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    @include m.big-opened-parchment-bg;
+  }
+
+  &__section-title {
+    font-size: 22px;
+  }
+
+  &__row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__abilities {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 12px;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+  }
+
+  &__field--narrow {
+    max-width: 160px;
+  }
+
+  &__textarea {
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+  }
+
+  &__error {
+    font-size: 13px;
+    color: var(--color-error);
+  }
+
+  &__submit {
+    align-self: flex-start;
+    color: var(--color-text);
+    @include m.wood-button-bg;
+  }
+
+  &__status {
+    font-size: 14px;
+  }
+
+  &__status--error {
+    color: var(--color-error);
+  }
+
+  &__status--success {
+    color: var(--color-success);
+  }
+}

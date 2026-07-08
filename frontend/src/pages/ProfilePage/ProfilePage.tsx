@@ -1,13 +1,15 @@
 import './ProfilePage.scss'
 import { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useMe } from '@/entities/Auth'
 import { useProfile, useUpdateProfile, type UpdateProfileInput } from '@/entities/User'
+import { useCharacters, useReferenceData, lookupName } from '@/entities/Character'
 import { PhoneInput, ImageDropzone, Loader, ErrorPlug } from '@/shared/ui'
 import { formatDateTime } from '@/shared/lib/datetime'
 import { getApiErrorMessage } from '@/shared/lib/apiError'
+import { ROUTES } from '@/shared/config/routes'
 
 const FIELD_KEYS: (keyof UpdateProfileInput)[] = [
   'firstName',
@@ -23,12 +25,15 @@ function getInitials(firstName: string, secondName: string) {
 
 function ProfilePage() {
   const { userId } = useParams<{ userId: string }>()
-  const { t } = useTranslation(['profile', 'common'])
+  const { t } = useTranslation(['profile', 'common', 'character'])
   const { data: me } = useMe()
   const { data, isLoading, isError } = useProfile(userId!)
+  const { data: characters } = useCharacters()
+  const { data: dnd } = useReferenceData()
 
   const update = useUpdateProfile(userId!)
   const isOwnProfile = me?.user.sub === userId
+  const userCharacters = characters?.filter((character) => character.userId === userId) ?? []
 
   const { register, handleSubmit, reset, control, formState: { errors } } = useForm<UpdateProfileInput>({
     defaultValues: { firstName: '', secondName: '', email: '', phone: '', image: '', bio: '' },
@@ -74,6 +79,41 @@ function ProfilePage() {
                 {t(`common:roles.${data.role}`, { defaultValue: data.role })}
               </span>
             }
+
+            <div className='profile__characters'>
+              <div className='profile__characters-info'>
+                <h2 className='profile__characters-title'>
+                  {t('profile:characters.title')}
+                </h2>
+
+                {userCharacters.length === 0 ? (
+                  <p className='profile__characters-empty'>
+                    {t('character:list.empty')}
+                  </p>
+                ) : (
+                  <ul className='profile__characters-list'>
+                    {userCharacters.map((character) => (
+                      <li key={character.id}>
+                        <Link className='profile__characters-link' to={ROUTES.character(character.id)}>
+                          <span className='profile__characters-name'>
+                            {character.name}
+                          </span>
+                          <span className='profile__characters-meta'>
+                            {t('character:fields.level')} {character.level} · {lookupName(dnd?.races ?? [], character.race)} {lookupName(dnd?.classes ?? [], character.class)}
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {isOwnProfile &&
+                  <Link className='profile__characters-create' to={ROUTES.characterNew}>
+                    {t('character:list.create')}
+                  </Link>
+                }
+              </div>
+            </div>
           </div>
 
           <div className='profile__info'>

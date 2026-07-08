@@ -12,3 +12,5 @@ export { default as KeywordSearchField } from './KeywordSearchField/KeywordSearc
 export { default as PhoneInput } from './PhoneInput/PhoneInput'
 export { default as ErrorPlug } from './ErrorPlug/ErrorPlug'
 export { default as Loader } from './Loader/Loader'
+export { default as TagListInput } from './TagListInput/TagListInput'
+export { default as MultiSelect } from './MultiSelect/MultiSelect'

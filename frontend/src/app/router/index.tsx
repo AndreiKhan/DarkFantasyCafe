@@ -10,6 +10,9 @@ import ReservationSuccessPage from '@/pages/ReservationSuccessPage/ReservationSu
 import NewsPage from '@/pages/NewsPage/NewsPage'
 import NewsSlugPage from '@/pages/NewsSlugPage/NewsSlugPage'
 import ProfilePage from '@/pages/ProfilePage/ProfilePage'
+import CharactersPage from '@/pages/CharactersPage/CharactersPage'
+import CharacterCreatePage from '@/pages/CharacterCreatePage/CharacterCreatePage'
+import CharacterPage from '@/pages/CharacterPage/CharacterPage'
 import AdminPage from '@/pages/AdminPage/AdminPage'
 import { getMe } from '@/entities/Auth'
 
@@ -25,10 +28,13 @@ export const router = createBrowserRouter([
         children: [
           { path: 'reserve', element: <ReservationPage /> },
           { path: 'reserve/success', element: <ReservationSuccessPage /> },
+          { path: 'characters/new', element: <CharacterCreatePage /> },
         ],
       },
       { path: 'news', element: <NewsPage /> },
       { path: 'news/:slug', element: <NewsSlugPage /> },
+      { path: 'characters', element: <CharactersPage /> },
+      { path: 'characters/:id', element: <CharacterPage /> },
       {
         path: 'profile',
         loader: async () => {
