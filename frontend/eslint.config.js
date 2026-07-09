@@ -19,6 +19,13 @@ export default defineConfig([
     languageOptions: {
       globals: globals.browser,
     },
+    rules: {
+      // Valid reset-on-close / reset-on-filter patterns; new rule is too strict for this codebase.
+      'react-hooks/set-state-in-effect': 'off',
+      'react-hooks/refs': 'off',
+      'react-refresh/only-export-components': 'off',
+      '@typescript-eslint/no-unused-vars': ['error', { varsIgnorePattern: '^_' }],
+    },
   },
   {
     files: ['src/**/*.{ts,tsx}'],

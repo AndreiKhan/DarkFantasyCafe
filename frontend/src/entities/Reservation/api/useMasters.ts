@@ -8,7 +8,11 @@ export function useMasters(
 ) {
   return useQuery({
     queryKey: ['masters', params],
-    queryFn: () => getMasters(params),
+    queryFn: () => (
+      'startsAt' in params
+        ? getMasters(params as AdminMastersParams)
+        : getMasters(params as MastersParams)
+    ),
     enabled,
     placeholderData: (prev) => prev,
   })

@@ -1,5 +1,5 @@
 import { prisma } from '../../db/prisma.js'
-import type { NewsType, Prisma } from '../../../generated/prisma/index.js'
+import type { NewsType, Prisma } from '../../../generated/prisma/client.js'
 
 export const newsRepository = {
   findPublished(type?: NewsType) {

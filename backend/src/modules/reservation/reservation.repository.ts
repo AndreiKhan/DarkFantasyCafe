@@ -1,7 +1,6 @@
 import { prisma } from '../../db/prisma.js'
-import type { OrderItemType, ReservationStatus } from '../../../generated/prisma/index.js'
+import type { MasterSessionType, OrderItemType } from '../../../generated/prisma/client.js'
 import type { ReservationCreate, ReservationUpdate } from './reservation.schema.js'
-import type { MasterSessionType } from '../../../generated/prisma/index.js'
 
 export interface ReservationItem {
   type: OrderItemType
@@ -132,7 +131,7 @@ export const reservationRepository = {
         masterSessionType: data.masterId ? data.masterSessionType ?? null : null,
         items: { create: data.items },
       },
-      include: { items: true, table: { include: { zone: true } } },
+      include: { items: true, table: { include: { zone: true } }, payment: true },
     })
   },
 
@@ -152,6 +151,7 @@ export const reservationRepository = {
       include: {
         items: true,
         table: { include: { zone: true } },
+        payment: true,
       },
       orderBy: { startsAt: 'desc' },
     })
@@ -257,8 +257,8 @@ export const reservationRepositoryAdmin = {
   create(input: ReservationCreate, items: ReservationItem[], totalAmount: number) {
     return prisma.reservation.create({
       data: {
-        user: { connect: { id: input.userId } },
-        table: { connect: { id: input.tableId } },
+        userId: input.userId,
+        tableId: input.tableId,
         startsAt: input.startsAt,
         endsAt: input.endsAt,
         guests: input.guests,
@@ -285,8 +285,8 @@ export const reservationRepositoryAdmin = {
         guests: input.guests,
         status: input.status,
         ...(totalAmount !== undefined ? { totalAmount } : {}),
-        ...(input.userId !== undefined ? { user: { connect: { id: input.userId } } } : {}),
-        ...(input.tableId !== undefined ? { table: { connect: { id: input.tableId } } } : {}),
+        ...(input.userId !== undefined ? { userId: input.userId } : {}),
+        ...(input.tableId !== undefined ? { tableId: input.tableId } : {}),
         ...(input.masterId !== undefined && {
           masterId: input.masterId,
           masterSessionType: input.masterId ? input.masterSessionType ?? null : null,

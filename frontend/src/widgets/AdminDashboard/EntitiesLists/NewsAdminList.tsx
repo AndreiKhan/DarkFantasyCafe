@@ -43,10 +43,20 @@ const COLUMNS: AdminTableColumn<NewsFull>[] = [
   { key: 'status', header: 'Статус', render: (item) => <span className='admin-table__badge'>{item.status}</span> },
 ]
 
-const toForm = (item: NewsFull): CreateNews =>
-  Object.fromEntries(
-    Object.keys(EMPTY_NEWS).map((k) => [k, (item as any)[k]]),
-  ) as CreateNews
+const toForm = (item: NewsFull): CreateNews => ({
+  slug: item.slug,
+  type: item.type,
+  status: item.status,
+  titleRu: item.titleRu,
+  titleEn: item.titleEn,
+  shortDescriptionRu: item.shortDescriptionRu,
+  shortDescriptionEn: item.shortDescriptionEn,
+  bodyRu: item.bodyRu,
+  bodyEn: item.bodyEn,
+  images: item.images,
+  startsAt: item.startsAt,
+  endsAt: item.endsAt,
+})
 
 function NewsAdminList() {
   const [query, setQuery] = useState('')

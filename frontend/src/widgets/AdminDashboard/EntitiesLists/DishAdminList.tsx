@@ -4,8 +4,7 @@ import {
 } from '@/entities/Dish'
 import { AdminModal, AdminTable, Dropdown, ErrorPlug, ImageDropzone, Loader, type AdminTableColumn } from '@/shared/ui'
 import { formatReadOnlyValue } from '@/shared/lib/datetime'
-import { Controller, FormProvider, useFormContext } from 'react-hook-form'
-import { useForm } from 'react-hook-form'
+import { Controller, FormProvider, useFormContext, useForm, type Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 
@@ -55,7 +54,7 @@ function DishAdminList() {
   const del = useDeleteDish()
 
   const methods = useForm<CreateDish>({
-    resolver: zodResolver(dishFormSchema),
+    resolver: zodResolver(dishFormSchema) as Resolver<CreateDish>,
     defaultValues: EMPTY_DISH,
   })
 

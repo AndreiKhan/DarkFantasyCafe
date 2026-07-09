@@ -1,6 +1,6 @@
 import { faqRepository, faqRepositoryAdmin } from './faq.repository.js'
 import type { FaqCreate, FaqUpdate } from './faq.schema.js'
-import type { Faq } from '../../../generated/prisma/index.js'
+import type { Faq } from '../../../generated/prisma/client.js'
 import { AppError } from '../../shared/AppError.js'
 
 function toCard(faq: Faq, lang: 'ru' | 'en') {

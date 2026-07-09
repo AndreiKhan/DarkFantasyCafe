@@ -1,6 +1,6 @@
 import { newsRepository, newsRepositoryAdmin } from './news.repository.js'
 import type { NewsListQuery, NewsCreate, NewsUpdate } from './news.schema.js'
-import type { News } from '../../../generated/prisma/index.js'
+import type { News } from '../../../generated/prisma/client.js'
 import { AppError } from '../../shared/AppError.js'
 
 function toCard(n: News, lang: 'ru' | 'en') {

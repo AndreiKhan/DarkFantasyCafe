@@ -6,7 +6,7 @@ import {
 } from '@/entities/Reservation'
 import { AdminModal, AdminTable, Dropdown, DateTimeField, type AdminTableColumn, ErrorPlug, Loader } from '@/shared/ui'
 import { formatDateTime, formatReadOnlyValue } from '@/shared/lib/datetime'
-import { Controller, FormProvider, useFieldArray, useForm, useFormContext, useWatch } from 'react-hook-form'
+import { Controller, FormProvider, useFieldArray, useForm, useFormContext, useWatch, type Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 
@@ -61,7 +61,7 @@ function ReservationAdminList() {
   const del = useDeleteReservationAdmin()
 
   const methods = useForm<CreateReservationAdmin>({
-    resolver: zodResolver(reservationFormSchema),
+    resolver: zodResolver(reservationFormSchema) as Resolver<CreateReservationAdmin>,
     defaultValues: EMPTY_RESERVATION,
   })
 
@@ -91,12 +91,12 @@ function ReservationAdminList() {
   }
 
   const save = (values: CreateReservationAdmin) => {
-    const payload = {
+    const payload: CreateReservationAdmin = {
       ...values,
       masterId: values.masterId || null,
       masterSessionType: values.masterId && values.masterSessionType
         ? values.masterSessionType
-        : null,
+        : '',
     }
     if (editItem) {
       update.mutate({ id: editItem.id, ...payload }, { onSuccess: close })

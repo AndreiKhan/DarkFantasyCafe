@@ -16,8 +16,8 @@ function loadNamespaces(modules: Record<string, { default: object }>) {
 
 i18n.use(initReactI18next).init({
   resources: {
-    ru: loadNamespaces(ruModules),
-    en: loadNamespaces(enModules),
+    ru: loadNamespaces(ruModules as Record<string, { default: object }>),
+    en: loadNamespaces(enModules as Record<string, { default: object }>),
   },
   lng: localStorage.getItem('lang') || 'ru',
   fallbackLng: 'ru',

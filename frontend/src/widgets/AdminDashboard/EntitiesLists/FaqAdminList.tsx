@@ -19,10 +19,12 @@ const COLUMNS: AdminTableColumn<FaqFull>[] = [
   { key: 'title', header: 'Вопрос', render: (item) => item.titleRu },
 ]
 
-const toForm = (item: FaqFull): CreateFaq =>
-  Object.fromEntries(
-    Object.keys(EMPTY_FAQ).map((k) => [k, (item as any)[k]]),
-  ) as CreateFaq
+const toForm = (item: FaqFull): CreateFaq => ({
+  titleRu: item.titleRu,
+  titleEn: item.titleEn,
+  descriptionRu: item.descriptionRu,
+  descriptionEn: item.descriptionEn,
+})
 
 function FaqAdminList() {
   const [query, setQuery] = useState('')

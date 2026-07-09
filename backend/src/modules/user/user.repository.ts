@@ -1,5 +1,5 @@
 import { prisma } from '../../db/prisma.js'
-import type { Prisma } from '../../../generated/prisma/index.js'
+import type { Prisma } from '../../../generated/prisma/client.js'
 
 const achievementsSelect = {
   achievements: {

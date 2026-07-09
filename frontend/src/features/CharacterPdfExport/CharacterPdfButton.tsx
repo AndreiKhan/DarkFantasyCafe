@@ -63,7 +63,7 @@ export function CharacterPdfButton({ character, dnd, className }: CharacterPdfBu
         import('@react-pdf/renderer'),
         import('./CharacterSheetDocument'),
       ])
-      const blob = await pdf(createElement(CharacterSheetDocument, { data })).toBlob()
+      const blob = await pdf(createElement(CharacterSheetDocument, { data }) as Parameters<typeof pdf>[0]).toBlob()
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url

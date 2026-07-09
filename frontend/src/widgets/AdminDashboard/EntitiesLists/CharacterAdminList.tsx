@@ -120,7 +120,7 @@ function CharacterAdminList() {
         title={editItem ? t('character:actions.editCharacter') : t('character:list.create')}
         isOpen={isOpen}
         onClose={close}
-        onSave={() => document.getElementById(ADMIN_FORM_ID)?.requestSubmit()}
+        onSave={() => (document.getElementById(ADMIN_FORM_ID) as HTMLFormElement | null)?.requestSubmit()}
         onRemove={editItem ? removeCurrent : undefined}
         error={mutationError ? getApiErrorMessage(mutationError, t) : undefined}
       >

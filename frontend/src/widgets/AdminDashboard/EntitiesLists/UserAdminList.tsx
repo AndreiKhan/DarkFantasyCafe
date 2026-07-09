@@ -91,7 +91,7 @@ function UserAdminList() {
 
   const onValid = (values: CreateUser) => {
     if (editItem) {
-      const { password, ...rest } = values
+      const { password: _password, ...rest } = values
 
       update.mutate(
         { id: editItem.id, ...rest, removeRefreshTokenIds: removedTokenIds },

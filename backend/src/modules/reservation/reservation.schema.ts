@@ -18,13 +18,13 @@ const dishLine = z.object({
   quantity: z.coerce.number().int().min(1).max(10),
 })
 
-function withMasterCheck<T extends { masterId?: string | null; masterSessionType?: MasterSessionType | null }>(
-  schema: z.ZodType<T>,
-) {
-  return schema.refine(
-    (data) => !data.masterId || data.masterSessionType,
-    { message: 'Выберите тип истории', path: ['masterSessionType'] },
-  )
+const masterCheck = {
+  message: 'Выберите тип истории',
+  path: ['masterSessionType'],
+}
+
+function hasMasterSessionType(data: { masterId?: string | null; masterSessionType?: MasterSessionType | null }) {
+  return !data.masterId || data.masterSessionType
 }
 
 export const tablesQuerySchema = z.object({
@@ -70,11 +70,13 @@ const adminReservation = z.object({
   dishes: z.array(dishLine).default([]),
 })
 
-export const createReservationSchema = withMasterCheck(publicReservation)
-export type CreateReservation = z.infer<typeof createReservationSchema>
+export const createReservationSchema = publicReservation.refine(hasMasterSessionType, masterCheck)
+export type CreateReservation = z.infer<typeof publicReservation>
 
-export const reservationCreateSchema = withMasterCheck(adminReservation)
-export type ReservationCreate = z.infer<typeof reservationCreateSchema>
+export const reservationCreateSchema = adminReservation.refine(hasMasterSessionType, masterCheck)
+export type ReservationCreate = z.infer<typeof adminReservation>
 
-export const reservationUpdateSchema = withMasterCheck(adminReservation.partial())
-export type ReservationUpdate = z.infer<typeof reservationUpdateSchema>
+const adminReservationPartial = adminReservation.partial()
+
+export const reservationUpdateSchema = adminReservationPartial.refine(hasMasterSessionType, masterCheck)
+export type ReservationUpdate = z.infer<typeof adminReservationPartial>

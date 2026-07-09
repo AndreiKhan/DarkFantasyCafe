@@ -16,6 +16,9 @@ function RegisterPage() {
       submitLabel={t('register.submit')}
       error={registerMutation.isError ? getApiErrorMessage(registerMutation.error, t) : undefined}
       onSubmit={async (values) => {
+        if (!('firstName' in values)) {
+          return
+        }
         await registerMutation.mutateAsync(values)
         navigate('/')
       }}

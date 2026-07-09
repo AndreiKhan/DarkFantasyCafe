@@ -11,7 +11,7 @@ import {
 } from '@/entities/Table'
 import { AdminModal, AdminTable, Dropdown, ErrorPlug, Loader, type AdminTableColumn } from '@/shared/ui'
 import { formatReadOnlyValue } from '@/shared/lib/datetime'
-import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form'
+import { Controller, FormProvider, useForm, useFormContext, type Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 
@@ -56,7 +56,7 @@ function TableAdminList() {
   const del = useDeleteTable()
 
   const methods = useForm<CreateTable>({
-    resolver: zodResolver(tableFormSchema),
+    resolver: zodResolver(tableFormSchema) as Resolver<CreateTable>,
     defaultValues: EMPTY_TABLE,
   })
 
