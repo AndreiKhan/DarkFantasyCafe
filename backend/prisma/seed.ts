@@ -228,6 +228,12 @@ async function seedConfirmedReservations(
 }
 
 async function main() {
+  const usersAlreadySeeded = await prisma.user.count()
+  if (usersAlreadySeeded > 0) {
+    console.log('Seed skipped: data already exists')
+    return
+  }
+
   await prisma.category.createMany({
     data: [
       { slug: 'food', nameRu: 'Еда', nameEn: 'Food' },
