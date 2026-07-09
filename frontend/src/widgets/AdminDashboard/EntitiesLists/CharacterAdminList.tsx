@@ -104,7 +104,7 @@ function CharacterAdminList() {
   }
 
   return (
-    <div className='admin-entity'>
+    <div className='character-entity'>
       <AdminTable
         columns={columns}
         data={data}

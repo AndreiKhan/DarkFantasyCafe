@@ -115,7 +115,7 @@ function UserAdminList() {
   }
 
   return (
-    <div className='admin-entity'>
+    <div className='user-entity'>
       <AdminTable
         columns={COLUMNS}
         data={data}
@@ -185,67 +185,75 @@ function UserForm({ meta, reservations, removedTokenIds, onRemoveToken }: {
       {meta && (
         <div className='admin-form__section'>
           <span className='admin-form__section-title'>Бронирования:</span>
-          {reservations.length === 0 && <p>—</p>}
-          {reservations.map((r) => (
-            <div key={r.id} className='admin-form__readonly'>
-              <p><strong>Стол:</strong> {r.table.number}</p>
-              <p><strong>Начало:</strong> {formatDateTime(r.startsAt)}</p>
-              <p><strong>Конец:</strong> {formatDateTime(r.endsAt)}</p>
-              <p><strong>Статус:</strong> {r.status}</p>
-              <p><strong>Сумма:</strong> {r.totalAmount} ₽</p>
-            </div>
-          ))}
+          <div className='admin-form__wrapper'>
+            {reservations.length === 0 && <p>—</p>}
+            {reservations.map((r) => (
+              <div key={r.id} className='admin-form__readonly'>
+                <p><strong>Стол:</strong> {r.table.number}</p>
+                <p><strong>Начало:</strong> {formatDateTime(r.startsAt)}</p>
+                <p><strong>Конец:</strong> {formatDateTime(r.endsAt)}</p>
+                <p><strong>Статус:</strong> {r.status}</p>
+                <p><strong>Сумма:</strong> {r.totalAmount} ₽</p>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
       {meta && (
         <div className='admin-form__section'>
           <span className='admin-form__section-title'>Сессии (refresh-токены):</span>
-          {meta.refreshTokens
-            .filter((token) => !removedTokenIds.includes(token.id))
-            .map((token) => (
-              <div key={token.id} className='admin-form__readonly admin-form__readonly--row'>
-                <p><strong>Выдан:</strong> {formatDateTime(token.createdAt)}</p>
-                <p><strong>Истекает:</strong> {formatDateTime(token.expiresAt)}</p>
-                <button
-                  type='button'
-                  className='admin-modal__button admin-modal__button--danger'
-                  onClick={() => onRemoveToken(token.id)}
-                >
-                  X
-                </button>
-              </div>
+          <div className='admin-form__wrapper'>
+            {meta.refreshTokens.every((token) => removedTokenIds.includes(token.id)) && <p>—</p>}
+            {meta.refreshTokens
+              .filter((token) => !removedTokenIds.includes(token.id))
+              .map((token) => (
+                <div key={token.id} className='admin-form__readonly admin-form__readonly--row'>
+                  <p><strong>Выдан:</strong> {formatDateTime(token.createdAt)}</p>
+                  <p><strong>Истекает:</strong> {formatDateTime(token.expiresAt)}</p>
+                  <button
+                    type='button'
+                    className='admin-modal__button admin-modal__button--danger'
+                    onClick={() => onRemoveToken(token.id)}
+                  >
+                    X
+                  </button>
+                </div>
             ))}
-          {meta.refreshTokens.every((token) => removedTokenIds.includes(token.id)) && <p>—</p>}
+          </div>
         </div>
       )}
 
       {meta && (
         <div className='admin-form__section'>
           <span className='admin-form__section-title'>Персонажи:</span>
-          {meta.characters.length === 0 && <p>—</p>}
-          {meta.characters.map((character) => (
-            <div key={character.id} className='admin-form__readonly'>
-              <p><strong>Имя:</strong> {character.name}</p>
-              <p><strong>Уровень:</strong> {character.level}</p>
-              <p><strong>Класс:</strong> {character.class}</p>
-              <p><strong>Раса:</strong> {character.race}</p>
-            </div>
-          ))}
+          <div className='admin-form__wrapper'>
+            {meta.characters.length === 0 && <p>—</p>}
+            {meta.characters.map((character) => (
+              <div key={character.id} className='admin-form__readonly'>
+                <p><strong>Имя:</strong> {character.name}</p>
+                <p><strong>Уровень:</strong> {character.level}</p>
+                <p><strong>Класс:</strong> {character.class}</p>
+                <p><strong>Раса:</strong> {character.race}</p>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
       {meta && (
         <div className='admin-form__section'>
           <span className='admin-form__section-title'>Достижения:</span>
-          {meta.achievements.length === 0 && <p>—</p>}
-          {meta.achievements.map((achievement) => (
-            <div key={achievement.id} className='admin-form__readonly'>
-              <p><strong>Название:</strong> {achievement.nameRu}</p>
-              <p><strong>Статус:</strong> {achievement.status}</p>
-              <p><strong>Бонусы:</strong> {achievement.bonuses}</p>
-            </div>
-          ))}
+          <div className='admin-form__wrapper'>
+            {meta.achievements.length === 0 && <p>—</p>}
+            {meta.achievements.map((achievement) => (
+              <div key={achievement.id} className='admin-form__readonly'>
+                <p><strong>Название:</strong> {achievement.nameRu}</p>
+                <p><strong>Статус:</strong> {achievement.status}</p>
+                <p><strong>Бонусы:</strong> {achievement.bonuses}</p>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

@@ -1,3 +1,11 @@
+export interface ProfileAchievement {
+  id: string
+  nameRu: string
+  nameEn: string
+  bonuses: number
+  rarity: string[]
+}
+
 export interface UserProfile {
   id: string
   firstName: string
@@ -9,6 +17,7 @@ export interface UserProfile {
   phone?: string | null
   role?: string
   bonuses?: number
+  achievements?: ProfileAchievement[]
 }
 
 export interface UpdateProfileInput {

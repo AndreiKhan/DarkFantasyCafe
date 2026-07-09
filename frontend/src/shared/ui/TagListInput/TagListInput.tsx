@@ -66,6 +66,7 @@ function TagListInput({ value, onChange, placeholder, label, maxItems, error }: 
         <div className='tag-list-input__add'>
           <div className='input-parchment-wrapper'>
             <input
+              className='tag-list-input__input'
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
               onKeyDown={onKeyDown}

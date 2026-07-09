@@ -9,9 +9,11 @@ import {
   FaqAdminList,
   ContactRequestAdminList,
   CharacterAdminList,
+  StatsAdminList,
 } from './EntitiesLists'
+import { ThemeSwitcher } from '@/features/ThemeSwitcher'
 
-type EntityKey = 'news' | 'reservation' | 'dish' | 'user' | 'table' | 'faq' | 'contactRequest' | 'character'
+type EntityKey = 'news' | 'reservation' | 'dish' | 'user' | 'table' | 'faq' | 'contactRequest' | 'character' | 'stats'
 
 const ENTITIES: { key: EntityKey; label: string }[] = [
   { key: 'news', label: 'Новости' },
@@ -22,6 +24,7 @@ const ENTITIES: { key: EntityKey; label: string }[] = [
   { key: 'faq', label: 'FAQ' },
   { key: 'contactRequest', label: 'Заявки' },
   { key: 'character', label: 'Персонажи' },
+  { key: 'stats', label: 'Статистика' },
 ]
 
 function AdminDashboard() {
@@ -33,6 +36,10 @@ function AdminDashboard() {
         <h1 className='admin-dashboard__title'>
           АДМИН
         </h1>
+
+        <div className='admin-dashboard__switchers'>
+          <ThemeSwitcher />
+        </div>
 
         <div className='admin-dashboard__entities'>
           {ENTITIES.map((e) => (
@@ -56,6 +63,7 @@ function AdminDashboard() {
           {entity === 'faq' && <FaqAdminList />}
           {entity === 'contactRequest' && <ContactRequestAdminList />}
           {entity === 'character' && <CharacterAdminList />}
+          {entity === 'stats' && <StatsAdminList />}
         </div>
       </div>
     </section>

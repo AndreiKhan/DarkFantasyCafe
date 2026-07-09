@@ -1,0 +1,95 @@
+@use 'app/styles/mixins' as m;
+
+.achievement-toast {
+  position: fixed !important;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  width: 280px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: achievement-toast-in 0.25s ease-out;
+
+  @include m.parchment-text-bg;
+
+  &__close {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.6;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &__rarity {
+    align-self: flex-start;
+    font-size: 11px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--color-common);
+
+    &--uncommon {
+      background: var(--color-uncommon);
+      color: var(--color-white);
+    }
+
+    &--rare {
+      background: var(--color-rare);
+      color: var(--color-white);
+    }
+
+    &--epic {
+      background: var(--color-epic);
+      color: var(--color-white);
+    }
+
+    &--legendary {
+      background: var(--color-legendary);
+      color: var(--color-white);
+    }
+  }
+
+  &__title {
+    font-size: 12px;
+    opacity: 0.75;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  &__name {
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  &__how {
+    font-size: 12px;
+    opacity: 0.85;
+  }
+
+  &__bonuses {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-success);
+  }
+}
+
+@keyframes achievement-toast-in {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

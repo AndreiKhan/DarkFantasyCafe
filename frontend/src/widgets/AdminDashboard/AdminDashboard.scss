@@ -12,6 +12,12 @@
     margin-bottom: 20px;
   }
 
+  &__switchers {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
   &__entities {
     display: flex;
     flex-wrap: wrap;
@@ -29,5 +35,70 @@
   &__entity--active {
     filter: drop-shadow(0 0 3px var(--color-chosen))
       drop-shadow(0 0 7px var(--color-chosen));
+  }
+
+  .news-entity, .reservation-entity, .dish-entity, .user-entity {
+    .admin-table__cell {
+      &:nth-last-child(-n+1) {
+        @include m.tablet {
+          display: none;
+        }
+      }
+      &:nth-last-child(-n+2) {
+        @include m.mobile {
+          display: none;
+        }
+      }
+      &:nth-last-child(-n+3) {
+        @include m.mobile($width: 500px) {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .character-entity {
+    .admin-table__cell {
+      &:nth-last-child(-n+2) {
+        @include m.tablet {
+          display: none;
+        }
+      }
+      &:nth-last-child(-n+3) {
+        @include m.mobile {
+          display: none;
+        }
+      }
+      &:nth-last-child(-n+4) {
+        @include m.mobile($width: 500px) {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .table-entity {
+    .admin-table__cell {
+      &:nth-last-child(-n+1) {
+        @include m.tablet {
+          display: none;
+        }
+      }
+      &:nth-last-child(-n+2) {
+        @include m.mobile {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .contact-request-entity {
+    .admin-table__cell {
+      &:nth-child(2) {
+        @include m.mobile {
+          display: none;
+        }
+      }
+    }
   }
 }

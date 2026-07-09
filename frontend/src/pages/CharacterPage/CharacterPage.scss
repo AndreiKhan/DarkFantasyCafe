@@ -26,6 +26,17 @@
     justify-content: center;
   }
 
+  &__avatar-button {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: inherit;
+  }
+
   &__avatar-image {
     width: 100%;
     height: 100%;
@@ -135,14 +146,35 @@
     text-decoration: underline;
   }
 
+  &__lightbox {
+    display: block;
+    max-width: min(900px, 100%);
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+  }
+
   .character-form {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     > :first-child {
       grid-row: span 3;
     }
-    > :nth-last-child(-n+2) {
+    > :nth-child(5),
+    > :nth-child(6) {
       grid-column: span 2;
+    }
+    @include m.mobile {
+      grid-template-columns: repeat(1, 1fr);
+      > :first-child {
+        grid-row: span 1;
+      }
+      > :nth-child(5),
+      > :nth-child(6) {
+        grid-column: span 1;
+      }
     }
   }
 }

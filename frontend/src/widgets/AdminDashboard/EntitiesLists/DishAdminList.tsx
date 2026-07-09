@@ -106,7 +106,7 @@ function DishAdminList() {
   }
 
   return (
-    <div className='admin-entity'>
+    <div className='dish-entity'>
       <AdminTable
         columns={COLUMNS}
         data={data}

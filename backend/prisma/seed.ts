@@ -25,6 +25,208 @@ function repeatNewsImages(index: number): string[] {
   return Array(count).fill(url)
 }
 
+const MASTER_PRICE_ONESHOT = 2000
+const MASTER_PRICE_CAMPAIGN = 5000
+
+function seedSlot(date: string, start: string, durationMin: number) {
+  const startsAt = new Date(`${date}T${start}:00`)
+  const endsAt = new Date(startsAt.getTime() + durationMin * 60_000)
+  return { startsAt, endsAt, hours: durationMin / 60 }
+}
+
+type SeedReservation = {
+  userEmail: string
+  tableNumber: number
+  date: string
+  start: string
+  durationMin: number
+  guests: number
+  createdAt: string
+  masterEmail?: string
+  masterSessionType?: 'ONESHOT' | 'CAMPAIGN'
+  dishes?: { dishIndex: number; quantity: number }[]
+}
+
+const SEED_RESERVATIONS: SeedReservation[] = [
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 1, date: '2026-06-05', start: '14:00', durationMin: 120, guests: 2, createdAt: '2026-06-03T09:15:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 3, date: '2026-06-07', start: '18:00', durationMin: 90, guests: 4, createdAt: '2026-06-03T11:40:00', dishes: [{ dishIndex: 0, quantity: 2 }] },
+  { userEmail: 'admin@baldgoose.ru', tableNumber: 7, date: '2026-06-08', start: '12:30', durationMin: 60, guests: 2, createdAt: '2026-06-03T16:20:00' },
+
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 2, date: '2026-06-12', start: '13:00', durationMin: 90, guests: 3, createdAt: '2026-06-10T08:30:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 4, date: '2026-06-14', start: '15:00', durationMin: 120, guests: 5, createdAt: '2026-06-10T10:00:00', dishes: [{ dishIndex: 1, quantity: 2 }] },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 5, date: '2026-06-15', start: '19:00', durationMin: 120, guests: 4, createdAt: '2026-06-10T12:45:00', masterEmail: 'master1@baldgoose.ru', masterSessionType: 'ONESHOT' },
+  { userEmail: 'admin@baldgoose.ru', tableNumber: 8, date: '2026-06-16', start: '17:30', durationMin: 90, guests: 3, createdAt: '2026-06-10T14:10:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 10, date: '2026-06-17', start: '20:00', durationMin: 60, guests: 2, createdAt: '2026-06-10T18:55:00' },
+
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 6, date: '2026-06-20', start: '18:00', durationMin: 120, guests: 6, createdAt: '2026-06-18T09:00:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 9, date: '2026-06-21', start: '14:00', durationMin: 90, guests: 3, createdAt: '2026-06-18T11:30:00', dishes: [{ dishIndex: 2, quantity: 1 }] },
+  { userEmail: 'admin@baldgoose.ru', tableNumber: 11, date: '2026-06-22', start: '16:00', durationMin: 120, guests: 4, createdAt: '2026-06-18T13:15:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 12, date: '2026-06-23', start: '21:00', durationMin: 60, guests: 2, createdAt: '2026-06-18T17:40:00' },
+
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 1, date: '2026-06-27', start: '12:00', durationMin: 60, guests: 2, createdAt: '2026-06-25T08:20:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 3, date: '2026-06-28', start: '13:30', durationMin: 90, guests: 4, createdAt: '2026-06-25T09:45:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 4, date: '2026-06-28', start: '18:00', durationMin: 180, guests: 6, createdAt: '2026-06-25T10:30:00', dishes: [{ dishIndex: 3, quantity: 2 }, { dishIndex: 5, quantity: 1 }] },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 7, date: '2026-06-29', start: '15:00', durationMin: 90, guests: 2, createdAt: '2026-06-25T12:00:00' },
+  { userEmail: 'admin@baldgoose.ru', tableNumber: 5, date: '2026-06-30', start: '19:30', durationMin: 120, guests: 4, createdAt: '2026-06-25T15:20:00', masterEmail: 'master2@baldgoose.ru', masterSessionType: 'ONESHOT' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 2, date: '2026-06-30', start: '21:00', durationMin: 60, guests: 2, createdAt: '2026-06-25T19:10:00', dishes: [{ dishIndex: 4, quantity: 1 }] },
+
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 1, date: '2026-07-04', start: '13:00', durationMin: 120, guests: 2, createdAt: '2026-07-02T09:00:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 8, date: '2026-07-05', start: '17:00', durationMin: 90, guests: 3, createdAt: '2026-07-02T11:20:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 10, date: '2026-07-06', start: '18:30', durationMin: 120, guests: 4, createdAt: '2026-07-02T14:00:00', dishes: [{ dishIndex: 0, quantity: 1 }] },
+  { userEmail: 'admin@baldgoose.ru', tableNumber: 6, date: '2026-07-07', start: '20:00', durationMin: 90, guests: 5, createdAt: '2026-07-02T16:45:00' },
+
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 3, date: '2026-07-10', start: '12:30', durationMin: 60, guests: 2, createdAt: '2026-07-08T08:10:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 9, date: '2026-07-10', start: '14:00', durationMin: 90, guests: 3, createdAt: '2026-07-08T10:25:00', dishes: [{ dishIndex: 1, quantity: 2 }] },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 4, date: '2026-07-11', start: '19:00', durationMin: 120, guests: 4, createdAt: '2026-07-08T12:40:00', masterEmail: 'master3@baldgoose.ru', masterSessionType: 'ONESHOT' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 11, date: '2026-07-12', start: '16:00', durationMin: 120, guests: 4, createdAt: '2026-07-08T15:00:00' },
+  { userEmail: 'admin@baldgoose.ru', tableNumber: 5, date: '2026-07-13', start: '21:00', durationMin: 60, guests: 3, createdAt: '2026-07-08T18:30:00' },
+
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 1, date: '2026-07-17', start: '12:00', durationMin: 60, guests: 2, createdAt: '2026-07-15T08:00:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 2, date: '2026-07-17', start: '13:00', durationMin: 90, guests: 3, createdAt: '2026-07-15T09:15:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 7, date: '2026-07-18', start: '14:30', durationMin: 90, guests: 2, createdAt: '2026-07-15T10:30:00', dishes: [{ dishIndex: 2, quantity: 2 }] },
+  { userEmail: 'admin@baldgoose.ru', tableNumber: 12, date: '2026-07-18', start: '17:00', durationMin: 120, guests: 4, createdAt: '2026-07-15T11:45:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 6, date: '2026-07-19', start: '19:30', durationMin: 120, guests: 6, createdAt: '2026-07-15T14:20:00', masterEmail: 'master4@baldgoose.ru', masterSessionType: 'CAMPAIGN' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 8, date: '2026-07-19', start: '21:00', durationMin: 60, guests: 2, createdAt: '2026-07-15T17:50:00' },
+
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 3, date: '2026-07-24', start: '15:00', durationMin: 90, guests: 4, createdAt: '2026-07-22T09:30:00', dishes: [{ dishIndex: 4, quantity: 2 }] },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 5, date: '2026-07-25', start: '18:00', durationMin: 120, guests: 4, createdAt: '2026-07-22T11:00:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 9, date: '2026-07-26', start: '20:00', durationMin: 90, guests: 3, createdAt: '2026-07-22T13:40:00', masterEmail: 'master1@baldgoose.ru', masterSessionType: 'ONESHOT' },
+  { userEmail: 'admin@baldgoose.ru', tableNumber: 10, date: '2026-07-27', start: '12:30', durationMin: 60, guests: 2, createdAt: '2026-07-22T16:15:00' },
+
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 4, date: '2026-07-30', start: '19:30', durationMin: 180, guests: 5, createdAt: '2026-07-28T08:45:00', masterEmail: 'master1@baldgoose.ru', masterSessionType: 'ONESHOT' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 1, date: '2026-07-31', start: '14:00', durationMin: 120, guests: 2, createdAt: '2026-07-28T10:20:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 11, date: '2026-07-31', start: '16:00', durationMin: 90, guests: 4, createdAt: '2026-07-28T12:55:00', dishes: [{ dishIndex: 6, quantity: 1 }] },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 2, date: '2026-07-31', start: '21:00', durationMin: 60, guests: 2, createdAt: '2026-07-28T15:30:00' },
+  { userEmail: 'admin@baldgoose.ru', tableNumber: 7, date: '2026-08-01', start: '12:00', durationMin: 120, guests: 2, createdAt: '2026-07-28T18:00:00' },
+
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 2, date: '2026-08-06', start: '16:00', durationMin: 90, guests: 3, createdAt: '2026-08-04T09:10:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 5, date: '2026-08-07', start: '18:00', durationMin: 120, guests: 4, createdAt: '2026-08-04T11:25:00', dishes: [{ dishIndex: 7, quantity: 2 }] },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 8, date: '2026-08-08', start: '20:00', durationMin: 90, guests: 4, createdAt: '2026-08-04T13:40:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 10, date: '2026-08-09', start: '18:30', durationMin: 120, guests: 4, createdAt: '2026-08-04T15:55:00', masterEmail: 'master2@baldgoose.ru', masterSessionType: 'ONESHOT' },
+  { userEmail: 'admin@baldgoose.ru', tableNumber: 12, date: '2026-08-09', start: '14:00', durationMin: 60, guests: 2, createdAt: '2026-08-04T17:20:00' },
+
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 1, date: '2026-08-13', start: '12:00', durationMin: 90, guests: 2, createdAt: '2026-08-11T08:30:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 3, date: '2026-08-13', start: '15:00', durationMin: 120, guests: 4, createdAt: '2026-08-11T10:00:00', dishes: [{ dishIndex: 0, quantity: 2 }] },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 6, date: '2026-08-14', start: '17:30', durationMin: 90, guests: 5, createdAt: '2026-08-11T11:45:00' },
+  { userEmail: 'admin@baldgoose.ru', tableNumber: 9, date: '2026-08-15', start: '19:00', durationMin: 60, guests: 2, createdAt: '2026-08-11T13:20:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 4, date: '2026-08-16', start: '20:00', durationMin: 120, guests: 5, createdAt: '2026-08-11T15:10:00', masterEmail: 'master3@baldgoose.ru', masterSessionType: 'ONESHOT' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 11, date: '2026-08-16', start: '21:30', durationMin: 60, guests: 3, createdAt: '2026-08-11T18:40:00' },
+
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 7, date: '2026-08-20', start: '12:30', durationMin: 120, guests: 2, createdAt: '2026-08-18T09:00:00', dishes: [{ dishIndex: 3, quantity: 1 }] },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 5, date: '2026-08-21', start: '17:00', durationMin: 90, guests: 3, createdAt: '2026-08-18T11:15:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 2, date: '2026-08-22', start: '19:30', durationMin: 120, guests: 3, createdAt: '2026-08-18T14:30:00' },
+  { userEmail: 'admin@baldgoose.ru', tableNumber: 8, date: '2026-08-23', start: '21:00', durationMin: 60, guests: 2, createdAt: '2026-08-18T16:45:00' },
+
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 1, date: '2026-08-27', start: '14:00', durationMin: 120, guests: 2, createdAt: '2026-08-25T08:20:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 3, date: '2026-08-27', start: '16:30', durationMin: 90, guests: 4, createdAt: '2026-08-25T10:40:00', dishes: [{ dishIndex: 5, quantity: 2 }] },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 10, date: '2026-08-28', start: '18:00', durationMin: 120, guests: 4, createdAt: '2026-08-25T12:55:00', masterEmail: 'master4@baldgoose.ru', masterSessionType: 'ONESHOT' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 6, date: '2026-08-29', start: '20:00', durationMin: 90, guests: 6, createdAt: '2026-08-25T15:10:00' },
+  { userEmail: 'guest@baldgoose.ru', tableNumber: 9, date: '2026-08-30', start: '15:30', durationMin: 90, guests: 3, createdAt: '2026-08-25T17:30:00', dishes: [{ dishIndex: 2, quantity: 1 }, { dishIndex: 4, quantity: 1 }] },
+]
+
+async function seedConfirmedReservations(
+  usersByEmail: Record<string, string>,
+  tableRows: Awaited<ReturnType<typeof prisma.table.findMany>>,
+  dishRows: Awaited<ReturnType<typeof prisma.dish.findMany>>,
+  masterUsers: Awaited<ReturnType<typeof prisma.user.findMany>>,
+  zonesById: Record<string, { nameRu: string; nameEn: string; pricePerHour: number }>,
+) {
+  const tableByNumber = Object.fromEntries(tableRows.map((table) => [table.number, table]))
+  const masterByEmail = Object.fromEntries(masterUsers.map((user) => [user.email, user]))
+
+  for (let index = 0; index < SEED_RESERVATIONS.length; index++) {
+    const entry = SEED_RESERVATIONS[index]!
+    const userId = usersByEmail[entry.userEmail]
+    const table = tableByNumber[entry.tableNumber]
+
+    if (!userId || !table) {
+      throw new Error(`Seed reservation ${index}: user or table not found`)
+    }
+
+    const { startsAt, endsAt, hours } = seedSlot(entry.date, entry.start, entry.durationMin)
+    const zoneRow = zonesById[table.zoneId]
+
+    if (!zoneRow) {
+      throw new Error(`Seed reservation ${index}: zone not found`)
+    }
+
+    const items: {
+      type: 'TIME' | 'DISH' | 'EXTRA'
+      dishId: string | null
+      titleRu: string
+      titleEn: string
+      unitPrice: number
+      quantity: number
+    }[] = [
+      {
+        type: 'TIME',
+        dishId: null,
+        titleRu: `Стол «${zoneRow.nameRu}», ${hours} ч`,
+        titleEn: `${zoneRow.nameEn} table, ${hours}h`,
+        unitPrice: Math.round(zoneRow.pricePerHour * hours),
+        quantity: 1,
+      },
+    ]
+
+    for (const line of entry.dishes ?? []) {
+      const dish = dishRows[line.dishIndex]
+      if (!dish) {
+        throw new Error(`Seed reservation ${index}: dish index ${line.dishIndex} not found`)
+      }
+      items.push({
+        type: 'DISH',
+        dishId: dish.id,
+        titleRu: dish.nameRu,
+        titleEn: dish.nameEn,
+        unitPrice: dish.price,
+        quantity: line.quantity,
+      })
+    }
+
+    if (entry.masterEmail && entry.masterSessionType) {
+      const master = masterByEmail[entry.masterEmail]
+      if (!master) {
+        throw new Error(`Seed reservation ${index}: master not found`)
+      }
+      const campaign = entry.masterSessionType === 'CAMPAIGN'
+      const masterName = `${master.firstName} ${master.secondName}`.trim()
+      items.push({
+        type: 'EXTRA',
+        dishId: null,
+        titleRu: `Мастер: ${masterName} (${campaign ? 'кампания' : 'короткая'})`,
+        titleEn: `Master: ${masterName} (${campaign ? 'campaign' : 'oneshot'})`,
+        unitPrice: campaign ? MASTER_PRICE_CAMPAIGN : MASTER_PRICE_ONESHOT,
+        quantity: 1,
+      })
+    }
+
+    const totalAmount = items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0)
+
+    await prisma.reservation.create({
+      data: {
+        userId,
+        tableId: table.id,
+        masterId: entry.masterEmail ? masterByEmail[entry.masterEmail]?.id ?? null : null,
+        masterSessionType: entry.masterSessionType ?? null,
+        startsAt,
+        endsAt,
+        guests: entry.guests,
+        status: 'CONFIRMED',
+        totalAmount,
+        createdAt: new Date(entry.createdAt),
+        items: { create: items },
+        payment: {
+          create: {
+            amount: totalAmount,
+            status: 'SUCCEEDED',
+            providerPaymentId: `seed-reservation-${index + 1}`,
+          },
+        },
+      },
+    })
+  }
+}
+
 async function main() {
   await prisma.category.createMany({
     data: [
@@ -1262,15 +1464,76 @@ async function main() {
     },
   ]
 
-  for (const character of characters) {
+  for (let i = 0; i < characters.length; i++) {
+    const character = characters[i]
     const userId = usersByEmail[character.ownerEmail]
     if (!userId) {
       throw new Error(`User not found for character seed: ${character.ownerEmail}`)
     }
 
     const { ownerEmail, ...data } = character
-    await prisma.character.create({ data: { ...data, userId } })
+    await prisma.character.create({
+      data: {
+        ...data,
+        userId,
+        avatar: `/images/characters/image${i + 1}.webp`,
+      },
+    })
   }
+
+  const tableRows = await prisma.table.findMany({ orderBy: { number: 'asc' } })
+  const dishRows = await prisma.dish.findMany({ orderBy: { createdAt: 'asc' } })
+  const masterUsers = await prisma.user.findMany({ where: { role: 'MASTER' } })
+  const zonesById = Object.fromEntries(
+    (await prisma.zone.findMany()).map((zone) => [zone.id, zone]),
+  )
+
+  await seedConfirmedReservations(usersByEmail, tableRows, dishRows, masterUsers, zonesById)
+
+  await prisma.achievements.createMany({
+    data: [
+      {
+        code: 'first_character',
+        status: 'PUBLISHED',
+        nameRu: 'Первый шаг в приключение',
+        nameEn: 'First Step Into Adventure',
+        howToGetRu: 'Создайте своего первого персонажа',
+        howToGetEn: 'Create your first character',
+        bonuses: 40,
+        rarity: ['EPIC'],
+      },
+      {
+        code: 'first_news_read',
+        status: 'PUBLISHED',
+        nameRu: 'Внимательный гость',
+        nameEn: 'Attentive Guest',
+        howToGetRu: 'Откройте любую новость кафе',
+        howToGetEn: 'Open any cafe news article',
+        bonuses: 20,
+        rarity: ['UNCOMMON'],
+      },
+      {
+        code: 'first_reservation',
+        status: 'PUBLISHED',
+        nameRu: 'Стол забронирован',
+        nameEn: 'Table Booked',
+        howToGetRu: 'Подтвердите первую бронь столика',
+        howToGetEn: 'Confirm your first table reservation',
+        bonuses: 50,
+        rarity: ['LEGENDARY'],
+      },
+      {
+        code: 'first_contact_request',
+        status: 'PUBLISHED',
+        nameRu: 'Весточка отправлена',
+        nameEn: 'Message Sent',
+        howToGetRu: 'Отправьте форму обратной связи',
+        howToGetEn: 'Submit the contact form',
+        bonuses: 30,
+        rarity: ['RARE'],
+      },
+    ],
+  })
 }
 
 main()

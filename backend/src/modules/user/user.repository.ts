@@ -1,6 +1,12 @@
 import { prisma } from '../../db/prisma.js'
 import type { Prisma } from '../../../generated/prisma/index.js'
 
+const achievementsSelect = {
+  achievements: {
+    select: { id: true, nameRu: true, nameEn: true, bonuses: true, rarity: true },
+  },
+} satisfies Prisma.UserSelect
+
 export const userRepository = {
   findById(id: string) {
     return prisma.user.findUnique({
@@ -16,6 +22,7 @@ export const userRepository = {
         bonuses: true,
         role: true,
         createdAt: true,
+        ...achievementsSelect,
       },
     })
   },
@@ -30,6 +37,7 @@ export const userRepository = {
         image: true,
         bio: true,
         createdAt: true,
+        ...achievementsSelect,
       },
     })
   },
@@ -50,6 +58,21 @@ export const userRepository = {
         role: true,
         createdAt: true,
       },
+    })
+  },
+
+  findPasswordHash(id: string) {
+    return prisma.user.findUnique({
+      where: { id },
+      select: { passwordHash: true },
+    })
+  },
+
+  updatePassword(id: string, passwordHash: string) {
+    return prisma.user.update({
+      where: { id },
+      data: { passwordHash },
+      select: { id: true },
     })
   },
 }

@@ -31,6 +31,9 @@ function Footer() {
             <Link to={ROUTES.news} className='footer__link'>
               {t('links.news')}
             </Link>
+            <Link to={ROUTES.characters} className='footer__link'>
+              {t('links.gallery')}
+            </Link>
           </nav>
           <section className='footer__item' aria-labelledby='footer-contacts-title'>
             <h5 className='footer__title' id='footer-contacts-title'>

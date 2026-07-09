@@ -6,6 +6,11 @@
     "duration": "Duration",
     "guests": "Number of guests"
   },
+  "validation": {
+    "past": "Choose a time in the future",
+    "afterHours": "The booking must end by 23:30",
+    "noSlots": "No time slots left for this day — pick another date"
+  },
   "summary": {
     "table": "Table",
     "upTo": "up to {{capacity}} guests",

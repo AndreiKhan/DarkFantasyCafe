@@ -107,7 +107,7 @@ function TableAdminList() {
   }
 
   return (
-    <div className='admin-entity'>
+    <div className='table-entity'>
       <AdminTable
         columns={COLUMNS}
         data={data}

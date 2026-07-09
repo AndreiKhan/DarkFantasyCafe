@@ -11,6 +11,7 @@
     "TABLE_TOO_SMALL": "Стол слишком мал для такого количества гостей",
     "TABLE_UNAVAILABLE": "Стол уже занят на это время",
     "RESERVATION_IN_PAST": "Нельзя забронировать время в прошлом",
+    "RESERVATION_END_AFTER_HOURS": "Бронь не может заканчиваться после 23:30",
     "RESERVATION_NOT_FOUND": "Бронирование не найдено",
     "RESERVATION_CANCELLED": "Бронирование отменено",
     "ALREADY_PAID": "Бронирование уже оплачено",

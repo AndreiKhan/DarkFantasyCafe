@@ -1,0 +1,12 @@
+{
+  "unlocked": "Achievement unlocked!",
+  "bonuses": "bonuses",
+  "close": "Close",
+  "rarity": {
+    "COMMON": "Common",
+    "UNCOMMON": "Uncommon",
+    "RARE": "Rare",
+    "EPIC": "Epic",
+    "LEGENDARY": "Legendary"
+  }
+}

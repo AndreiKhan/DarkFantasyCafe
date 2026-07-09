@@ -11,6 +11,7 @@
     "TABLE_TOO_SMALL": "The table is too small for this party size",
     "TABLE_UNAVAILABLE": "The table is already booked for this time",
     "RESERVATION_IN_PAST": "Reservation time is in the past",
+    "RESERVATION_END_AFTER_HOURS": "The booking cannot end after 23:30",
     "RESERVATION_NOT_FOUND": "Reservation not found",
     "RESERVATION_CANCELLED": "The reservation is cancelled",
     "ALREADY_PAID": "The reservation is already paid",

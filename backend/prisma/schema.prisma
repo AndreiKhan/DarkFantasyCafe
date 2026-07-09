@@ -84,6 +84,7 @@ model Character {
 
 model Achievements {
   id         String              @id @default(uuid())
+  code       String              @unique
   status     achievementStatus   @default(DRAFT)
   nameRu     String
   nameEn     String

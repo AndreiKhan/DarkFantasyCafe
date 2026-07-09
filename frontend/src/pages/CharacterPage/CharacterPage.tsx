@@ -1,4 +1,5 @@
 import './CharacterPage.scss'
+import { useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useMe } from '@/entities/Auth'
@@ -13,7 +14,7 @@ import {
 } from '@/entities/Character'
 import CharacterForm from '@/widgets/CharacterForm/CharacterForm'
 import { CharacterPdfButton } from '@/features/CharacterPdfExport'
-import { ErrorPlug, Loader } from '@/shared/ui'
+import { ErrorPlug, Loader, Modal } from '@/shared/ui'
 import { ROUTES } from '@/shared/config/routes'
 
 function TextList({ items }: { items: string[] }) {
@@ -52,6 +53,7 @@ function CharacterPage() {
   const { data: dnd } = useReferenceData()
   const update = useUpdateCharacter()
   const del = useDeleteCharacter()
+  const [lightboxOpen, setLightboxOpen] = useState(false)
 
   if (isLoading) {
     return <Loader width='200px' height='200px' />
@@ -71,7 +73,14 @@ function CharacterPage() {
       <div className='character-page__header'>
         <div className='character-page__avatar'>
           {character.avatar ? (
-            <img className='character-page__avatar-image' src={character.avatar} alt={character.name} />
+            <button
+              type='button'
+              className='character-page__avatar-button'
+              onClick={() => setLightboxOpen(true)}
+              aria-label={t('character:avatar.openImage')}
+            >
+              <img className='character-page__avatar-image' src={character.avatar} alt={character.name} />
+            </button>
           ) : (
             <div className='character-page__avatar-placeholder'>{character.name[0]?.toUpperCase()}</div>
           )}
@@ -197,6 +206,12 @@ function CharacterPage() {
             onSubmit={(values) => update.mutate({ id: character.id, ...values })}
           />
 
+          {justCreated &&
+            <p className='character-page__notice' role='status' style={{ width: '100%', textAlign: 'center', marginTop: '20px'}}>
+              {t('character:notifications.created')}
+            </p>
+          }
+
           <button
             type='button'
             className='character-page__delete'
@@ -211,6 +226,16 @@ function CharacterPage() {
           </button>
         </>
       )}
+
+      {character.avatar &&
+        <Modal isOpen={lightboxOpen} onClose={() => setLightboxOpen(false)}>
+          <img
+            className='character-page__lightbox'
+            src={character.avatar}
+            alt={character.name}
+          />
+        </Modal>
+      }
     </section>
   )
 }

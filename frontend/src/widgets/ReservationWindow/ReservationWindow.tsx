@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import './ReservationWindow.scss'
 import { useTranslation } from 'react-i18next'
 import { useAvailability, useMasters, type AvailabilityParams, type AvailabilityTable, type MasterSessionType, type ReservationSummary } from '@/entities/Reservation'
+import { normalizeReservationParams } from '@/shared/lib/time'
 import { todayStr } from './options'
 import { StepWindow } from './StepWindow'
 import { StepDishes } from './StepDishes'
@@ -36,12 +37,12 @@ function ReservationWindow() {
   const { t } = useTranslation('reservation')
   const [draft] = useState(loadDraft)
 
-  const [params, setParams] = useState<AvailabilityParams>(draft.params ?? {
+  const [params, setParams] = useState<AvailabilityParams>(() => normalizeReservationParams(draft.params ?? {
     date: todayStr(),
     start: '18:00',
     duration: 60,
     guests: 2,
-  })
+  }))
 
   const [selectedId, setSelectedId] = useState<string | null>(draft.selectedId ?? null)
   const [masterId, setMasterId] = useState<string>(draft.masterId ?? '')
@@ -99,7 +100,9 @@ function ReservationWindow() {
     }
   }
 
-  const update = (patch: Partial<AvailabilityParams>) => setParams((p) => ({ ...p, ...patch }))
+  const update = (patch: Partial<AvailabilityParams>) => {
+    setParams((current) => normalizeReservationParams({ ...current, ...patch }))
+  }
 
   const selectTable = (table: AvailabilityTable) => {
     if (!table.available || !table.fitsGuests) {

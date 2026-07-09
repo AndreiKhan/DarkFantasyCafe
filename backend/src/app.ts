@@ -18,10 +18,12 @@ import { reservationService } from './modules/reservation/reservation.service.js
 import { tableAdminRoutes } from './modules/table/table.route.js'
 import { uploadRoutes, UPLOAD_DIR } from './modules/upload/upload.route.js'
 import { characterRoutes, characterAdminRoutes } from './modules/character/character.route.js'
+import { achievementRoutes } from './modules/achievement/achievement.route.js'
+import { statsAdminRoutes } from './modules/stats/stats.route.js'
 
 
-export function buildApp() {
-  const app = Fastify({ logger: true })
+export function buildApp(options?: { logger?: boolean }) {
+  const app = Fastify({ logger: options?.logger ?? true })
 
   app.register(cors, {
     origin: 'http://localhost:5173',
@@ -70,6 +72,7 @@ export function buildApp() {
   app.register(userRoutes, { prefix: '/user' })
   app.register(uploadRoutes, { prefix: '/upload' })
   app.register(characterRoutes, { prefix: '/character' })
+  app.register(achievementRoutes, { prefix: '/achievement' })
 
   app.register(newsAdminRoutes, { prefix: '/admin/news' })
   app.register(dishAdminRoutes, { prefix: '/admin/dish' })
@@ -79,6 +82,7 @@ export function buildApp() {
   app.register(userAdminRoutes, { prefix: '/admin/user' })
   app.register(tableAdminRoutes, { prefix: '/admin/table' })
   app.register(characterAdminRoutes, { prefix: '/admin/character' })
+  app.register(statsAdminRoutes, { prefix: '/admin/stats' })
 
   app.post('/payments/yookassa/webhook', async (request, reply) => {
     const body = request.body as { object?: { metadata?: { reservationId?: string } } }

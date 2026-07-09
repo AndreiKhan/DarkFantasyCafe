@@ -3,5 +3,27 @@
   "bonuses": "Бонусы:",
   "characters": {
     "title": "Персонажи"
+  },
+  "reservations": {
+    "title": "Бронирования",
+    "empty": "Нет подтверждённых броней",
+    "detailTitle": "Бронирование",
+    "startsAt": "Начало",
+    "endsAt": "Конец",
+    "hours": "{{count}} ч",
+    "items": "Состав заказа",
+    "tableMeta": "Стол №{{number}} · {{zone}}"
+  },
+  "achievements": {
+    "title": "Достижения"
+  },
+  "password": {
+    "open": "Сменить пароль",
+    "title": "Смена пароля",
+    "current": "Текущий пароль",
+    "new": "Новый пароль",
+    "continue": "Продолжить",
+    "save": "Сохранить пароль",
+    "success": "Пароль изменён"
   }
 }

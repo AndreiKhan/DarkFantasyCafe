@@ -1,9 +1,11 @@
-export type { UserProfile, UpdateProfileInput, UserRole, UserFull, RefreshTokenInfo, CreateUser, UpdateUser } from './model/types'
+export type { UserProfile, ProfileAchievement, UpdateProfileInput, UserRole, UserFull, RefreshTokenInfo, CreateUser, UpdateUser } from './model/types'
 export { userFormSchema } from './model/schema'
 export { getProfile } from './api/getProfile'
 export { useProfile } from './api/useProfile'
 export { updateProfile } from './api/updateProfile'
 export { useUpdateProfile } from './api/useUpdateProfile'
+export { verifyPassword } from './api/verifyPassword'
+export { changePassword } from './api/changePassword'
 
 export { getAdminUsers } from './api/getAdminUsers'
 export { useAdminUsers } from './api/useAdminUsers'

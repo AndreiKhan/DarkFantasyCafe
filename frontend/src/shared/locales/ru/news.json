@@ -6,5 +6,8 @@
     "NEWS": "Новость",
     "PERFORMANCE": "Представление",
     "MONSTER": "Монстр"
+  },
+  "gallery": {
+    "openImage": "Открыть изображение {{index}}"
   }
 }

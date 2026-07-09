@@ -1,14 +1,16 @@
 import type { AvailabilityParams, AvailabilityTable, AvailabilityZone, MasterOption, MasterSessionType } from '@/entities/Reservation'
 import { useTranslation } from 'react-i18next'
-import { buildStartOptions, buildDurationOptions, todayStr } from './options'
+import {
+  buildDurationOptionsForSlot,
+  buildStartOptionsForDate,
+  getReservationWindowIssue,
+} from '@/shared/lib/time'
+import { todayStr } from './options'
 import { HallMap } from './HallMap'
 import { ZoneList } from './ZoneList'
 import { TodayPerformance } from './TodayPerformance'
 import { useNewsList } from '@/entities/News'
 import { Dropdown, ErrorPlug, Loader } from '@/shared/ui'
-
-const START_OPTIONS = buildStartOptions()
-const DURATION_OPTIONS = buildDurationOptions()
 
 export function StepWindow({
   params,
@@ -50,6 +52,10 @@ export function StepWindow({
   const { t } = useTranslation(['reservation', 'common'])
   const selectedMaster = masters.find((master) => master.id === masterId)
 
+  const startOptions = buildStartOptionsForDate(params.date)
+  const durationOptions = buildDurationOptionsForSlot(params.date, params.start)
+  const windowIssue = getReservationWindowIssue(params)
+
   const { data: performanceData } = useNewsList('PERFORMANCE')
   const reservationStart = new Date(`${params.date}T${params.start}:00`)
   const reservationEnd = new Date(reservationStart.getTime() + params.duration * 60000)
@@ -79,14 +85,14 @@ export function StepWindow({
         </div>
 
         <Dropdown
-          options={START_OPTIONS.map((time) => ({ value: time, label: time }))}
+          options={startOptions.map((time) => ({ value: time, label: time }))}
           value={params.start}
           onChange={(value) => onUpdate({ start: value })}
           label={t('reservation:filters.time')}
         />
 
         <Dropdown
-          options={DURATION_OPTIONS.map((dish) => ({ value: String(dish.value), label: dish.label }))}
+          options={durationOptions.map((item) => ({ value: String(item.value), label: item.label }))}
           value={String(params.duration)}
           onChange={(value) => onUpdate({ duration: Number(value) })}
           label={t('reservation:filters.duration')}
@@ -108,6 +114,12 @@ export function StepWindow({
         </div>
       </form>
 
+      {windowIssue &&
+        <p className='reserve__validation' role='alert'>
+          {t(`reservation:validation.${windowIssue}`)}
+        </p>
+      }
+
       <div className='reserve__summary'>
         {selectedTable && selectedZone ? (
           <p className='reserve__text-info'>
@@ -123,7 +135,7 @@ export function StepWindow({
         <button
           type='button'
           className='reserve__button reserve__shadow'
-          disabled={!selectedId || Boolean(masterId && !masterSessionType)}
+          disabled={!selectedId || Boolean(masterId && !masterSessionType) || Boolean(windowIssue) || durationOptions.length === 0}
           onClick={onNext}
         >
           {t('reservation:actions.next')}

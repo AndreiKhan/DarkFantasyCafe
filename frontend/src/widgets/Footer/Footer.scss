@@ -9,6 +9,12 @@
   &__content {
     @include m.wood-background-bg;
     margin: -3px;
+    @include m.tablet {
+      padding: 12px 12px;
+    }
+    @include m.mobile {
+      padding: 12px 6px;
+    }
   }
   &__grid {
     display: grid;
@@ -16,6 +22,15 @@
     justify-items: center;
     padding: 30px 0 !important;
     gap: 50px;
+    @include m.tablet {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 35px;
+    }
+    @include m.mobile {
+      padding-top: 8px !important;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 20px;
+    }
   }
   &__logo {
     max-width: 175px;

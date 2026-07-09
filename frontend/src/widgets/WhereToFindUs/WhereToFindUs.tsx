@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import SectionDecoratedTitle from '@/shared/ui/SectionDecoratedTitle/SectionDecoratedTitle'
 import { useCreateContactRequest, createContactRequestFormSchema, type CreateContactRequest } from '@/entities/ContactRequest'
+import { useMe } from '@/entities/Auth'
+import { useTrackAchievement } from '@/entities/Achievement'
 import { getApiErrorMessage } from '@/shared/lib/apiError'
 import AddressIcon from '@/assets/svg/address.svg?react'
 import PhoneIcon from '@/assets/svg/phone.svg?react'
@@ -16,6 +18,8 @@ const YANDEX_MAP_EMBED_SRC = 'https://yandex.ru/map-widget/v1/?ll=37.617828%2C55
 function WhereToFindUs() {
   const { t } = useTranslation(['whereToFindUs', 'errors'])
   const create = useCreateContactRequest()
+  const { data: me } = useMe()
+  const trackAchievement = useTrackAchievement()
 
   const resolver = useMemo(
     () => zodResolver(createContactRequestFormSchema(t)),
@@ -27,7 +31,14 @@ function WhereToFindUs() {
   })
 
   const onSubmit = (values: CreateContactRequest) => {
-    create.mutate(values, { onSuccess: () => reset() })
+    create.mutate(values, {
+      onSuccess: () => {
+        reset()
+        if (me) {
+          trackAchievement.mutate('first_contact_request')
+        }
+      },
+    })
   }
 
   return (

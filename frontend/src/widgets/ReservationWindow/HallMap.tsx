@@ -11,7 +11,7 @@ function tableClass(table: AvailabilityTable, selectedId: string | null): string
     classStyle.push('hall-map__table--busy')
   }
   else if (!table.fitsGuests) {
-    classStyle.push('hall-map__table--busy')
+    classStyle.push('hall-map__table--too-small')
   }
 
   return classStyle.join(' ')

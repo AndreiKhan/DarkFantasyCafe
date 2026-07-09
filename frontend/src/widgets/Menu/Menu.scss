@@ -6,6 +6,13 @@
     justify-content: space-between;
     gap: 12px;
     @include m.half-rolled-parchment-button-bg-variant-2;
+    @include m.mobile(760px) {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @include m.mobile {
+      grid-template-columns: repeat(1, 1fr);
+    }
 
     &-type {
 
@@ -46,6 +53,15 @@
   &__cards {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
+    @include m.tablet {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @include m.mobile {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @include m.mobile(525px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
     gap: 30px;
     padding: 20px;
   }

@@ -1,14 +1,29 @@
 import './NewsSlugPage.scss'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useNews, type NewsType } from '@/entities/News'
-import { ErrorPlug, HtmlContent, Loader } from '@/shared/ui'
+import { useMe } from '@/entities/Auth'
+import { useTrackAchievement } from '@/entities/Achievement'
+import { ErrorPlug, HtmlContent, Loader, Modal } from '@/shared/ui'
 import { ROUTES } from '@/shared/config/routes'
 
 function NewsSlugPage() {
   const { slug = '' } = useParams()
   const { t, i18n } = useTranslation(['news', 'common'])
   const { data, isLoading, isError } = useNews(slug)
+  const { data: me } = useMe()
+  const trackAchievement = useTrackAchievement()
+  const tracked = useRef(false)
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!data || !me || tracked.current) {
+      return
+    }
+    tracked.current = true
+    trackAchievement.mutate('first_news_read')
+  }, [data, me])
 
   function formatDate(date: string | null) {
     if (!date) {
@@ -66,12 +81,28 @@ function NewsSlugPage() {
       {gallery.length > 0 &&
         <div className='article__gallery'>
           {gallery.map((image, index) => (
-            <div className='article__gallery-frame' key={image}>
+            <button
+              type='button'
+              className='article__gallery-frame'
+              key={image}
+              onClick={() => setLightboxImage(image)}
+              aria-label={t('gallery.openImage', { index: index + 1 })}
+            >
               <img className='article__gallery-image' src={image} alt={`${data.title} ${index + 2}`} />
-            </div>
+            </button>
           ))}
         </div>
       }
+
+      <Modal isOpen={lightboxImage !== null} onClose={() => setLightboxImage(null)}>
+        {lightboxImage &&
+          <img
+            className='article__lightbox'
+            src={lightboxImage}
+            alt={data.title}
+          />
+        }
+      </Modal>
     </article>
   )
 }

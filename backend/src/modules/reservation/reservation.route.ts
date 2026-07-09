@@ -20,6 +20,11 @@ export async function reservationRoutes(app: FastifyInstance) {
     return reservationService.getMasters(query)
   })
 
+  app.get('/mine', { preHandler: app.authenticate }, async (request) => {
+    const { lang } = langSchema.parse(request.query)
+    return reservationService.listMine(request.user!.sub, lang)
+  })
+
   app.get('/:id', { preHandler: app.authenticate }, async (request) => {
     const { id } = idParamSchema.parse(request.params)
     const { lang } = langSchema.parse(request.query)

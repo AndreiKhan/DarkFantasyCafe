@@ -1,6 +1,7 @@
 import { usePayReservation, type ReservationSummary } from '@/entities/Reservation'
 import { useTranslation } from 'react-i18next'
 import { getApiErrorMessage } from '@/shared/lib/apiError'
+import { Loader } from '@/shared/ui'
 
 export function StepPayment({ reservation }: { reservation: ReservationSummary }) {
   const pay = usePayReservation()
@@ -28,7 +29,7 @@ export function StepPayment({ reservation }: { reservation: ReservationSummary }
         </p>
       }
       <button className='reserve__button' type='button' onClick={handlePay} disabled={pay.isPending}>
-        {pay.isPending ? t('common:actions.redirecting') : t('common:actions.pay')}
+        {pay.isPending ? <Loader width='30px' height='30px'/> : t('common:actions.pay')}
       </button>
     </div>
   )

@@ -1,15 +1,18 @@
 import './ProfilePage.scss'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useMe } from '@/entities/Auth'
 import { useProfile, useUpdateProfile, type UpdateProfileInput } from '@/entities/User'
 import { useCharacters, useReferenceData, lookupName } from '@/entities/Character'
+import { useMyReservations, type ReservationSummary } from '@/entities/Reservation'
 import { PhoneInput, ImageDropzone, Loader, ErrorPlug } from '@/shared/ui'
 import { formatDateTime } from '@/shared/lib/datetime'
 import { getApiErrorMessage } from '@/shared/lib/apiError'
 import { ROUTES } from '@/shared/config/routes'
+import ChangePasswordModal from './ChangePasswordModal'
+import ReservationDetailModal from './ReservationDetailModal'
 
 const FIELD_KEYS: (keyof UpdateProfileInput)[] = [
   'firstName',
@@ -25,15 +28,18 @@ function getInitials(firstName: string, secondName: string) {
 
 function ProfilePage() {
   const { userId } = useParams<{ userId: string }>()
-  const { t } = useTranslation(['profile', 'common', 'character'])
+  const { t, i18n } = useTranslation(['profile', 'common', 'character', 'reservation'])
   const { data: me } = useMe()
   const { data, isLoading, isError } = useProfile(userId!)
   const { data: characters } = useCharacters()
   const { data: dnd } = useReferenceData()
 
   const update = useUpdateProfile(userId!)
+  const [passwordModalOpen, setPasswordModalOpen] = useState(false)
+  const [selectedReservation, setSelectedReservation] = useState<ReservationSummary | null>(null)
   const isOwnProfile = me?.user.sub === userId
   const userCharacters = characters?.filter((character) => character.userId === userId) ?? []
+  const { data: myReservations } = useMyReservations(isOwnProfile)
 
   const { register, handleSubmit, reset, control, formState: { errors } } = useForm<UpdateProfileInput>({
     defaultValues: { firstName: '', secondName: '', email: '', phone: '', image: '', bio: '' },
@@ -114,6 +120,53 @@ function ProfilePage() {
                 }
               </div>
             </div>
+
+            {isOwnProfile &&
+              <div className='profile__reservations'>
+                <div className='profile__reservations-info'>
+                  <h2 className='profile__reservations-title'>
+                    {t('profile:reservations.title')}
+                  </h2>
+
+                  {!myReservations || myReservations.length === 0 ? (
+                    <p className='profile__reservations-empty'>
+                      {t('profile:reservations.empty')}
+                    </p>
+                  ) : (
+                    <ul className='profile__reservations-list'>
+                      {myReservations.map((reservation) => (
+                        <li key={reservation.id}>
+                          <button
+                            type='button'
+                            className='profile__reservations-link'
+                            onClick={() => setSelectedReservation(reservation)}
+                          >
+                            <span className='profile__reservations-date'>
+                              {formatDateTime(reservation.startsAt)}
+                            </span>
+                            <span className='profile__reservations-meta'>
+                              {t('profile:reservations.tableMeta', {
+                                number: reservation.table.number,
+                                zone: reservation.table.zone,
+                              })}
+                            </span>
+                            <span className='profile__reservations-meta'>
+                              {t('reservation:confirm.guests', { count: reservation.guests })} · {reservation.totalAmount} ₽
+                            </span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+            }
+
+            <ReservationDetailModal
+              reservation={selectedReservation}
+              isOpen={selectedReservation !== null}
+              onClose={() => setSelectedReservation(null)}
+            />
           </div>
 
           <div className='profile__info'>
@@ -130,6 +183,22 @@ function ProfilePage() {
               </p>
             }
 
+            {data.achievements && data.achievements.length > 0 &&
+              <div className='profile__achievements'>
+                <h2 className='profile__achievements-title'>
+                  {t('profile:achievements.title')}
+                </h2>
+                
+                <ul className='profile__achievements-list'>
+                  {data.achievements.map((achievement) => (
+                    <li key={achievement.id} className={`profile__achievements-item profile__achievements-item--${achievement.rarity[0].toLowerCase()}`}>
+                      {i18n.language === 'en' ? achievement.nameEn : achievement.nameRu}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            }
+
             {!isOwnProfile ? (
               data.bio &&
                 <p className='profile__bio'>
@@ -138,6 +207,16 @@ function ProfilePage() {
             ) : (
               <>
                 <div className='profile__divider' />
+
+                <button
+                  className='profile__password-button'
+                  type='button'
+                  onClick={() => setPasswordModalOpen(true)}
+                >
+                  {t('profile:password.open')}
+                </button>
+
+                <ChangePasswordModal isOpen={passwordModalOpen} onClose={() => setPasswordModalOpen(false)} />
 
                 <form className='profile__form' onSubmit={handleSubmit((values) => update.mutate(values))}>
                   <div className='profile__field'>

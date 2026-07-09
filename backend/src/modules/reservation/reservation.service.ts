@@ -3,6 +3,7 @@ import type { CreateReservation, TablesQuery, ReservationCreate, ReservationUpda
 import { createYooKassaPayment, getYooKassaPayment } from '../../lib/yookassa.js'
 import { env } from '../../config/env.js'
 import { AppError } from '../../shared/AppError.js'
+import { buildReservationWindow, getPublicReservationWindowError } from '../../shared/schemas.js'
 
 const BUFFER_MS = 30 * 60 * 1000
 const MASTER_PRICE_ONESHOT = 2000
@@ -25,6 +26,7 @@ function masterSessionPrice(type: MasterSessionType) {
 export const reservationService = {
   async getTables(query: TablesQuery) {
     const { startsAt, endsAt } = buildWindow(query.date, query.start, query.duration)
+    assertPublicReservationWindow(startsAt, endsAt)
 
     const busy = await reservationRepository.findConfirmedBetween(
       new Date(startsAt.getTime() - BUFFER_MS),
@@ -82,6 +84,7 @@ export const reservationService = {
 
   async getMasters(query: MastersQuery) {
     const { startsAt, endsAt } = buildWindow(query.date, query.start, query.duration)
+    assertPublicReservationWindow(startsAt, endsAt)
     return listMasters(startsAt, endsAt)
   },
 
@@ -93,10 +96,7 @@ export const reservationService = {
     await cleanupStaleReservations()
 
     const { startsAt, endsAt } = buildWindow(input.date, input.start, input.duration)
-
-    if (startsAt.getTime() <= Date.now()) {
-      throw AppError.badRequest('Reservation time is in the past', 'RESERVATION_IN_PAST')
-    }
+    assertPublicReservationWindow(startsAt, endsAt)
 
     const table = await reservationRepository.findTableById(input.tableId)
 
@@ -187,6 +187,11 @@ export const reservationService = {
     }
 
     return toSummary(reservation, lang)
+  },
+
+  async listMine(userId: string, lang: 'ru' | 'en') {
+    const reservations = await reservationRepository.findConfirmedByUser(userId)
+    return reservations.map((reservation) => toSummary(reservation, lang)!)
   },
 
   async pay(userId: string, id: string) {
@@ -468,10 +473,14 @@ async function assertAdminReservationValid(
 }
 
 function buildWindow(date: string, start: string, duration: number) {
-  const startsAt = new Date(`${date}T${start}:00`)
-  const endsAt = new Date(startsAt.getTime() + duration * 60 * 1000)
+  return buildReservationWindow(date, start, duration)
+}
 
-  return { startsAt, endsAt }
+function assertPublicReservationWindow(startsAt: Date, endsAt: Date) {
+  const error = getPublicReservationWindowError(startsAt, endsAt)
+  if (error) {
+    throw AppError.badRequest(error.message, error.code)
+  }
 }
 
 function toSummary(reserve: Awaited<ReturnType<typeof reservationRepository.findReservationById>>, lang: 'ru' | 'en') {

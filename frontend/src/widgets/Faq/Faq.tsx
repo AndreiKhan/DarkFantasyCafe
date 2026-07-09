@@ -1,12 +1,10 @@
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useFaqList } from '@/entities/Faq'
 import SectionDecoratedTitle from '@/shared/ui/SectionDecoratedTitle/SectionDecoratedTitle'
 import { HtmlContent } from '@/shared/ui'
 import './Faq.scss'
 
 function Faq() {
-  const { t } = useTranslation('faq')
   const { data } = useFaqList()
   const [openId, setOpenId] = useState<string | null>(null)
 
@@ -17,7 +15,7 @@ function Faq() {
   return (
     <section className='faq' aria-labelledby='faq-title'>
       <div className='center'>
-        <SectionDecoratedTitle title={t('title')} arrows={false} />
+        <SectionDecoratedTitle title='FAQ' />
 
         <div className='faq__questions' role='list'>
           {data.map((item) => {

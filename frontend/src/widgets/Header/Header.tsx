@@ -18,7 +18,7 @@ function Header() {
   return (
     <header className='header'>
       <div className='center header__content'>
-        <Link to={ROUTES.home} aria-label={t('common:a11y.siteLogo')}>
+        <Link className='header__logo-link' to={ROUTES.home} aria-label={t('common:a11y.siteLogo')}>
           <img className='header__logo' src={logo} alt={t('common:a11y.siteLogo')} />
         </Link>
         <div className='header__container'>
@@ -28,13 +28,6 @@ function Header() {
                 <NavLink to={ROUTES.reserve} className={navLinkClass}>
                   {t('nav.booking')}
                 </NavLink>
-              </li>
-              <li>
-                {/* <NavLink to={ROUTES.news} className={navLinkClass}> */}
-                <div className='header__nav-item'>
-                  {t('nav.arena')}
-                </div>
-                {/* </NavLink> */}
               </li>
               <li>
                 <NavLink to={ROUTES.characters} className={navLinkClass}>

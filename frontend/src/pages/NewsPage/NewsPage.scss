@@ -7,6 +7,13 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 24px;
     margin-bottom: 28px;
+
+    @include m.tablet {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @include m.mobile {
+      grid-template-columns: repeat(1, 1fr);
+    }
   }
   &__item {
   }
@@ -37,6 +44,11 @@
     padding: 5px 3px;
     padding-bottom: 0;
     font-size: 24px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   &__description {
     padding: 0 3px;

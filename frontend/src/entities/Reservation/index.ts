@@ -30,6 +30,8 @@ export { useMasters } from './api/useMasters'
 export { payReservation } from './api/payReservation'
 export { usePayReservation } from './api/usePayReservation'
 export { useReservationStatus } from './api/useReservationStatus'
+export { getMyReservations } from './api/getMyReservations'
+export { useMyReservations } from './api/useMyReservations'
 
 export { getAdminReservations } from './api/getAdminReservations'
 export { useAdminReservations } from './api/useAdminReservations'

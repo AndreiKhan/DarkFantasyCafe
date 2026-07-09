@@ -88,6 +88,8 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    max-height: 360px;
+    overflow-y: auto;
   }
 
   &__characters-link {
@@ -114,6 +116,99 @@
     @include m.wood-button-bg;
   }
 
+  &__reservations {
+    @include m.product-border-bg;
+    width: 100%;
+  }
+
+  &__reservations-info {
+    @include m.parchment-text-bg;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  &__reservations-title {
+    font-size: 16px;
+    text-align: center;
+  }
+
+  &__reservations-empty {
+    font-size: 13px;
+    opacity: 0.75;
+    text-align: center;
+  }
+
+  &__reservations-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 360px;
+    overflow-y: auto;
+  }
+
+  &__reservations-link {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+    padding: 8px;
+    text-align: left;
+    cursor: pointer;
+    color: inherit;
+    @include m.small-stone-button-bg;
+  }
+
+  &__reservations-date {
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  &__reservations-meta {
+    font-size: 12px;
+    opacity: 0.85;
+  }
+
+  &__reservation-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 8px 8px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  &__reservation-modal-row {
+    margin: 0;
+  }
+
+  &__reservation-modal-items {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__reservation-modal-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+  }
+
+  &__reservation-modal-total {
+    margin: 4px 0 0;
+    font-weight: 700;
+    font-size: 15px;
+  }
+
   &__info {
     flex: 1;
     min-width: 0;
@@ -136,6 +231,69 @@
 
   &__bonuses {
     font-size: 16px;
+  }
+
+  &__achievements {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__achievements-title {
+    font-size: 16px;
+  }
+
+  &__achievements-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  &__achievements-item {
+    font-size: 12px;
+    @include m.small-stone-button-bg;
+    padding: 6px 12px;
+  }
+
+  &__achievements-item--uncommon {
+    --achievement-glow: var(--color-uncommon);
+  }
+
+  &__achievements-item--rare {
+    --achievement-glow: var(--color-rare);
+  }
+
+  &__achievements-item--epic {
+    --achievement-glow: var(--color-epic);
+  }
+
+  &__achievements-item--legendary {
+    --achievement-glow: var(--color-legendary);
+  }
+
+  &__achievements-item--uncommon,
+  &__achievements-item--rare,
+  &__achievements-item--epic,
+  &__achievements-item--legendary {
+    animation: pulse-shadow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-shadow {
+    0%,
+    100% {
+      filter: drop-shadow(0 0 2px var(--achievement-glow))
+        drop-shadow(0 0 2px var(--achievement-glow))
+        drop-shadow(0 0 2px var(--achievement-glow));
+    }
+
+    50% {
+      filter: drop-shadow(0 0 5px var(--achievement-glow))
+        drop-shadow(0 0 5px var(--achievement-glow))
+        drop-shadow(0 0 5px var(--achievement-glow));
+    }
   }
 
   &__bio {
@@ -178,6 +336,20 @@
     color: var(--color-text);
 
     @include m.wood-button-bg;
+  }
+
+  &__password-button {
+    align-self: flex-start;
+    color: var(--color-text);
+
+    @include m.small-stone-button-bg;
+  }
+
+  &__password-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 8px 8px;
   }
 
   &__status {

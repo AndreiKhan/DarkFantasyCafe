@@ -30,3 +30,15 @@ export const userSelfUpdateSchema = z.object({
 }).partial()
 
 export type UserSelfUpdate = z.infer<typeof userSelfUpdateSchema>
+
+export const verifyPasswordSchema = z.object({
+  password: z.string().min(1),
+})
+
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1),
+  newPassword: z.string().min(8),
+})
+
+export type VerifyPasswordInput = z.infer<typeof verifyPasswordSchema>
+export type ChangePasswordInput = z.infer<typeof changePasswordSchema>

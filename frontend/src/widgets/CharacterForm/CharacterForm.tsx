@@ -101,7 +101,7 @@ function CharacterForm({ defaultValues, onSubmit, isPending, isSuccess, error, s
         <label className='character-form__field'>
           {t('character:fields.name')}
           <div className='input-parchment-wrapper'>
-            <input {...register('name')} />
+            <input className='character-form__input' {...register('name')} />
           </div>
           {errors.name && <span className='character-form__error'>{errors.name.message}</span>}
         </label>
@@ -183,7 +183,7 @@ function CharacterForm({ defaultValues, onSubmit, isPending, isSuccess, error, s
         <label className='character-form__field character-form__field--narrow'>
           {t('character:fields.level')}
           <div className='input-parchment-wrapper'>
-            <input type='number' {...register('level')} />
+            <input className='character-form__input' type='number' {...register('level')} />
           </div>
           {errors.level && <span className='character-form__error'>{errors.level.message}</span>}
         </label>
@@ -241,7 +241,7 @@ function CharacterForm({ defaultValues, onSubmit, isPending, isSuccess, error, s
             <label key={key} className='character-form__field character-form__field--narrow'>
               {t(`character:fields.${key}`)}
               <div className='input-parchment-wrapper'>
-                <input type='number' {...register(key)} />
+                <input className='character-form__input' type='number' {...register(key)} />
               </div>
               {errors[key] && <span className='character-form__error'>{errors[key]?.message}</span>}
             </label>

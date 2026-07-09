@@ -6,5 +6,8 @@
     "NEWS": "News",
     "PERFORMANCE": "Performance",
     "MONSTER": "Monster"
+  },
+  "gallery": {
+    "openImage": "Open image {{index}}"
   }
 }

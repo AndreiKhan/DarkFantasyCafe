@@ -1,6 +1,11 @@
 :root {
   --color-black: #000;
   --color-white: #fff;
+  --color-common: var(--frame-tint);
+  --color-uncommon: #3f8f4c;
+  --color-rare: #2f6fb2;
+  --color-epic: #7a3fb2;
+  --color-legendary: #c98a2b;
 }
 
 :root[data-theme='dark'] {
@@ -46,7 +51,7 @@
   --color-chosen: #000000;
   --color-error: #831616;
   --color-error-bg: #ff393959;
-  --color-success: #288316;
-  --color-success-bg: #61ff3959;
+  --color-success: #1c5f0f;
+  --color-success-bg: #50d33059;
   --text-shadow-bg: 0 1px 2px var(--color-bg), 0 2px 8px var(--color-bg), 0 0 12px var(--color-bg);
 }

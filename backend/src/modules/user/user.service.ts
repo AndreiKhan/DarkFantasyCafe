@@ -2,7 +2,7 @@ import argon2 from 'argon2'
 import { userRepository, userRepositoryAdmin } from './user.repository.js'
 import { refreshTokenRepository } from '../auth/refreshToken.repository.js'
 import { AppError } from '../../shared/AppError.js'
-import type { UserCreate, UserSelfUpdate, UserUpdate } from './user.schema.js'
+import type { UserCreate, UserSelfUpdate, UserUpdate, VerifyPasswordInput, ChangePasswordInput } from './user.schema.js'
 
 export const userService = {
   async getProfile(profileId: string, viewerId: string | null) {
@@ -34,6 +34,27 @@ export const userService = {
       image: input.image,
       bio: input.bio,
     })
+  },
+
+  async verifyPassword(userId: string, input: VerifyPasswordInput) {
+    const user = await userRepository.findPasswordHash(userId)
+    if (!user) {
+      throw AppError.notFound('User not found', 'USER_NOT_FOUND')
+    }
+
+    const ok = await argon2.verify(user.passwordHash, input.password)
+    if (!ok) {
+      throw AppError.unauthorized('Invalid password', 'INVALID_PASSWORD')
+    }
+
+    return { ok: true }
+  },
+
+  async changePassword(userId: string, input: ChangePasswordInput) {
+    await userService.verifyPassword(userId, { password: input.currentPassword })
+    const passwordHash = await argon2.hash(input.newPassword)
+    await userRepository.updatePassword(userId, passwordHash)
+    return { ok: true }
   },
 }
 

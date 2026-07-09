@@ -1,6 +1,8 @@
+import { useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useReservationStatus } from '@/entities/Reservation'
+import { useTrackAchievement } from '@/entities/Achievement'
 import './ReservationSuccessPage.scss'
 
 function ReservationSuccessPage() {
@@ -8,6 +10,14 @@ function ReservationSuccessPage() {
   const id = sp.get('reservationId') ?? ''
   const { t } = useTranslation('reservation')
   const { data } = useReservationStatus(id)
+  const trackAchievement = useTrackAchievement()
+  const tracked = useRef(false)
+
+  useEffect(() => {
+    if (data?.status !== 'CONFIRMED' || tracked.current) return
+    tracked.current = true
+    trackAchievement.mutate('first_reservation')
+  }, [data?.status])
 
   if (!id) {
     return <section className='center reserve-success__not'>

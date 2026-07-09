@@ -63,5 +63,8 @@
     "created": "Character created successfully!"
   },
   "notFound": "Character not found",
-  "notOwner": "You can only edit your own characters"
+  "notOwner": "You can only edit your own characters",
+  "avatar": {
+    "openImage": "Open portrait"
+  }
 }

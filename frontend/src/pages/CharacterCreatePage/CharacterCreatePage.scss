@@ -1,3 +1,5 @@
+@use 'app/styles/mixins' as m;
+
 .character-create {
   display: flex;
   flex-direction: column;
@@ -8,8 +10,19 @@
     > :first-child {
       grid-row: span 3;
     }
-    > :nth-last-child(-n+2) {
+    > :nth-child(5),
+    > :nth-child(6) {
       grid-column: span 2;
+    }
+    @include m.mobile {
+      grid-template-columns: repeat(1, 1fr);
+      > :first-child {
+        grid-row: span 1;
+      }
+      > :nth-child(5),
+      > :nth-child(6) {
+        grid-column: span 1;
+      }
     }
   }
 }

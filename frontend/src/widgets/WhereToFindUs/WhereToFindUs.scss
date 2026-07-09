@@ -9,6 +9,9 @@
   &__content {
     display: flex;
     gap: 25px;
+    @include m.tablet(860px) {
+      flex-direction: column;
+    }
   }
   &__map-wrapper {
     width: 100%;
@@ -17,6 +20,9 @@
   }
   &__map {
     height: 100%;
+    @include m.tablet(860px) {
+      height: 380px;
+    }
   }
   &__map-yandex {
     width: 100%;
@@ -29,6 +35,9 @@
     gap: 16px;
     max-width: 340px;
     @include m.big-opened-parchment-bg;
+    @include m.tablet(860px) {
+      max-width: none;
+    }
   }
   &__header {
     font-family: var(--font-display);

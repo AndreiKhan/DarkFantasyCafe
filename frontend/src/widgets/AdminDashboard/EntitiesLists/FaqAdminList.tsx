@@ -81,7 +81,7 @@ function FaqAdminList() {
   }
 
   return (
-    <div className='admin-entity'>
+    <div className='faq-entity'>
       <AdminTable
         columns={COLUMNS}
         data={data}

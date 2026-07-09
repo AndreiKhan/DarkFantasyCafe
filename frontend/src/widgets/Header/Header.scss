@@ -6,10 +6,17 @@
     display: flex;
     align-items: center;
     gap: 50px;
+    @include m.tablet(760px) {
+      justify-content: space-between;
+    }
+  }
+  &__logo-link {
+    @include m.mobile {
+      display: none;
+    }
   }
   &__logo {
     max-width: 100px;
-    
   }
   &__container {
     width: 100%;
@@ -17,6 +24,9 @@
     align-items: center;
     justify-content: space-between;
     gap: 50px;
+    @include m.mobile {
+      gap: 10px;
+    }
   }
   &__nav {
     width: 100%;
@@ -24,10 +34,11 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 25px;
     }
     &-item {
-      width: min-content;
-      padding: 20px 40px;
+      text-wrap: nowrap;
       font-size: 18px;
       @include m.half-rolled-parchment-button-bg-variant-1;
       cursor: pointer;

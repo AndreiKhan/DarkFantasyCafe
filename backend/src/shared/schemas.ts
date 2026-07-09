@@ -19,6 +19,7 @@ export const optionalPhone = z.union([z.string().regex(PHONE_REGEX, 'Телеф�
 
 export const WORK_START_HOUR = 12
 export const WORK_END_HOUR = 23
+export const WORK_END_TIME = '23:30'
 
 export function isWorkingSlot(date: Date): boolean {
   if (Number.isNaN(date.getTime())) {
@@ -41,3 +42,43 @@ export function isWorkingSlot(date: Date): boolean {
 }
 
 export const workingDateTime = z.coerce.date().refine(isWorkingSlot, 'Time must be within working hours (12:00–23:30) in 30-minute steps')
+
+export function buildReservationWindow(date: string, start: string, durationMinutes: number) {
+  const startsAt = new Date(`${date}T${start}:00`)
+  const endsAt = new Date(startsAt.getTime() + durationMinutes * 60 * 1000)
+  return { startsAt, endsAt }
+}
+
+export function workDayEnd(date: string): Date {
+  return new Date(`${date}T${WORK_END_TIME}:00`)
+}
+
+export type ReservationWindowErrorCode =
+  | 'TIME_NOT_ALIGNED'
+  | 'RESERVATION_IN_PAST'
+  | 'INVALID_TIME_RANGE'
+  | 'RESERVATION_END_AFTER_HOURS'
+
+export function getPublicReservationWindowError(
+  startsAt: Date,
+  endsAt: Date,
+): { code: ReservationWindowErrorCode; message: string } | null {
+  if (!isWorkingSlot(startsAt)) {
+    return { code: 'TIME_NOT_ALIGNED', message: 'Time must be aligned to working hours' }
+  }
+
+  if (startsAt.getTime() <= Date.now()) {
+    return { code: 'RESERVATION_IN_PAST', message: 'Reservation time is in the past' }
+  }
+
+  if (endsAt <= startsAt) {
+    return { code: 'INVALID_TIME_RANGE', message: 'End time must be after start time' }
+  }
+
+  const dateKey = `${startsAt.getFullYear()}-${String(startsAt.getMonth() + 1).padStart(2, '0')}-${String(startsAt.getDate()).padStart(2, '0')}`
+  if (endsAt.getTime() > workDayEnd(dateKey).getTime()) {
+    return { code: 'RESERVATION_END_AFTER_HOURS', message: 'Reservation ends after working hours' }
+  }
+
+  return null
+}

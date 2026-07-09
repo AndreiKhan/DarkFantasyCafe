@@ -3,5 +3,27 @@
   "bonuses": "Bonuses:",
   "characters": {
     "title": "Characters"
+  },
+  "reservations": {
+    "title": "Bookings",
+    "empty": "No confirmed bookings",
+    "detailTitle": "Booking",
+    "startsAt": "Start",
+    "endsAt": "End",
+    "hours": "{{count}} h",
+    "items": "Order details",
+    "tableMeta": "Table №{{number}} · {{zone}}"
+  },
+  "achievements": {
+    "title": "Achievements"
+  },
+  "password": {
+    "open": "Change password",
+    "title": "Change password",
+    "current": "Current password",
+    "new": "New password",
+    "continue": "Continue",
+    "save": "Save password",
+    "success": "Password updated"
   }
 }

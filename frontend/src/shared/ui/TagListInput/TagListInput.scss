@@ -9,6 +9,13 @@
     font-size: 14px;
   }
 
+  &__input {
+    width: 100%;
+    &::placeholder {
+      color: var(--color-text);
+    }
+  }
+
   &__tags {
     display: flex;
     flex-wrap: wrap;

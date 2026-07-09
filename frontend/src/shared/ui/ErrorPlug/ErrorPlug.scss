@@ -1,3 +1,7 @@
 .error-plug {
+  color: var(--color-error);
   font-size: 20px;
+  filter: drop-shadow(0 0 5px var(--color-bg))
+    drop-shadow(0 0 5px var(--color-bg))
+    drop-shadow(0 0 5px var(--color-bg));
 }

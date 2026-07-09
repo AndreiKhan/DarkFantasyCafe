@@ -117,7 +117,7 @@ function ReservationAdminList() {
   }
 
   return (
-    <div className='admin-entity'>
+    <div className='reservation-entity'>
       <AdminTable
         columns={COLUMNS}
         data={data}

@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify'
 import { userService, userAdmin } from './user.service.js'
-import { userCreateSchema, userUpdateSchema, userSelfUpdateSchema } from './user.schema.js'
+import { userCreateSchema, userUpdateSchema, userSelfUpdateSchema, verifyPasswordSchema, changePasswordSchema } from './user.schema.js'
 import { idParamSchema, searchQuerySchema } from '../../shared/schemas.js'
 import { requireRole } from '../../plugins/auth.js'
 
@@ -13,6 +13,16 @@ export async function userRoutes(app: FastifyInstance) {
   app.patch('/', { preHandler: app.authenticate }, async (request) => {
     const data = userSelfUpdateSchema.parse(request.body)
     return userService.updateProfile(request.user!.sub, data)
+  })
+
+  app.post('/verify-password', { preHandler: app.authenticate }, async (request) => {
+    const data = verifyPasswordSchema.parse(request.body)
+    return userService.verifyPassword(request.user!.sub, data)
+  })
+
+  app.patch('/password', { preHandler: app.authenticate }, async (request) => {
+    const data = changePasswordSchema.parse(request.body)
+    return userService.changePassword(request.user!.sub, data)
   })
 }
 

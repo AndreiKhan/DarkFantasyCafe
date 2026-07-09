@@ -146,6 +146,17 @@ export const reservationRepository = {
     })
   },
 
+  findConfirmedByUser(userId: string) {
+    return prisma.reservation.findMany({
+      where: { userId, status: 'CONFIRMED' },
+      include: {
+        items: true,
+        table: { include: { zone: true } },
+      },
+      orderBy: { startsAt: 'desc' },
+    })
+  },
+
   upsertPayment(reservationId: string, providerPaymentId: string, amount: number) {
     return prisma.payment.upsert({
       where: { reservationId },
