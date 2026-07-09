@@ -7,7 +7,7 @@ const REFRESH_COOKIE = 'refreshToken'
 
 const cookieOptions = {
   httpOnly: true,
-  secure: env.NODE_ENV === 'production',
+  secure: env.FRONTEND_URL.startsWith('https://'),
   sameSite: 'lax' as const,
   path: '/auth',
   maxAge: 60 * 60 * 24 * 7,
