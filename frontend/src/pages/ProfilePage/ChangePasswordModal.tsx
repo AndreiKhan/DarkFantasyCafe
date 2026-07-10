@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Modal } from '@/shared/ui'
+import { Loader, Modal } from '@/shared/ui'
+import { useLogout } from '@/entities/Auth'
 import { changePassword, verifyPassword } from '@/entities/User'
 import { getApiErrorMessage } from '@/shared/lib/apiError'
+import { ROUTES } from '@/shared/config/routes'
 
 function ChangePasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { t } = useTranslation(['profile', 'common', 'errors'])
+  const logout = useLogout()
+  const navigate = useNavigate()
   const [step, setStep] = useState<'current' | 'new'>('current')
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
@@ -23,6 +28,18 @@ function ChangePasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
       setPending(false)
     }
   }, [isOpen])
+
+  useEffect(() => {
+    if (!success) {
+      return
+    }
+    const timer = setTimeout(() => {
+      logout.mutate(undefined, {
+        onSettled: () => navigate(ROUTES.login),
+      })
+    }, 3000)
+    return () => clearTimeout(timer)
+  }, [success])
 
   const handleVerify = async () => {
     setError('')
@@ -93,7 +110,7 @@ function ChangePasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
               </div>
             </label>
             <button className='profile__submit' type='button' disabled={pending || !newPassword} onClick={handleSave}>
-              {pending ? t('common:actions.saving') : t('profile:password.save')}
+              {pending ? <Loader width='30px' height='30px' /> : t('profile:password.save')}
             </button>
           </>
         )}

@@ -24,7 +24,7 @@ describe('admin stats', () => {
     const { user, accessToken } = await registerTestUser(app)
 
     await api(app)
-      .get('/admin/stats')
+      .get('/api/admin/stats')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(403)
 
@@ -35,7 +35,7 @@ describe('admin stats', () => {
     const { accessToken } = await loginUser(app, 'admin@baldgoose.ru', TEST_PASSWORD)
 
     const response = await api(app)
-      .get('/admin/stats?from=2020-01-01&to=2030-12-31')
+      .get('/api/admin/stats?from=2020-01-01&to=2030-12-31')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(200)
 

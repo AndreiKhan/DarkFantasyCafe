@@ -28,7 +28,7 @@ export function StepPayment({ reservation }: { reservation: ReservationSummary }
           {getApiErrorMessage(pay.error, t)}
         </p>
       }
-      <button className='reserve__button' type='button' onClick={handlePay} disabled={pay.isPending}>
+      <button className='reserve__button--confirm' type='button' onClick={handlePay} disabled={pay.isPending}>
         {pay.isPending ? <Loader width='30px' height='30px'/> : t('common:actions.pay')}
       </button>
     </div>

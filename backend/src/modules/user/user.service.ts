@@ -54,6 +54,7 @@ export const userService = {
     await userService.verifyPassword(userId, { password: input.currentPassword })
     const passwordHash = await argon2.hash(input.newPassword)
     await userRepository.updatePassword(userId, passwordHash)
+    await refreshTokenRepository.deleteByUser(userId)
     return { ok: true }
   },
 }

@@ -5,7 +5,16 @@ import { langSchema, idParamSchema, searchQuerySchema } from '../../shared/schem
 import { requireRole } from '../../plugins/auth.js'
 
 export async function faqRoutes(app: FastifyInstance) {
-  app.get('/', async (request) => {
+  app.get('/', {
+    schema: {
+      tags: ['faq'],
+      summary: 'Список вопросов и ответов',
+      querystring: {
+        type: 'object',
+        properties: { lang: { type: 'string', enum: ['ru', 'en'] } },
+      },
+    },
+  }, async (request) => {
     const { lang } = langSchema.parse(request.query)
     return faqService.getList(lang)
   })

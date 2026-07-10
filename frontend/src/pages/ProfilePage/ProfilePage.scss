@@ -331,11 +331,23 @@
     color: var(--color-error);
   }
 
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
   &__submit {
     align-self: flex-start;
     color: var(--color-text);
 
     @include m.wood-button-bg;
+  }
+
+  &__logout {
+    color: var(--color-text);
+
+    @include m.small-stone-button-bg;
   }
 
   &__password-button {

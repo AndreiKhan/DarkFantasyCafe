@@ -3,6 +3,8 @@ import cors from '@fastify/cors'
 import cookie from '@fastify/cookie'
 import multipart from '@fastify/multipart'
 import fastifyStatic from '@fastify/static'
+import swagger from '@fastify/swagger'
+import swaggerUi from '@fastify/swagger-ui'
 import { mkdirSync } from 'node:fs'
 import { ZodError } from 'zod'
 import { AppError } from './shared/AppError.js'
@@ -32,7 +34,20 @@ export function buildApp(options?: { logger?: boolean }) {
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
   app.register(cookie)
-  
+
+  app.register(swagger, {
+    openapi: {
+      info: { title: 'DarkFantasyCafe API', version: '1.0.0' },
+      servers: [{ url: '/api' }],
+      components: {
+        securitySchemes: {
+          bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+        },
+      },
+    },
+  })
+  app.register(swaggerUi, { routePrefix: '/api/docs' })
+
   app.register(multipart, { limits: { fileSize: 5 * 1024 * 1024 } })
 
   mkdirSync(UPLOAD_DIR, { recursive: true })
@@ -63,38 +78,40 @@ export function buildApp(options?: { logger?: boolean }) {
     return reply.code(500).send({ message: 'Internal server error' })
   })
 
-  app.register(dishRoutes, { prefix: '/dish' })
-  app.register(authRoutes, { prefix: '/auth' })
-  app.register(reservationRoutes, { prefix: '/reservation' })
-  app.register(newsRoutes, { prefix: '/news' })
-  app.register(faqRoutes, { prefix: '/faq' })
-  app.register(contactRequestRoutes, { prefix: '/contact-request' })
-  app.register(userRoutes, { prefix: '/user' })
-  app.register(uploadRoutes, { prefix: '/upload' })
-  app.register(characterRoutes, { prefix: '/character' })
-  app.register(achievementRoutes, { prefix: '/achievement' })
+  app.register(async (api) => {
+    api.register(dishRoutes, { prefix: '/dish' })
+    api.register(authRoutes, { prefix: '/auth' })
+    api.register(reservationRoutes, { prefix: '/reservation' })
+    api.register(newsRoutes, { prefix: '/news' })
+    api.register(faqRoutes, { prefix: '/faq' })
+    api.register(contactRequestRoutes, { prefix: '/contact-request' })
+    api.register(userRoutes, { prefix: '/user' })
+    api.register(uploadRoutes, { prefix: '/upload' })
+    api.register(characterRoutes, { prefix: '/character' })
+    api.register(achievementRoutes, { prefix: '/achievement' })
 
-  app.register(newsAdminRoutes, { prefix: '/admin/news' })
-  app.register(dishAdminRoutes, { prefix: '/admin/dish' })
-  app.register(reservationAdminRoutes, { prefix: '/admin/reservation' })
-  app.register(faqAdminRoutes, { prefix: '/admin/faq' })
-  app.register(contactRequestAdminRoutes, { prefix: '/admin/contact-request' })
-  app.register(userAdminRoutes, { prefix: '/admin/user' })
-  app.register(tableAdminRoutes, { prefix: '/admin/table' })
-  app.register(characterAdminRoutes, { prefix: '/admin/character' })
-  app.register(statsAdminRoutes, { prefix: '/admin/stats' })
+    api.register(newsAdminRoutes, { prefix: '/admin/news' })
+    api.register(dishAdminRoutes, { prefix: '/admin/dish' })
+    api.register(reservationAdminRoutes, { prefix: '/admin/reservation' })
+    api.register(faqAdminRoutes, { prefix: '/admin/faq' })
+    api.register(contactRequestAdminRoutes, { prefix: '/admin/contact-request' })
+    api.register(userAdminRoutes, { prefix: '/admin/user' })
+    api.register(tableAdminRoutes, { prefix: '/admin/table' })
+    api.register(characterAdminRoutes, { prefix: '/admin/character' })
+    api.register(statsAdminRoutes, { prefix: '/admin/stats' })
 
-  app.post('/payments/yookassa/webhook', async (request, reply) => {
-    const body = request.body as { object?: { metadata?: { reservationId?: string } } }
+    api.post('/payments/yookassa/webhook', async (request, reply) => {
+      const body = request.body as { object?: { metadata?: { reservationId?: string } } }
 
-    const reservationId = body?.object?.metadata?.reservationId
+      const reservationId = body?.object?.metadata?.reservationId
 
-    if (reservationId) {
-      await reservationService.handleWebhook(reservationId).catch((e) => app.log.error(e))
-    }
+      if (reservationId) {
+        await reservationService.handleWebhook(reservationId).catch((e) => app.log.error(e))
+      }
 
-    return reply.code(200).send({ ok: true })
-  })
+      return reply.code(200).send({ ok: true })
+    })
+  }, { prefix: '/api' })
 
   return app
 }

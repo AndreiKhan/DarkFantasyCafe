@@ -24,6 +24,6 @@
     "new": "New password",
     "continue": "Continue",
     "save": "Save password",
-    "success": "Password updated"
+    "success": "Password updated. You will be signed out — log in with your new password"
   }
 }

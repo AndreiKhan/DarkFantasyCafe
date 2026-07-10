@@ -6,11 +6,12 @@
   gap: 24px;
   padding-top: 24px;
   padding-bottom: 60px;
-  max-width: 860px;
 
   &__back {
     font-size: 15px;
     text-shadow: var(--text-shadow-bg);
+    @include m.wood-button-bg;
+    width: max-content;
   }
 
   &__header {

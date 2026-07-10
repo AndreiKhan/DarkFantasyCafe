@@ -3,6 +3,8 @@ import { Header } from '@/widgets/Header'
 import { Footer } from '@/widgets/Footer'
 import { getPageBackground } from './getLayoutBg'
 import './MainLayout.scss'
+import { Suspense } from 'react'
+import { Loader } from '@/shared/ui'
 
 function MainLayout() {
   const { pathname } = useLocation()
@@ -18,7 +20,9 @@ function MainLayout() {
       <div className='page-shell'>
         <Header />
         <main>
-          <Outlet />
+          <Suspense fallback={<Loader width='200px' height='200px' />}>
+            <Outlet />
+          </Suspense>
         </main>
         <Footer />
       </div>

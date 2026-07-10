@@ -5,11 +5,36 @@ import { langSchema, idParamSchema, searchQuerySchema } from '../../shared/schem
 import { requireRole } from '../../plugins/auth.js'
 
 export async function dishRoutes(app: FastifyInstance) {
-  app.get('/', async (request) => {
+  app.get('/', {
+    schema: {
+      tags: ['dish'],
+      summary: 'Список блюд меню',
+      querystring: {
+        type: 'object',
+        properties: {
+          lang: { type: 'string', enum: ['ru', 'en'] },
+          category: { type: 'string' },
+          tags: { type: 'string', description: 'ID тегов через запятую' },
+          allergens: { type: 'string', description: 'ID аллергенов через запятую' },
+          sort: { type: 'string', enum: ['price_asc', 'price_desc'] },
+          keywordSearch: { type: 'string' },
+        },
+      },
+    },
+  }, async (request) => {
     const query = dishQuerySchema.parse(request.query)
     return dishService.getMenu(query)
   })
-  app.get('/filters', async (request) => {
+  app.get('/filters', {
+    schema: {
+      tags: ['dish'],
+      summary: 'Категории, теги и аллергены для фильтров меню',
+      querystring: {
+        type: 'object',
+        properties: { lang: { type: 'string', enum: ['ru', 'en'] } },
+      },
+    },
+  }, async (request) => {
     const { lang } = langSchema.parse(request.query)
     return dishService.getFilters(lang)
   })

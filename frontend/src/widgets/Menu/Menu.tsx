@@ -69,7 +69,7 @@ function Menu({ dishQuantity, onQuantityChange, hideTitle = false }: {
   const toggleSort = () =>
     setFilters((filter) => ({
       ...filter,
-      sort: filter.sort === 'price_asc' ? 'price_desc' : 'price_asc'
+      sort: filter.sort === 'price_desc' ? 'price_asc' : 'price_desc'
     }))
 
   return (

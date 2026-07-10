@@ -3,6 +3,7 @@ import { useCreateReservation } from '@/entities/Reservation'
 import { useDishes } from '@/entities/Dish'
 import { useTranslation } from 'react-i18next'
 import { getApiErrorMessage } from '@/shared/lib/apiError'
+import { Loader } from '@/shared/ui'
 
 export function StepConfirm({ params, table, zone, dishQuantity, masterId, masterSessionType, master, masterPrices, onBack, onCreated }: {
   params: AvailabilityParams
@@ -97,8 +98,8 @@ export function StepConfirm({ params, table, zone, dishQuantity, masterId, maste
           <button className='reserve__button' type='button' onClick={onBack}>
             {t('reservation:actions.back')}
           </button>
-          <button className='reserve__button' type='button' onClick={handleConfirm} disabled={create.isPending}>
-            {create.isPending ? t('common:actions.creating') : t('common:actions.confirm')}
+          <button className='reserve__button--confirm' type='button' onClick={handleConfirm} disabled={create.isPending}>
+            {create.isPending ? <Loader width='30px' height='30px'/> : t('common:actions.confirm')}
           </button>
         </div>
       </div>

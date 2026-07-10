@@ -10,7 +10,9 @@
   },
   "actions": {
     "save": "Save",
+    "saving": "Saving…",
     "saved": "Saved",
+    "logout": "Log out",
     "back": "Back",
     "next": "Next",
     "skip": "Skip",

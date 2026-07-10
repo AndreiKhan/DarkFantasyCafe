@@ -9,6 +9,7 @@
   &__content {
     @include m.wood-background-bg;
     margin: -3px;
+    margin-top: 0;
     @include m.tablet {
       padding: 12px 12px;
     }

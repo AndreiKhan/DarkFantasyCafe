@@ -225,6 +225,12 @@
     }
   }
 
+  &__button--confirm {
+    @include m.wood-button-bg;
+    color: var(--color-text);
+    font-size: 22px;
+  }
+
   &__shadow {
     text-shadow: var(--text-shadow-bg);
   }

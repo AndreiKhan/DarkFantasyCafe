@@ -37,7 +37,7 @@ export async function uploadRoutes(app: FastifyInstance) {
     const filename = `${randomUUID()}${extension}`
     await writeFile(path.join(UPLOAD_DIR, filename), buffer)
 
-    const url = `${request.protocol}://${request.headers.host}/uploads/${filename}`
+    const url = `/uploads/${filename}`
 
     return reply.code(201).send({ url })
   })

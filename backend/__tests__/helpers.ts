@@ -46,7 +46,7 @@ export async function registerTestUser(app: FastifyInstance) {
     secondName: 'User',
   }
 
-  const response = await api(app).post('/auth/register').send(payload).expect(200)
+  const response = await api(app).post('/api/auth/register').send(payload).expect(200)
   const user = await prisma.user.findUnique({ where: { email: payload.email } })
 
   if (!user) {
@@ -57,7 +57,7 @@ export async function registerTestUser(app: FastifyInstance) {
 }
 
 export async function loginUser(app: FastifyInstance, email: string, password: string) {
-  const response = await api(app).post('/auth/login').send({ email, password }).expect(200)
+  const response = await api(app).post('/api/auth/login').send({ email, password }).expect(200)
   return { accessToken: response.body.accessToken as string }
 }
 

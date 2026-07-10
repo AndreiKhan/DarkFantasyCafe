@@ -2,6 +2,7 @@
   "api": {
     "UNKNOWN": "Something went wrong, please try again",
     "INVALID_CREDENTIALS": "Invalid email or password",
+    "INVALID_PASSWORD": "Invalid password",
     "EMAIL_TAKEN": "This email is already registered",
     "USER_NOT_FOUND": "User not found",
     "FILE_TOO_LARGE": "File is too large (max 5 MB)",

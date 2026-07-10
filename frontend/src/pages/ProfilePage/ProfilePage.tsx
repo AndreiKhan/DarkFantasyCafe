@@ -1,9 +1,9 @@
 import './ProfilePage.scss'
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useMe } from '@/entities/Auth'
+import { useMe, useLogout } from '@/entities/Auth'
 import { useProfile, useUpdateProfile, type UpdateProfileInput } from '@/entities/User'
 import { useCharacters, useReferenceData, lookupName } from '@/entities/Character'
 import { useMyReservations, type ReservationSummary } from '@/entities/Reservation'
@@ -35,6 +35,8 @@ function ProfilePage() {
   const { data: dnd } = useReferenceData()
 
   const update = useUpdateProfile(userId!)
+  const logout = useLogout()
+  const navigate = useNavigate()
   const [passwordModalOpen, setPasswordModalOpen] = useState(false)
   const [selectedReservation, setSelectedReservation] = useState<ReservationSummary | null>(null)
   const isOwnProfile = me?.user.sub === userId
@@ -269,9 +271,22 @@ function ProfilePage() {
                     </label>
                   ))}
 
-                  <button className='profile__submit' type='submit' disabled={update.isPending}>
-                    {update.isPending ? t('common:actions.saving') : t('common:actions.save')}
-                  </button>
+                  <div className='profile__actions'>
+                    <button className='profile__submit' type='submit' disabled={update.isPending}>
+                      {update.isPending ? <Loader width='30px' height='30px' /> : t('common:actions.save')}
+                    </button>
+
+                    <button
+                      className='profile__logout'
+                      type='button'
+                      disabled={logout.isPending}
+                      onClick={() => logout.mutate(undefined, {
+                        onSettled: () => navigate(ROUTES.home),
+                      })}
+                    >
+                      {t('common:actions.logout')}
+                    </button>
+                  </div>
 
                   {update.isError &&
                     <p className='profile__status profile__status--error' role='alert'>

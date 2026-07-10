@@ -37,7 +37,7 @@ describe('achievement', () => {
     })
 
     const first = await api(app)
-      .post('/achievement/events?lang=ru')
+      .post('/api/achievement/events?lang=ru')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({ code })
       .expect(200)
@@ -51,7 +51,7 @@ describe('achievement', () => {
     expect(updatedUser?.bonuses).toBe(15)
 
     const second = await api(app)
-      .post('/achievement/events?lang=ru')
+      .post('/api/achievement/events?lang=ru')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({ code })
       .expect(200)

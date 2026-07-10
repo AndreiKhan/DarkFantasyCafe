@@ -1,5 +1,6 @@
 @use 'app/styles/mixins' as m;
 
 .language-switcher {
-  @include m.stone-circle-button
+  @include m.stone-circle-button;
+  color: var(--color-text);
 }

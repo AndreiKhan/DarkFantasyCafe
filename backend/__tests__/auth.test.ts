@@ -35,7 +35,7 @@ describe('auth', () => {
     const { user, accessToken } = await registerTestUser(app)
 
     const response = await api(app)
-      .get('/auth/me')
+      .get('/api/auth/me')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(200)
 
@@ -48,6 +48,6 @@ describe('auth', () => {
   })
 
   it('возвращает 401 для GET /auth/me без токена', async () => {
-    await api(app).get('/auth/me').expect(401)
+    await api(app).get('/api/auth/me').expect(401)
   })
 })

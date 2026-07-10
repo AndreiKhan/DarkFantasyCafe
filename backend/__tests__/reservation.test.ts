@@ -54,7 +54,7 @@ describe('reservation', () => {
     })
 
     const response = await api(app)
-      .get('/reservation/mine?lang=ru')
+      .get('/api/reservation/mine?lang=ru')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(200)
 
@@ -70,7 +70,7 @@ describe('reservation', () => {
     const date = yesterday.toISOString().slice(0, 10)
 
     const response = await api(app)
-      .get(`/reservation/tables?lang=ru&date=${date}&start=18:00&duration=60&guests=2`)
+      .get(`/api/reservation/tables?lang=ru&date=${date}&start=18:00&duration=60&guests=2`)
       .expect(400)
 
     expect(response.body.code).toBe('RESERVATION_IN_PAST')
@@ -82,7 +82,7 @@ describe('reservation', () => {
     const date = tomorrow.toISOString().slice(0, 10)
 
     const response = await api(app)
-      .get(`/reservation/tables?lang=ru&date=${date}&start=23:00&duration=120&guests=2`)
+      .get(`/api/reservation/tables?lang=ru&date=${date}&start=23:00&duration=120&guests=2`)
       .expect(400)
 
     expect(response.body.code).toBe('RESERVATION_END_AFTER_HOURS')

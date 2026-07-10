@@ -1,20 +1,23 @@
 import { createBrowserRouter, redirect } from 'react-router-dom'
 import { default as RequireRole } from './RequireRole'
+import { getMe } from '@/entities/Auth'
+import { lazy } from 'react'
 import MainLayout from '@/app/layouts/MainLayout'
 import AdminLayout from '@/app/layouts/AdminLayout'
 import HomePage from '@/pages/HomePage/HomePage'
 import LoginPage from '@/pages/LoginPage/LoginPage'
-import RegisterPage from '@/pages/RegisterPage/RegisterPage'
-import ReservationPage from '@/pages/ReservationPage/ReservationPage'
-import ReservationSuccessPage from '@/pages/ReservationSuccessPage/ReservationSuccessPage'
-import NewsPage from '@/pages/NewsPage/NewsPage'
-import NewsSlugPage from '@/pages/NewsSlugPage/NewsSlugPage'
-import ProfilePage from '@/pages/ProfilePage/ProfilePage'
-import CharactersPage from '@/pages/CharactersPage/CharactersPage'
-import CharacterCreatePage from '@/pages/CharacterCreatePage/CharacterCreatePage'
-import CharacterPage from '@/pages/CharacterPage/CharacterPage'
-import AdminPage from '@/pages/AdminPage/AdminPage'
-import { getMe } from '@/entities/Auth'
+
+const RegisterPage = lazy(() => import('@/pages/RegisterPage/RegisterPage'))
+const ReservationPage = lazy(() => import('@/pages/ReservationPage/ReservationPage'))
+const ReservationSuccessPage = lazy(() => import('@/pages/ReservationSuccessPage/ReservationSuccessPage'))
+const NewsPage = lazy(() => import('@/pages/NewsPage/NewsPage'))
+const NewsSlugPage = lazy(() => import('@/pages/NewsSlugPage/NewsSlugPage'))
+const ProfilePage = lazy(() => import('@/pages/ProfilePage/ProfilePage'))
+const CharactersPage = lazy(() => import('@/pages/CharactersPage/CharactersPage'))
+const CharacterCreatePage = lazy(() => import('@/pages/CharacterCreatePage/CharacterCreatePage'))
+const CharacterPage = lazy(() => import('@/pages/CharacterPage/CharacterPage'))
+const AdminPage = lazy(() => import('@/pages/AdminPage/AdminPage'))
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage/NotFoundPage'))
 
 export const router = createBrowserRouter([
   {
@@ -47,6 +50,7 @@ export const router = createBrowserRouter([
         },
       },
       { path: 'profile/:userId', element: <ProfilePage /> },
+      { path: '*', element: <NotFoundPage /> },
     ],
   },
   {
