@@ -17,31 +17,39 @@ export function isWorkingSlotIso(iso: string): boolean {
   if (Number.isNaN(date.getTime())) {
     return false
   }
-  if (date.getSeconds() !== 0 || date.getMilliseconds() !== 0) {
+  if (date.getUTCSeconds() !== 0 || date.getUTCMilliseconds() !== 0) {
     return false
   }
 
-  const minutes = date.getMinutes()
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Yekaterinburg',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).formatToParts(date)
+
+  const hours = Number(parts.find((part) => part.type === 'hour')?.value)
+  const minutes = Number(parts.find((part) => part.type === 'minute')?.value)
 
   if (minutes !== 0 && minutes !== 30) {
     return false
   }
-  const minutesOfDay = date.getHours() * 60 + minutes
+  const minutesOfDay = hours * 60 + minutes
 
   return minutesOfDay >= WORK_START_HOUR * 60 && minutesOfDay <= WORK_END_HOUR * 60 + 30
 }
 
 export function workDayEnd(date: string): Date {
-  return new Date(`${date}T${WORK_END_TIME}:00`)
+  return new Date(`${date}T${WORK_END_TIME}:00+05:00`)
 }
 
 export function buildStartOptionsForDate(date: string): string[] {
   const now = Date.now()
-  return buildTimeSlots().filter((slot) => new Date(`${date}T${slot}:00`).getTime() > now)
+  return buildTimeSlots().filter((slot) => new Date(`${date}T${slot}:00+05:00`).getTime() > now)
 }
 
 export function buildDurationOptionsForSlot(date: string, start: string): { value: number; label: string }[] {
-  const startMs = new Date(`${date}T${start}:00`).getTime()
+  const startMs = new Date(`${date}T${start}:00+05:00`).getTime()
   const endLimit = workDayEnd(date).getTime()
   const opts: { value: number; label: string }[] = []
 
@@ -67,7 +75,7 @@ export function getReservationWindowIssue(params: {
     return 'noSlots'
   }
 
-  const startAt = new Date(`${params.date}T${params.start}:00`)
+  const startAt = new Date(`${params.date}T${params.start}:00+05:00`)
 
   if (startAt.getTime() <= Date.now()) {
     return 'past'

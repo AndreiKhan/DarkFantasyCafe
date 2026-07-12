@@ -57,7 +57,7 @@ export function StepWindow({
   const windowIssue = getReservationWindowIssue(params)
 
   const { data: performanceData } = useNewsList('PERFORMANCE')
-  const reservationStart = new Date(`${params.date}T${params.start}:00`)
+  const reservationStart = new Date(`${params.date}T${params.start}:00+05:00`)
   const reservationEnd = new Date(reservationStart.getTime() + params.duration * 60000)
   const activePerformance = (performanceData ?? []).find((item) => {
     if (!item.startsAt || !item.endsAt) {

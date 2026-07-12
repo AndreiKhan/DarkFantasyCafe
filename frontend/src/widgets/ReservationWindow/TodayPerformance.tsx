@@ -3,8 +3,21 @@ import { Link } from 'react-router-dom'
 import { useNewsList } from '@/entities/News'
 
 function formatTime(iso: string): string {
-  const date = new Date(iso)
-  return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
+  return new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Yekaterinburg',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(new Date(iso))
+}
+
+function cafeDateKey(iso: string): string {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Yekaterinburg',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date(iso))
 }
 
 export function TodayPerformance({ date }: { date: string }) {
@@ -13,10 +26,10 @@ export function TodayPerformance({ date }: { date: string }) {
   const { data: newsData } = useNewsList('NEWS')
 
   const performances = (performanceData ?? [])
-    .filter((item) => item.startsAt?.slice(0, 10) === date)
+    .filter((item) => item.startsAt && cafeDateKey(item.startsAt) === date)
     .sort((a, b) => (a.startsAt ?? '').localeCompare(b.startsAt ?? ''))
 
-  const news = (newsData ?? []).filter((item) => item.startsAt?.slice(0, 10) === date)
+  const news = (newsData ?? []).filter((item) => item.startsAt && cafeDateKey(item.startsAt) === date)
 
   const items = [...performances, ...news]
 

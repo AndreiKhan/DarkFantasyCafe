@@ -23,6 +23,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-baldgoose}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8080}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:8080}
+      TZ: Asia/Yekaterinburg
     depends_on:
       postgres:
         condition: service_healthy

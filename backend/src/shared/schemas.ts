@@ -26,17 +26,25 @@ export function isWorkingSlot(date: Date): boolean {
     return false
   }
 
-  if (date.getSeconds() !== 0 || date.getMilliseconds() !== 0) {
+  if (date.getUTCSeconds() !== 0 || date.getUTCMilliseconds() !== 0) {
     return false
   }
 
-  const minutes = date.getMinutes()
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Yekaterinburg',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).formatToParts(date)
+
+  const hours = Number(parts.find((part) => part.type === 'hour')?.value)
+  const minutes = Number(parts.find((part) => part.type === 'minute')?.value)
 
   if (minutes !== 0 && minutes !== 30) {
     return false
   }
-  
-  const minutesOfDay = date.getHours() * 60 + minutes
+
+  const minutesOfDay = hours * 60 + minutes
 
   return minutesOfDay >= WORK_START_HOUR * 60 && minutesOfDay <= WORK_END_HOUR * 60 + 30
 }
@@ -44,13 +52,13 @@ export function isWorkingSlot(date: Date): boolean {
 export const workingDateTime = z.coerce.date().refine(isWorkingSlot, 'Time must be within working hours (12:00–23:30) in 30-minute steps')
 
 export function buildReservationWindow(date: string, start: string, durationMinutes: number) {
-  const startsAt = new Date(`${date}T${start}:00`)
+  const startsAt = new Date(`${date}T${start}:00+05:00`)
   const endsAt = new Date(startsAt.getTime() + durationMinutes * 60 * 1000)
   return { startsAt, endsAt }
 }
 
 export function workDayEnd(date: string): Date {
-  return new Date(`${date}T${WORK_END_TIME}:00`)
+  return new Date(`${date}T${WORK_END_TIME}:00+05:00`)
 }
 
 export type ReservationWindowErrorCode =
@@ -75,7 +83,12 @@ export function getPublicReservationWindowError(
     return { code: 'INVALID_TIME_RANGE', message: 'End time must be after start time' }
   }
 
-  const dateKey = `${startsAt.getFullYear()}-${String(startsAt.getMonth() + 1).padStart(2, '0')}-${String(startsAt.getDate()).padStart(2, '0')}`
+  const dateKey = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Yekaterinburg',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(startsAt)
   if (endsAt.getTime() > workDayEnd(dateKey).getTime()) {
     return { code: 'RESERVATION_END_AFTER_HOURS', message: 'Reservation ends after working hours' }
   }

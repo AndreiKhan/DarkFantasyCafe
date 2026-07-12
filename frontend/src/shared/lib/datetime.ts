@@ -9,9 +9,21 @@ export function toDatetimeLocal(value: string | null | undefined): string {
     return ''
   }
 
-  const offsetMs = date.getTimezoneOffset() * 60 * 1000
+  const datePart = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Yekaterinburg',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(date)
 
-  return new Date(date.getTime() - offsetMs).toISOString().slice(0, 16)
+  const timePart = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Yekaterinburg',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(date)
+
+  return `${datePart}T${timePart}`
 }
 
 export function fromDatetimeLocal(value: string): string | null {
@@ -19,7 +31,7 @@ export function fromDatetimeLocal(value: string): string | null {
     return null
   }
 
-  const date = new Date(value)
+  const date = new Date(`${value}:00+05:00`)
 
   if (Number.isNaN(date.getTime())) {
     return null
@@ -44,6 +56,7 @@ export function formatDateTime(value: string | Date | null | undefined): string 
     year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
+    timeZone: 'Asia/Yekaterinburg',
   })
 }
 
