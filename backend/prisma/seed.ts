@@ -30,7 +30,7 @@ const MASTER_PRICE_ONESHOT = 2000
 const MASTER_PRICE_CAMPAIGN = 5000
 
 function seedSlot(date: string, start: string, durationMin: number) {
-  const startsAt = new Date(`${date}T${start}:00`)
+  const startsAt = new Date(`${date}T${start}:00+05:00`)
   const endsAt = new Date(startsAt.getTime() + durationMin * 60_000)
   return { startsAt, endsAt, hours: durationMin / 60 }
 }
@@ -861,8 +861,8 @@ async function main() {
       shortDescriptionEn: 'A folk evening with sea songs and drums in the Tavern.',
       bodyRu: '## Морской ветер на сцене\n\nВ **Таверне** прозвучат баллады Скеллиге: барабаны, скрипки и хоровые припевы. Начало в **19:30**, вход свободный для гостей с бронью.\n\nРекомендуем столы ближе к сцене — их видно на карте зала.',
       bodyEn: '## Sea wind on stage\n\nThe **Tavern** will host Skellige ballads: drums, fiddles and choral refrains. Starts at **7:30 PM**, free entry for guests with a reservation.\n\nWe recommend tables closer to the stage — visible on the hall map.',
-      startsAt: new Date('2026-07-12T19:30:00'),
-      endsAt: new Date('2026-07-12T22:30:00'),
+      startsAt: new Date('2026-07-12T19:30:00+05:00'),
+      endsAt: new Date('2026-07-12T22:30:00+05:00'),
       publishedAt: new Date('2026-06-19'),
     },
     {
@@ -875,8 +875,8 @@ async function main() {
       shortDescriptionEn: 'A live bard set on the Great Hall stage.',
       bodyRu: '## Лютик возвращается\n\nЛегендарный бард исполнит новые и старые баллады о рыцарях, драконах и несчастной любви. Вечер начнётся в **20:00** и продлится до полуночи.\n\n> Бронируйте стол заранее — на выступления места разбирают быстро.',
       bodyEn: '## Dandelion returns\n\nThe legendary bard will perform new and old ballads of knights, dragons and doomed romance. The evening starts at **8:00 PM** and runs until midnight.\n\n> Book your table early — performance nights fill up fast.',
-      startsAt: new Date('2026-07-26T20:00:00'),
-      endsAt: new Date('2026-07-26T23:00:00'),
+      startsAt: new Date('2026-07-26T20:00:00+05:00'),
+      endsAt: new Date('2026-07-26T23:00:00+05:00'),
       publishedAt: new Date('2026-06-21'),
     },
     {
@@ -889,8 +889,8 @@ async function main() {
       shortDescriptionEn: 'A team D&D session against a troll for parties of 4–6 heroes.',
       bodyRu: '## Тролль вышел на арену\n\nМастер ведёт боевую сессию для команд, готовых к тактике, ловушкам и хитрому регeneration. Уровень персонажей: 5–7.\n\n**Начало:** 18:00\n**Длительность:** 3 часа\n\nВозьмите огонь, кислоту и хорошее чувство юмора.',
       bodyEn: '## The troll enters the arena\n\nA master runs a combat session for teams ready for tactics, traps and nasty regeneration. Character levels: 5–7.\n\n**Start:** 6:00 PM\n**Duration:** 3 hours\n\nBring fire, acid and a good sense of humor.',
-      startsAt: new Date('2026-07-15T18:00:00'),
-      endsAt: new Date('2026-07-15T21:00:00'),
+      startsAt: new Date('2026-07-15T18:00:00+05:00'),
+      endsAt: new Date('2026-07-15T21:00:00+05:00'),
       publishedAt: new Date('2026-06-23'),
     },
     {
@@ -903,8 +903,8 @@ async function main() {
       shortDescriptionEn: 'A quest with mirrors, traps and a deadly gaze.',
       bodyRu: '## Не смотри ему в глаза\n\nКомандный квест для опытных игроков. Нужны зеркала, верёвки и хотя бы один персонаж с высоким спасброском.\n\nМастер подготовил карту подземелья и несколько способов пережить встречу с василиском.',
       bodyEn: '## Do not meet its gaze\n\nA team quest for experienced players. Mirrors, ropes and at least one character with a solid saving throw are recommended.\n\nThe master prepared a dungeon map and several ways to survive the basilisk encounter.',
-      startsAt: new Date('2026-07-22T17:00:00'),
-      endsAt: new Date('2026-07-22T20:00:00'),
+      startsAt: new Date('2026-07-22T17:00:00+05:00'),
+      endsAt: new Date('2026-07-22T20:00:00+05:00'),
       publishedAt: new Date('2026-06-24'),
     },
     {
@@ -917,8 +917,8 @@ async function main() {
       shortDescriptionEn: 'A fight for newcomers — a first step into the arena.',
       bodyRu: '## Молодой дракон учится жару\n\nСессия для новичков: уровни 1–3, много подсказок, меньше смертей (но не обещаем). Идеально для первой игры в таверне.\n\nПосле боя — десерт со скидкой участникам.',
       bodyEn: '## A young dragon learns the heat\n\nA session for newcomers: levels 1–3, plenty of hints, fewer deaths (no promises though). Perfect for your first game at the tavern.\n\nAfter the fight — dessert at a discount for participants.',
-      startsAt: new Date('2026-07-29T18:00:00'),
-      endsAt: new Date('2026-07-29T20:00:00'),
+      startsAt: new Date('2026-07-29T18:00:00+05:00'),
+      endsAt: new Date('2026-07-29T20:00:00+05:00'),
       publishedAt: new Date('2026-06-25'),
     },
   ]
